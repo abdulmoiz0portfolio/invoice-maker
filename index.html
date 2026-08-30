@@ -112,22 +112,113 @@
           </h3>
 
           <!-- Currency Selector -->
+          <!-- Currency Selector & Custom Symbol Input -->
           <div>
-            <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">Currency Symbol</label>
-            <select v-model="invoice.currency" class="w-full text-xs font-semibold px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-              <option value="$">USD ($) - US Dollar</option>
-              <option value="€">EUR (€) - Euro</option>
-              <option value="£">GBP (£) - British Pound</option>
-              <option value="C$">CAD (C$) - Canadian Dollar</option>
-              <option value="A$">AUD (A$) - Australian Dollar</option>
-              <option value="Rs">PKR (Rs) - Pakistani Rupee</option>
-              <option value="AED">AED (AED) - UAE Dirham</option>
-              <option value="SAR">SAR (SAR) - Saudi Riyal</option>
-              <option value="₹">INR (₹) - Indian Rupee</option>
-              <option value="¥">JPY (¥) - Japanese Yen</option>
-              <option value="CHF">CHF (CHF) - Swiss Franc</option>
-              <option value="S$">SGD (S$) - Singapore Dollar</option>
-            </select>
+            <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">Currency Symbol / Code</label>
+            <div class="space-y-1.5">
+              <select v-model="invoice.currency" class="w-full text-xs font-semibold px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                <optgroup label="⭐ Major Global Currencies">
+                  <option value="$">USD ($) - US Dollar</option>
+                  <option value="€">EUR (€) - Euro</option>
+                  <option value="£">GBP (£) - British Pound</option>
+                  <option value="¥">JPY (¥) - Japanese Yen</option>
+                  <option value="CHF">CHF - Swiss Franc</option>
+                  <option value="C$">CAD (C$) - Canadian Dollar</option>
+                  <option value="A$">AUD (A$) - Australian Dollar</option>
+                  <option value="NZ$">NZD (NZ$) - New Zealand Dollar</option>
+                  <option value="S$">SGD (S$) - Singapore Dollar</option>
+                  <option value="HK$">HKD (HK$) - Hong Kong Dollar</option>
+                  <option value="¥">CNY (¥) - Chinese Yuan</option>
+                </optgroup>
+
+                <optgroup label="🕌 Middle East & Gulf (GCC)">
+                  <option value="AED">AED (د.إ) - UAE Dirham</option>
+                  <option value="SAR">SAR (﷼) - Saudi Riyal</option>
+                  <option value="QAR">QAR (﷼) - Qatari Riyal</option>
+                  <option value="KWD">KWD (د.ك) - Kuwaiti Dinar</option>
+                  <option value="BHD">BHD (ب.د) - Bahraini Dinar</option>
+                  <option value="OMR">OMR (ر.ع) - Omani Rial</option>
+                  <option value="JOD">JOD (د.ا) - Jordanian Dinar</option>
+                  <option value="EGP">EGP (ج.م) - Egyptian Pound</option>
+                  <option value="₺">TRY (₺) - Turkish Lira</option>
+                  <option value="₪">ILS (₪) - Israeli New Shekel</option>
+                  <option value="IQD">IQD (ع.د) - Iraqi Dinar</option>
+                  <option value="LBP">LBP (ل.ل) - Lebanese Pound</option>
+                </optgroup>
+
+                <optgroup label="🌏 South Asia">
+                  <option value="Rs">PKR (Rs) - Pakistani Rupee</option>
+                  <option value="₹">INR (₹) - Indian Rupee</option>
+                  <option value="৳">BDT (৳) - Bangladeshi Taka</option>
+                  <option value="Rs">LKR (Rs) - Sri Lankan Rupee</option>
+                  <option value="₨">NPR (₨) - Nepalese Rupee</option>
+                  <option value="AFN">AFN (؋) - Afghan Afghani</option>
+                </optgroup>
+
+                <optgroup label="🌴 Southeast & East Asia">
+                  <option value="RM">MYR (RM) - Malaysian Ringgit</option>
+                  <option value="Rp">IDR (Rp) - Indonesian Rupiah</option>
+                  <option value="₱">PHP (₱) - Philippine Peso</option>
+                  <option value="฿">THB (฿) - Thai Baht</option>
+                  <option value="₫">VND (₫) - Vietnamese Dong</option>
+                  <option value="₩">KRW (₩) - South Korean Won</option>
+                  <option value="NT$">TWD (NT$) - New Taiwan Dollar</option>
+                </optgroup>
+
+                <optgroup label="🏰 Europe & Nordic">
+                  <option value="kr">SEK (kr) - Swedish Krona</option>
+                  <option value="kr">NOK (kr) - Norwegian Krone</option>
+                  <option value="kr">DKK (kr) - Danish Krone</option>
+                  <option value="zł">PLN (zł) - Polish Zloty</option>
+                  <option value="Kč">CZK (Kč) - Czech Koruna</option>
+                  <option value="Ft">HUF (Ft) - Hungarian Forint</option>
+                  <option value="lei">RON (lei) - Romanian Leu</option>
+                  <option value="лв">BGN (лв) - Bulgarian Lev</option>
+                  <option value="₴">UAH (₴) - Ukrainian Hryvnia</option>
+                  <option value="₽">RUB (₽) - Russian Ruble</option>
+                  <option value="kn">HRK (kn) - Croatian Kuna</option>
+                  <option value="RSD">RSD - Serbian Dinar</option>
+                </optgroup>
+
+                <optgroup label="🌎 Americas">
+                  <option value="Mex$">MXN (Mex$) - Mexican Peso</option>
+                  <option value="R$">BRL (R$) - Brazilian Real</option>
+                  <option value="CLP$">CLP (CLP$) - Chilean Peso</option>
+                  <option value="COP$">COP (COP$) - Colombian Peso</option>
+                  <option value="PEN">PEN (S/.) - Peruvian Sol</option>
+                  <option value="ARS$">ARS (ARS$) - Argentine Peso</option>
+                  <option value="UYU">UYU ($U) - Uruguayan Peso</option>
+                  <option value="CRC">CRC (₡) - Costa Rican Colon</option>
+                  <option value="DOP">DOP (RD$) - Dominican Peso</option>
+                </optgroup>
+
+                <optgroup label="🌍 Africa">
+                  <option value="R">ZAR (R) - South African Rand</option>
+                  <option value="₦">NGN (₦) - Nigerian Naira</option>
+                  <option value="KSh">KES (KSh) - Kenyan Shilling</option>
+                  <option value="GH₵">GHS (GH₵) - Ghanaian Cedi</option>
+                  <option value="MAD">MAD (د.م.) - Moroccan Dirham</option>
+                  <option value="TSh">TZS (TSh) - Tanzanian Shilling</option>
+                  <option value="UGX">UGX (USh) - Ugandan Shilling</option>
+                  <option value="ETB">ETB (Br) - Ethiopian Birr</option>
+                  <option value="DZD">DZD (د.ج) - Algerian Dinar</option>
+                </optgroup>
+
+                <optgroup label="⚡ Crypto / Web3">
+                  <option value="₿">BTC (₿) - Bitcoin</option>
+                  <option value="Ξ">ETH (Ξ) - Ethereum</option>
+                  <option value="₮">USDT (₮) - Tether USD</option>
+                  <option value="USDC">USDC - USD Coin</option>
+                  <option value="SOL">SOL - Solana</option>
+                </optgroup>
+              </select>
+
+              <!-- Custom Currency Quick Input -->
+              <div class="flex items-center gap-1.5 pt-0.5">
+                <span class="text-[10px] text-slate-400 font-medium">Custom:</span>
+                <input type="text" v-model="invoice.currency" placeholder="e.g. CAD, zł, Rs." class="flex-1 text-xs font-mono font-semibold px-2 py-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+              </div>
+            </div>
           </div>
 
           <!-- Template Preset Selector -->
