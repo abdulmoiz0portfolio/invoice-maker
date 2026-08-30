@@ -1,0 +1,250 @@
+﻿/* AutomatixInvoice - Elite SaaS Design System */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  --primary-brand: #4f46e5;
+  --primary-accent: #6366f1;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Universal Button Haptic Micro-Interactions & Magnetic Physics */
+button, .btn, .tab-btn, .nav-item, input[type="submit"] {
+  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.18s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.15s ease, border-color 0.15s ease;
+  will-change: transform;
+  user-select: none;
+}
+
+button:active, .btn:active, .tab-btn:active {
+  transform: scale(0.94) translateY(1px) !important;
+}
+
+button:hover, .btn:hover {
+  transform: translateY(-1px);
+}
+
+/* Luxury Click Ripple Wave */
+.ripple-wave {
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(0);
+  animation: rippleAnimation 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  background-color: rgba(255, 255, 255, 0.45);
+  pointer-events: none;
+  z-index: 10;
+}
+
+@keyframes rippleAnimation {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* Spring Modal Physics */
+@keyframes modalSpringIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.86) translateY(28px);
+    filter: blur(6px);
+  }
+  65% {
+    transform: scale(1.02) translateY(-2px);
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0px);
+  }
+}
+
+@keyframes backdropFadeIn {
+  0% {
+    opacity: 0;
+    backdrop-filter: blur(0px);
+  }
+  100% {
+    opacity: 1;
+    backdrop-filter: blur(14px);
+  }
+}
+
+.modal-backdrop:not(.hidden) {
+  display: flex !important;
+  animation: backdropFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.modal-backdrop:not(.hidden) .modal-dialog {
+  animation: modalSpringIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* A4 Invoice Paper Sheet Simulation */
+.invoice-paper-sheet {
+  width: 100%;
+  max-width: 820px;
+  min-height: 1060px;
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 20px 45px -15px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  border-radius: 16px;
+  transition: all 0.3s ease;
+}
+
+.dark .invoice-paper-sheet {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+/* Template Color Schemes for Invoice Paper */
+.theme-modern-indigo .invoice-header-bar {
+  background: linear-gradient(135deg, #4f46e5, #4338ca);
+  color: #ffffff;
+}
+.theme-modern-indigo .theme-text-primary {
+  color: #4f46e5 !important;
+}
+.theme-modern-indigo .theme-bg-subtle {
+  background-color: #f5f3ff !important;
+}
+.theme-modern-indigo .theme-border-primary {
+  border-color: #4f46e5 !important;
+}
+
+.theme-emerald-growth .invoice-header-bar {
+  background: linear-gradient(135deg, #059669, #047857);
+  color: #ffffff;
+}
+.theme-emerald-growth .theme-text-primary {
+  color: #059669 !important;
+}
+.theme-emerald-growth .theme-bg-subtle {
+  background-color: #ecfdf5 !important;
+}
+.theme-emerald-growth .theme-border-primary {
+  border-color: #059669 !important;
+}
+
+.theme-executive-slate .invoice-header-bar {
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  color: #ffffff;
+}
+.theme-executive-slate .theme-text-primary {
+  color: #0f172a !important;
+}
+.theme-executive-slate .theme-bg-subtle {
+  background-color: #f8fafc !important;
+}
+.theme-executive-slate .theme-border-primary {
+  border-color: #0f172a !important;
+}
+
+.theme-vibrant-coral .invoice-header-bar {
+  background: linear-gradient(135deg, #e11d48, #be123c);
+  color: #ffffff;
+}
+.theme-vibrant-coral .theme-text-primary {
+  color: #e11d48 !important;
+}
+.theme-vibrant-coral .theme-bg-subtle {
+  background-color: #fff1f2 !important;
+}
+.theme-vibrant-coral .theme-border-primary {
+  border-color: #e11d48 !important;
+}
+
+.theme-automatix-cyber .invoice-header-bar {
+  background: linear-gradient(135deg, #090d16, #1e293b);
+  color: #c8e019;
+}
+.theme-automatix-cyber .theme-text-primary {
+  color: #090d16 !important;
+}
+.theme-automatix-cyber .theme-bg-subtle {
+  background-color: #f7fee7 !important;
+}
+.theme-automatix-cyber .theme-border-primary {
+  border-color: #c8e019 !important;
+}
+
+/* Print Stylesheet (Pure Clean A4) */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    font-size: 9.5pt !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  header, footer, .no-print, #toast, .drawer-modal, .modal-backdrop {
+    display: none !important;
+  }
+
+  @page {
+    size: A4 portrait;
+    margin: 8mm 10mm;
+  }
+
+  .invoice-paper-sheet {
+    max-width: 100% !important;
+    width: 100% !important;
+    min-height: auto !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+  }
+
+  .print-clean-input {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    color: #0f172a !important;
+    font-size: 9.5pt !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    resize: none !important;
+  }
+
+  .print-clean-input::placeholder {
+    color: transparent !important;
+  }
+
+  /* Prevent awkward page break cuts */
+  .page-break-avoid, tr, .invoice-header-row, .invoice-parties-row, .invoice-totals-row, .invoice-notes-row, .invoice-signature-row, .invoice-watermark-row {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .invoice-watermark-row {
+    display: block !important;
+    position: static !important;
+    margin-top: 16px !important;
+    padding-top: 10px !important;
+    border-top: 1px solid #e2e8f0 !important;
+  }
+}

@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutomatixInvoice - Free Professional Invoice Maker</title>
+  <meta name="description" content="Create, customize, and export professional A4 PDF invoices instantly with live calculations, custom logo manager, and dark/light mode.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['Space Grotesk', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-slate-50 dark:bg-[#090D16] text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-sans antialiased transition-colors duration-200 selection:bg-indigo-500 selection:text-white">
+
+  <div id="app" class="flex flex-col min-h-screen">
+
+    <!-- Header Navigation -->
+    <header class="border-b border-slate-200/90 dark:border-slate-800/80 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md sticky top-0 z-40 shadow-sm no-print transition-colors">
+      <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        
+        <!-- Left: Brand Logo -->
+        <div class="flex items-center space-x-3">
+          <a href="https://www.automatixes.com" target="_blank" class="flex items-center gap-2.5 group">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-600 via-indigo-700 to-violet-800 flex items-center justify-center shadow-md shadow-indigo-600/20 group-hover:scale-105 transition-transform text-white">
+              <i data-lucide="file-text" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-base font-bold font-heading text-slate-900 dark:text-white tracking-tight">Automatix<span class="text-indigo-600 dark:text-indigo-400">Invoice</span></span>
+                <span class="px-2 py-0.5 text-[10px] font-bold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800/60 rounded-full flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                  FREE SAAS
+                </span>
+              </div>
+              <span class="text-[10px] text-slate-500 dark:text-slate-400 font-medium block">A4 PDF Invoice Generator</span>
+            </div>
+          </a>
+        </div>
+
+        <!-- Center: Quick Template Picker -->
+        <div class="hidden md:flex items-center gap-1 bg-slate-100 dark:bg-slate-800 p-1 rounded-xl border border-slate-200/80 dark:border-slate-700/60">
+          <button v-for="tmpl in templates" :key="tmpl.id" @click="currentTemplate = tmpl.id" :class="currentTemplate === tmpl.id ? 'bg-white dark:bg-slate-700 shadow-sm text-indigo-600 dark:text-indigo-400 font-bold' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'" class="px-3 py-1 text-xs rounded-lg transition flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full" :style="{ backgroundColor: tmpl.color }"></span>
+            <span>{{ tmpl.name }}</span>
+          </button>
+        </div>
+
+        <!-- Right: Actions & Theme Switcher -->
+        <div class="flex items-center gap-2 sm:gap-3">
+          
+          <!-- Library Drawer Button -->
+          <button @click="drawerOpen = true" class="px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 transition flex items-center gap-1.5" title="Saved Invoices History">
+            <i data-lucide="folder-clock" class="w-4 h-4 text-indigo-600 dark:text-indigo-400"></i>
+            <span class="hidden sm:inline">Library</span>
+            <span v-if="savedInvoices.length > 0" class="px-1.5 py-0.2 rounded-full bg-indigo-600 text-white text-[10px]">{{ savedInvoices.length }}</span>
+          </button>
+
+          <!-- Save Draft Button -->
+          <button @click="saveInvoiceToLibrary" class="px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 transition flex items-center gap-1.5" title="Save Draft">
+            <i data-lucide="save" class="w-4 h-4 text-emerald-600 dark:text-emerald-400"></i>
+            <span class="hidden sm:inline">Save Draft</span>
+          </button>
+
+          <!-- Dark / Light Theme Mode Switcher -->
+          <button @click="toggleTheme" class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 flex items-center justify-center transition" :title="isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
+            <i v-if="!isDark" data-lucide="moon" class="w-4 h-4 text-slate-700"></i>
+            <i v-else data-lucide="sun" class="w-4 h-4 text-amber-400"></i>
+          </button>
+
+          <!-- Reset Button -->
+          <button @click="resetForm" class="p-2 text-xs font-semibold rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition hidden sm:flex items-center gap-1" title="Reset Invoice">
+            <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+          </button>
+
+          <!-- Print / Download PDF CTA -->
+          <button @click="triggerPrint" class="px-4 py-2 text-xs font-bold rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-600/25 transition flex items-center gap-2">
+            <i data-lucide="printer" class="w-4 h-4"></i>
+            <span>Export PDF</span>
+          </button>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- Main Studio Layout -->
+    <main class="max-w-[1600px] w-full mx-auto px-3 sm:px-6 lg:px-8 py-6 flex-1 flex flex-col lg:flex-row gap-6 items-start">
+
+      <!-- Left Sidebar: Controls (Screen Only) -->
+      <aside class="w-full lg:w-[320px] shrink-0 space-y-4 no-print">
+        
+        <div class="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-4 shadow-sm space-y-4">
+          <h3 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2 pb-2 border-b border-slate-100 dark:border-slate-800">
+            <i data-lucide="sliders" class="w-4 h-4 text-indigo-600 dark:text-indigo-400"></i>
+            Invoice Settings
+          </h3>
+
+          <!-- Currency Selector -->
+          <div>
+            <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">Currency Symbol</label>
+            <select v-model="invoice.currency" class="w-full text-xs font-semibold px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+              <option value="$">USD ($) - US Dollar</option>
+              <option value="€">EUR (€) - Euro</option>
+              <option value="£">GBP (£) - British Pound</option>
+              <option value="C$">CAD (C$) - Canadian Dollar</option>
+              <option value="A$">AUD (A$) - Australian Dollar</option>
+              <option value="Rs">PKR (Rs) - Pakistani Rupee</option>
+              <option value="AED">AED (AED) - UAE Dirham</option>
+              <option value="SAR">SAR (SAR) - Saudi Riyal</option>
+              <option value="₹">INR (₹) - Indian Rupee</option>
+              <option value="¥">JPY (¥) - Japanese Yen</option>
+              <option value="CHF">CHF (CHF) - Swiss Franc</option>
+              <option value="S$">SGD (S$) - Singapore Dollar</option>
+            </select>
+          </div>
+
+          <!-- Template Preset Selector -->
+          <div>
+            <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">Visual Theme</label>
+            <div class="grid grid-cols-2 gap-2">
+              <button v-for="tmpl in templates" :key="tmpl.id" @click="currentTemplate = tmpl.id" :class="currentTemplate === tmpl.id ? 'border-indigo-600 bg-indigo-50/50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 font-bold' : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400'" class="p-2 border rounded-xl text-left text-xs flex items-center gap-2 transition">
+                <span class="w-2.5 h-2.5 rounded-full shrink-0" :style="{ backgroundColor: tmpl.color }"></span>
+                <span class="truncate">{{ tmpl.name }}</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Toggles -->
+          <div class="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800 text-xs">
+            <label class="flex items-center justify-between cursor-pointer">
+              <span class="text-slate-600 dark:text-slate-400">Show Tax Breakdown</span>
+              <input type="checkbox" v-model="options.showTax" class="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4">
+            </label>
+
+            <label class="flex items-center justify-between cursor-pointer">
+              <span class="text-slate-600 dark:text-slate-400">Show Discount Field</span>
+              <input type="checkbox" v-model="options.showDiscount" class="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4">
+            </label>
+
+            <label class="flex items-center justify-between cursor-pointer">
+              <span class="text-slate-600 dark:text-slate-400">Show Shipping / Delivery</span>
+              <input type="checkbox" v-model="options.showShipping" class="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4">
+            </label>
+
+            <label class="flex items-center justify-between cursor-pointer">
+              <span class="text-slate-600 dark:text-slate-400">Bank & Wire Details</span>
+              <input type="checkbox" v-model="options.showBankDetails" class="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4">
+            </label>
+
+            <label class="flex items-center justify-between cursor-pointer">
+              <span class="text-slate-600 dark:text-slate-400">Digital Signature Line</span>
+              <input type="checkbox" v-model="options.showSignature" class="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4">
+            </label>
+
+            <label class="flex items-center justify-between cursor-pointer">
+              <span class="text-slate-600 dark:text-slate-400">Watermark Footer</span>
+              <input type="checkbox" v-model="options.showWatermark" class="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4">
+            </label>
+          </div>
+
+          <!-- JSON Backup & Restore -->
+          <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex gap-2">
+            <button @click="exportJSON" class="flex-1 py-1.5 px-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-semibold transition text-center flex items-center justify-center gap-1">
+              <i data-lucide="download" class="w-3.5 h-3.5"></i> Export
+            </button>
+            <label class="flex-1 py-1.5 px-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-semibold transition text-center flex items-center justify-center gap-1 cursor-pointer">
+              <i data-lucide="upload" class="w-3.5 h-3.5"></i> Import
+              <input type="file" @change="importJSON" accept=".json" class="hidden">
+            </label>
+          </div>
+
+        </div>
+
+        <div class="bg-indigo-50/70 dark:bg-indigo-950/30 border border-indigo-200/80 dark:border-indigo-800/40 rounded-2xl p-4 text-xs text-indigo-900 dark:text-indigo-200 space-y-2">
+          <div class="font-bold flex items-center gap-1.5 text-indigo-700 dark:text-indigo-300">
+            <i data-lucide="sparkles" class="w-4 h-4"></i> Pro Tip
+          </div>
+          <p class="leading-relaxed text-[11px] text-indigo-800/90 dark:text-indigo-300/90">
+            Click directly on any text on the invoice sheet to edit! Use <strong>Ctrl + P</strong> or <strong>Export PDF</strong> to download your A4 document.
+          </p>
+        </div>
+
+      </aside>
+
+      <!-- Center: Interactive A4 Sheet Canvas -->
+      <section class="flex-1 w-full flex justify-center pb-12">
+        
+        <div class="invoice-paper-sheet p-6 sm:p-10" :class="'theme-' + currentTemplate">
+          
+          <!-- Header Banner Row -->
+          <div class="flex flex-col sm:flex-row items-start justify-between gap-6 pb-6 border-b border-slate-200 invoice-header-row page-break-avoid">
+            
+            <!-- Left: Company Logo & Info -->
+            <div class="w-full sm:w-1/2 space-y-3">
+              
+              <!-- Logo Container & Controls -->
+              <div class="flex items-center gap-3">
+                <div v-if="company.showLogo && company.logo" class="relative group">
+                  <img :src="company.logo" alt="Company Logo" class="max-h-14 max-w-[170px] object-contain rounded-md">
+                  <div class="no-print absolute -bottom-6 left-0 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
+                    <label class="px-1.5 py-0.5 bg-slate-900 text-white rounded text-[10px] cursor-pointer hover:bg-slate-800 flex items-center gap-1 shadow">
+                      <span>Change</span>
+                      <input type="file" @change="onLogoUpload" accept="image/*" class="hidden">
+                    </label>
+                    <button @click="removeLogo" class="px-1.5 py-0.5 bg-rose-600 text-white rounded text-[10px] hover:bg-rose-700 shadow">
+                      Remove
+                    </button>
+                  </div>
+                </div>
+
+                <div v-else class="no-print">
+                  <label class="px-3 py-1.5 rounded-lg border-2 border-dashed border-slate-300 hover:border-indigo-500 bg-slate-50 text-slate-600 hover:text-indigo-600 text-xs font-semibold cursor-pointer inline-flex items-center gap-1.5 transition">
+                    <i data-lucide="image-plus" class="w-3.5 h-3.5"></i>
+                    <span>Add Company Logo</span>
+                    <input type="file" @change="onLogoUpload" accept="image/*" class="hidden">
+                  </label>
+                </div>
+              </div>
+
+              <!-- Company Name & Tagline -->
+              <div>
+                <input type="text" v-model="company.name" class="w-full font-heading font-extrabold text-xl sm:text-2xl text-slate-900 tracking-tight print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="Your Business Name">
+                <input type="text" v-model="company.tagline" class="w-full text-xs text-slate-500 font-medium print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="Business Tagline / Subtitle">
+              </div>
+
+              <!-- Company Contact Info -->
+              <div class="text-xs text-slate-500 space-y-0.5">
+                <input type="text" v-model="company.address" class="w-full print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="123 Street Name, City, Country">
+                <div class="flex items-center gap-2">
+                  <input type="text" v-model="company.phone" class="w-1/2 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="+1 (555) 000-0000">
+                  <input type="email" v-model="company.email" class="w-1/2 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="billing@yourbusiness.com">
+                </div>
+                <div class="flex items-center gap-2">
+                  <input type="text" v-model="company.website" class="w-1/2 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="www.yourbusiness.com">
+                  <input type="text" v-model="company.taxId" class="w-1/2 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="Tax / VAT ID (Optional)">
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Right: Invoice Title & Meta Card -->
+            <div class="w-full sm:w-1/2 flex flex-col sm:items-end text-left sm:text-right space-y-3">
+              <h1 class="text-3xl sm:text-4xl font-heading font-extrabold tracking-tight theme-text-primary">INVOICE</h1>
+              
+              <div class="w-full max-w-[280px] p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-1.5 text-xs text-slate-600 theme-bg-subtle">
+                <div class="flex items-center justify-between">
+                  <span class="font-bold text-slate-700">Invoice No:</span>
+                  <input type="text" v-model="invoice.number" class="w-28 text-right font-mono font-bold text-slate-900 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="INV-1001">
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="font-semibold text-slate-600">Issue Date:</span>
+                  <input type="date" v-model="invoice.date" class="w-32 text-right font-medium text-slate-800 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1">
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="font-semibold text-slate-600">Due Date:</span>
+                  <input type="date" v-model="invoice.dueDate" class="w-32 text-right font-medium text-slate-800 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1">
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="font-semibold text-slate-600">PO / Ref #:</span>
+                  <input type="text" v-model="invoice.poNumber" class="w-28 text-right font-mono text-slate-800 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="PO-9920">
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- Parties Row: Billed To / Client -->
+          <div class="py-6 invoice-parties-row page-break-avoid">
+            <div class="w-full sm:w-1/2 p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-1 text-xs">
+              <span class="text-[10px] font-bold tracking-wider uppercase text-slate-400 block mb-1">Billed To (Client):</span>
+              <input type="text" v-model="client.name" class="w-full font-bold text-sm text-slate-900 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="Client / Contact Name">
+              <input type="text" v-model="client.company" class="w-full font-medium text-slate-700 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="Client Company Name">
+              <input type="text" v-model="client.address" class="w-full text-slate-600 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="Client Billing Address">
+              <div class="flex items-center gap-2 pt-0.5">
+                <input type="email" v-model="client.email" class="w-1/2 text-slate-600 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="client@company.com">
+                <input type="text" v-model="client.phone" class="w-1/2 text-slate-600 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="+1 (555) 123-4567">
+              </div>
+            </div>
+          </div>
+
+          <!-- Line Items Table -->
+          <div class="overflow-x-auto mb-4 page-break-avoid">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr class="border-b-2 border-slate-300 bg-slate-100/70 text-slate-700 uppercase text-[10px] font-bold tracking-wider">
+                  <th class="py-2.5 px-3 w-[45%]">Item & Description</th>
+                  <th class="py-2.5 px-3 text-center w-[15%]">Qty</th>
+                  <th class="py-2.5 px-3 text-right w-[20%]">Rate ({{ invoice.currency }})</th>
+                  <th class="py-2.5 px-3 text-right w-[20%]">Amount ({{ invoice.currency }})</th>
+                  <th class="py-2.5 px-2 text-center w-[40px] no-print"></th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200">
+                <tr v-for="(item, index) in items" :key="index" class="group hover:bg-slate-50/80 transition-colors">
+                  <td class="py-2.5 px-3 align-top">
+                    <input type="text" v-model="item.name" class="w-full font-bold text-slate-900 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="Service or Product Name">
+                    <textarea v-model="item.desc" rows="1" class="w-full text-[11px] text-slate-500 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1 mt-0.5" placeholder="Detailed service breakdown or notes..."></textarea>
+                  </td>
+                  <td class="py-2.5 px-3 text-center align-top">
+                    <input type="number" min="1" step="1" v-model.number="item.qty" class="w-16 text-center font-semibold text-slate-800 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1">
+                  </td>
+                  <td class="py-2.5 px-3 text-right align-top">
+                    <input type="number" min="0" step="0.01" v-model.number="item.rate" class="w-24 text-right font-mono font-semibold text-slate-800 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1">
+                  </td>
+                  <td class="py-2.5 px-3 text-right align-top font-mono font-bold text-slate-900">
+                    {{ invoice.currency }} {{ formatMoney(item.qty * item.rate) }}
+                  </td>
+                  <td class="py-2.5 px-2 text-center align-top no-print">
+                    <button @click="removeItem(index)" :disabled="items.length <= 1" class="text-slate-400 hover:text-rose-600 disabled:opacity-30 transition p-1" title="Delete Row">
+                      <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Add Line Item Button (No Print) -->
+          <div class="mb-6 no-print">
+            <button @click="addItem" class="px-3 py-1.5 rounded-xl border border-indigo-200 dark:border-indigo-800 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 text-xs font-bold transition inline-flex items-center gap-1.5">
+              <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+              <span>Add Item Row</span>
+            </button>
+          </div>
+
+          <!-- Summary & Totals Row -->
+          <div class="flex flex-col sm:flex-row items-start justify-between gap-6 py-4 invoice-totals-row page-break-avoid">
+            
+            <!-- Left: Payment Notes & Bank Details -->
+            <div class="w-full sm:w-1/2 space-y-4">
+              
+              <!-- Payment Instructions -->
+              <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-1 text-xs">
+                <span class="text-[10px] font-bold tracking-wider uppercase text-slate-400 block mb-1">Notes & Payment Instructions:</span>
+                <textarea v-model="invoice.notes" rows="3" class="w-full text-slate-600 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded p-1 leading-relaxed" placeholder="Payment terms, bank deposit instructions, or client greeting..."></textarea>
+              </div>
+
+              <!-- Bank Account Details -->
+              <div v-if="options.showBankDetails" class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-1.5 text-xs">
+                <span class="text-[10px] font-bold tracking-wider uppercase text-slate-400 block mb-1">Bank & Wire Transfer:</span>
+                <div class="grid grid-cols-2 gap-2">
+                  <div>
+                    <label class="text-[10px] text-slate-400 block">Bank Name:</label>
+                    <input type="text" v-model="bank.name" class="w-full font-semibold text-slate-800 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="JPMorgan Chase">
+                  </div>
+                  <div>
+                    <label class="text-[10px] text-slate-400 block">Account / IBAN:</label>
+                    <input type="text" v-model="bank.iban" class="w-full font-mono text-slate-800 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="GB29 XXXXXXXX">
+                  </div>
+                  <div>
+                    <label class="text-[10px] text-slate-400 block">Swift / BIC:</label>
+                    <input type="text" v-model="bank.swift" class="w-full font-mono text-slate-800 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="CHASUS33">
+                  </div>
+                  <div>
+                    <label class="text-[10px] text-slate-400 block">Account Title:</label>
+                    <input type="text" v-model="bank.holder" class="w-full text-slate-800 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="Automatixes LLC">
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Right: Calculations & Grand Total Card -->
+            <div class="w-full sm:w-1/2 max-w-[320px] ml-auto space-y-2 text-xs">
+              
+              <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2 theme-bg-subtle">
+                <div class="flex items-center justify-between font-semibold text-slate-600">
+                  <span>Subtotal:</span>
+                  <span class="font-mono font-bold text-slate-900">{{ invoice.currency }} {{ formatMoney(subtotal) }}</span>
+                </div>
+
+                <!-- Tax Calculation -->
+                <div v-if="options.showTax" class="flex items-center justify-between text-slate-600">
+                  <div class="flex items-center gap-1">
+                    <span>Tax:</span>
+                    <input type="number" min="0" max="100" step="0.1" v-model.number="invoice.taxRate" class="w-12 text-center font-mono font-semibold text-slate-800 print-clean-input border border-slate-300 rounded px-1" placeholder="0">%
+                  </div>
+                  <span class="font-mono text-slate-900">+ {{ invoice.currency }} {{ formatMoney(taxAmount) }}</span>
+                </div>
+
+                <!-- Discount Calculation -->
+                <div v-if="options.showDiscount" class="flex items-center justify-between text-slate-600">
+                  <div class="flex items-center gap-1">
+                    <span>Discount:</span>
+                    <input type="number" min="0" max="100" step="0.1" v-model.number="invoice.discountRate" class="w-12 text-center font-mono font-semibold text-slate-800 print-clean-input border border-slate-300 rounded px-1" placeholder="0">%
+                  </div>
+                  <span class="font-mono text-emerald-600">- {{ invoice.currency }} {{ formatMoney(discountAmount) }}</span>
+                </div>
+
+                <!-- Shipping -->
+                <div v-if="options.showShipping" class="flex items-center justify-between text-slate-600">
+                  <span>Shipping / Fee:</span>
+                  <div class="flex items-center gap-1">
+                    <span class="font-mono">{{ invoice.currency }}</span>
+                    <input type="number" min="0" step="1" v-model.number="invoice.shipping" class="w-16 text-right font-mono font-semibold text-slate-800 print-clean-input border border-slate-300 rounded px-1" placeholder="0">
+                  </div>
+                </div>
+
+                <!-- Grand Total -->
+                <div class="pt-3 border-t-2 border-slate-300 flex items-center justify-between">
+                  <span class="font-heading font-extrabold text-sm sm:text-base text-slate-900">Total Due:</span>
+                  <span class="font-mono font-extrabold text-lg sm:text-xl theme-text-primary">
+                    {{ invoice.currency }} {{ formatMoney(grandTotal) }}
+                  </span>
+                </div>
+              </div>
+
+              <!-- Signature Block -->
+              <div v-if="options.showSignature" class="pt-4 text-center sm:text-right invoice-signature-row">
+                <div class="inline-block text-center space-y-1">
+                  <div class="w-44 border-b border-slate-400 pb-1 mx-auto sm:ml-auto">
+                    <input type="text" v-model="signature.name" class="w-full text-center font-serif italic text-sm text-slate-800 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded" placeholder="Authorized Signature">
+                  </div>
+                  <input type="text" v-model="signature.title" class="text-[10px] text-slate-400 text-center print-clean-input focus:ring-1 focus:ring-indigo-500 rounded" placeholder="Managing Director">
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- In-Flow Watermark Footer -->
+          <div v-if="options.showWatermark" class="invoice-watermark-row pt-6 mt-4 border-t border-slate-200 text-center text-slate-400 text-[10px] page-break-avoid">
+            <span>Generated via <strong>AutomatixInvoice</strong> • Built by <a href="https://www.automatixes.com" target="_blank" class="hover:underline text-slate-500 font-semibold">Automatixes AI Solutions</a></span>
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- Saved Invoices Library Modal -->
+    <div v-if="drawerOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm modal-backdrop">
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4 modal-dialog">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+          <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <i data-lucide="folder-clock" class="w-4 h-4 text-indigo-600 dark:text-indigo-400"></i>
+            Saved Invoices Library ({{ savedInvoices.length }})
+          </h3>
+          <button @click="drawerOpen = false" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-lg">&times;</button>
+        </div>
+
+        <div v-if="savedInvoices.length === 0" class="text-center py-8 text-slate-400 text-xs">
+          No saved invoices found yet. Click "Save Draft" in the top bar to store your invoices!
+        </div>
+
+        <div v-else class="max-h-72 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800 text-xs">
+          <div v-for="(inv, idx) in savedInvoices" :key="idx" class="py-3 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/50 p-2 rounded-xl transition">
+            <div>
+              <div class="font-bold text-slate-800 dark:text-slate-100">{{ inv.invoice.number || 'INV-Draft' }} — {{ inv.client.name || 'Client' }}</div>
+              <div class="text-[11px] text-slate-400">{{ inv.invoice.date }} • {{ inv.invoice.currency }} {{ formatMoney(inv.total) }}</div>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <button @click="loadSavedInvoice(inv)" class="px-2.5 py-1 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100 rounded-lg text-xs font-semibold">Load</button>
+              <button @click="deleteSavedInvoice(idx)" class="px-2 py-1 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg"><i data-lucide="trash" class="w-3.5 h-3.5"></i></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-3 border-t border-slate-100 dark:border-slate-800 flex justify-end">
+          <button @click="drawerOpen = false" class="px-4 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-semibold">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Official Automatixes SaaS Footer -->
+    <footer class="bg-white dark:bg-slate-950 text-slate-600 dark:text-slate-400 border-t border-slate-200/90 dark:border-slate-800/80 mt-auto pt-12 pb-8 no-print transition-colors">
+      <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 mb-12">
+          
+          <!-- Col 1: Brand & Bio -->
+          <div class="lg:col-span-4 space-y-4">
+            <a href="https://www.automatixes.com" target="_blank" class="inline-flex items-center gap-3 group">
+              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-indigo-700 flex items-center justify-center text-white font-bold shadow-md shadow-indigo-600/20 group-hover:scale-105 transition-transform">
+                <i data-lucide="file-text" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <span class="text-lg font-bold font-heading text-slate-900 dark:text-white tracking-tight">Automatix<span class="text-indigo-600 dark:text-indigo-400">Invoice</span></span>
+                <span class="block text-[10px] text-slate-500 dark:text-slate-400 font-mono font-semibold">By Automatixes AI Solutions</span>
+              </div>
+            </a>
+            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed max-w-sm">
+              At Automatixes, we operate at the intersection of AI agents, sophisticated workflow automation, and custom web development. Let us help automate your growth.
+            </p>
+            <div class="flex items-center gap-3 pt-1">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200/80 dark:border-emerald-800/40 text-[11px] font-mono text-emerald-700 dark:text-emerald-400 font-semibold">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                All Systems Operational
+              </span>
+            </div>
+          </div>
+
+          <!-- Col 2: Quick Links -->
+          <div class="lg:col-span-2 space-y-3">
+            <h4 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Quick Links</h4>
+            <ul class="space-y-2 text-xs font-medium text-slate-600 dark:text-slate-400">
+              <li><a href="https://www.automatixes.com" target="_blank" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Home</a></li>
+              <li><a href="https://www.automatixes.com/about" target="_blank" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">About Us</a></li>
+              <li><a href="https://www.automatixes.com/blogs" target="_blank" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Blogs</a></li>
+              <li><a href="https://www.automatixes.com/contact" target="_blank" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Contact Us</a></li>
+              <li><a href="https://www.automatixes.com/privacy" target="_blank" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Privacy Policy</a></li>
+              <li><a href="https://www.automatixes.com/terms" target="_blank" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Terms of Service</a></li>
+            </ul>
+          </div>
+
+          <!-- Col 3: Our Services -->
+          <div class="lg:col-span-2 space-y-3">
+            <h4 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Our Services</h4>
+            <ul class="space-y-2 text-xs font-medium text-slate-600 dark:text-slate-400">
+              <li><a href="https://www.automatixes.com/ai-automated-solutions" target="_blank" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">AI Automations</a></li>
+              <li><a href="https://www.automatixes.com/website-development" target="_blank" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Web & App Dev</a></li>
+              <li><a href="https://www.automatixes.com/product-shoot" target="_blank" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Product Shoot</a></li>
+            </ul>
+          </div>
+
+          <!-- Col 4: SaaS Tools -->
+          <div class="lg:col-span-2 space-y-3">
+            <h4 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5">
+              <span>SaaS Tools</span>
+              <span class="w-1.5 h-1.5 rounded-full bg-indigo-600"></span>
+            </h4>
+            <ul class="space-y-2 text-xs font-medium text-slate-600 dark:text-slate-400">
+              <li>
+                <a href="https://qrcode.automatixes.com" target="_blank" class="hover:text-indigo-600 dark:hover:text-indigo-400 font-medium flex items-center gap-1.5">
+                  <span>QR Code Generator</span>
+                  <span class="px-1.5 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 text-[9px] font-bold border border-indigo-200 dark:border-indigo-800">Free</span>
+                </a>
+              </li>
+              <li>
+                <a href="https://invoicemaker.automatixes.com" class="text-indigo-600 dark:text-indigo-400 font-bold flex items-center gap-1.5">
+                  <span>Free Invoice Maker</span>
+                  <span class="px-1.5 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 text-[9px] font-bold border border-indigo-200 dark:border-indigo-800">Active</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Col 5: Contact Info -->
+          <div class="lg:col-span-2 space-y-3">
+            <h4 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Contact Info</h4>
+            <ul class="space-y-2.5 text-xs text-slate-600 dark:text-slate-400 font-mono">
+              <li class="flex items-center gap-2">
+                <i data-lucide="mail" class="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400 shrink-0"></i>
+                <a href="mailto:contact@automatixes.com" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition select-all truncate text-[11px]">contact@automatixes.com</a>
+              </li>
+              <li class="flex items-center gap-2">
+                <i data-lucide="phone" class="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400 shrink-0"></i>
+                <a href="tel:+923366920141" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition select-all text-[11px]">+92 336 6920141</a>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+
+        <div class="pt-6 border-t border-slate-100 dark:border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 font-medium">
+          <p>&copy; 2026 Automatixes. All rights reserved.</p>
+          <div class="flex items-center gap-4">
+            <a href="https://www.automatixes.com/privacy" target="_blank" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Privacy Policy</a>
+            <span>•</span>
+            <a href="https://www.automatixes.com/terms" target="_blank" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Terms of Service</a>
+            <span>•</span>
+            <a href="https://www.automatixes.com" target="_blank" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Automatixes AI Solutions</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-2.5 px-4 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl shadow-2xl text-xs font-medium pointer-events-none border border-slate-800 dark:border-slate-200">
+      <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
+      <span id="toast-message">Operation successful!</span>
+    </div>
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
