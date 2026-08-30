@@ -141,30 +141,61 @@
             </div>
           </div>
 
-          <!-- Toggles -->
+          <!-- Logo Management in Sidebar -->
+          <div>
+            <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1.5">Company Logo</label>
+            <div class="flex items-center gap-2">
+              <label class="flex-1 py-1.5 px-3 bg-indigo-50 dark:bg-indigo-950/50 hover:bg-indigo-100 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 rounded-xl text-xs font-semibold cursor-pointer text-center flex items-center justify-center gap-1.5 transition">
+                <i data-lucide="image-plus" class="w-3.5 h-3.5"></i>
+                <span>{{ company.logo ? 'Change Logo' : 'Upload Logo' }}</span>
+                <input type="file" @change="onLogoUpload" accept="image/*" class="hidden">
+              </label>
+              <button v-if="company.logo" type="button" @click="removeLogo" class="py-1.5 px-3 bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800 rounded-xl text-xs font-semibold transition" title="Remove Logo">
+                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Template Preset Selector -->
+          <div>
+            <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">Visual Theme</label>
+            <div class="grid grid-cols-2 gap-2">
+              <button v-for="tmpl in templates" :key="tmpl.id" @click="currentTemplate = tmpl.id" :class="currentTemplate === tmpl.id ? 'border-indigo-600 bg-indigo-50/50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 font-bold' : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400'" class="p-2 border rounded-xl text-left text-xs flex items-center gap-2 transition">
+                <span class="w-2.5 h-2.5 rounded-full shrink-0" :style="{ backgroundColor: tmpl.color }"></span>
+                <span class="truncate">{{ tmpl.name }}</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Toggles & Sections -->
           <div class="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800 text-xs">
             <label class="flex items-center justify-between cursor-pointer">
-              <span class="text-slate-600 dark:text-slate-400">Show Tax Breakdown</span>
-              <input type="checkbox" v-model="options.showTax" class="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4">
+              <span class="text-slate-600 dark:text-slate-400">Notes & Terms Section</span>
+              <input type="checkbox" v-model="options.showNotes" class="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4">
             </label>
 
             <label class="flex items-center justify-between cursor-pointer">
-              <span class="text-slate-600 dark:text-slate-400">Show Discount Field</span>
-              <input type="checkbox" v-model="options.showDiscount" class="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4">
-            </label>
-
-            <label class="flex items-center justify-between cursor-pointer">
-              <span class="text-slate-600 dark:text-slate-400">Show Shipping / Delivery</span>
-              <input type="checkbox" v-model="options.showShipping" class="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4">
-            </label>
-
-            <label class="flex items-center justify-between cursor-pointer">
-              <span class="text-slate-600 dark:text-slate-400">Bank & Wire Details</span>
+              <span class="text-slate-600 dark:text-slate-400">Bank & Wire Section</span>
               <input type="checkbox" v-model="options.showBankDetails" class="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4">
             </label>
 
             <label class="flex items-center justify-between cursor-pointer">
-              <span class="text-slate-600 dark:text-slate-400">Digital Signature Line</span>
+              <span class="text-slate-600 dark:text-slate-400">Tax Calculation</span>
+              <input type="checkbox" v-model="options.showTax" class="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4">
+            </label>
+
+            <label class="flex items-center justify-between cursor-pointer">
+              <span class="text-slate-600 dark:text-slate-400">Discount Calculation</span>
+              <input type="checkbox" v-model="options.showDiscount" class="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4">
+            </label>
+
+            <label class="flex items-center justify-between cursor-pointer">
+              <span class="text-slate-600 dark:text-slate-400">Shipping / Extra Fee</span>
+              <input type="checkbox" v-model="options.showShipping" class="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4">
+            </label>
+
+            <label class="flex items-center justify-between cursor-pointer">
+              <span class="text-slate-600 dark:text-slate-400">Digital Signature</span>
               <input type="checkbox" v-model="options.showSignature" class="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4">
             </label>
 
@@ -189,10 +220,10 @@
 
         <div class="bg-indigo-50/70 dark:bg-indigo-950/30 border border-indigo-200/80 dark:border-indigo-800/40 rounded-2xl p-4 text-xs text-indigo-900 dark:text-indigo-200 space-y-2">
           <div class="font-bold flex items-center gap-1.5 text-indigo-700 dark:text-indigo-300">
-            <i data-lucide="sparkles" class="w-4 h-4"></i> Pro Tip
+            <i data-lucide="sparkles" class="w-4 h-4"></i> Editable Sections
           </div>
           <p class="leading-relaxed text-[11px] text-indigo-800/90 dark:text-indigo-300/90">
-            Click directly on any text on the invoice sheet to edit! Use <strong>Ctrl + P</strong> or <strong>Export PDF</strong> to download your A4 document.
+            All section headers like <strong>Notes & Payment Instructions</strong> and <strong>Bank & Wire Transfer</strong> are directly editable or can be removed by clicking the <strong>✕</strong> button on the card!
           </p>
         </div>
 
@@ -211,23 +242,23 @@
               
               <!-- Logo Container & Controls -->
               <div class="flex items-center gap-3">
-                <div v-if="company.showLogo && company.logo" class="relative group">
-                  <img :src="company.logo" alt="Company Logo" class="max-h-14 max-w-[170px] object-contain rounded-md">
-                  <div class="no-print absolute -bottom-6 left-0 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity z-10">
-                    <label class="px-1.5 py-0.5 bg-slate-900 text-white rounded text-[10px] cursor-pointer hover:bg-slate-800 flex items-center gap-1 shadow">
-                      <span>Change</span>
+                <div v-if="company.logo" class="relative inline-flex items-center gap-2">
+                  <img :src="company.logo" alt="Company Logo" class="max-h-14 max-w-[180px] object-contain rounded-md">
+                  <div class="no-print flex items-center gap-1">
+                    <label class="p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs cursor-pointer transition shadow-sm" title="Change Logo">
+                      <i data-lucide="camera" class="w-3.5 h-3.5"></i>
                       <input type="file" @change="onLogoUpload" accept="image/*" class="hidden">
                     </label>
-                    <button @click="removeLogo" class="px-1.5 py-0.5 bg-rose-600 text-white rounded text-[10px] hover:bg-rose-700 shadow">
-                      Remove
+                    <button type="button" @click="removeLogo" class="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-lg text-xs transition shadow-sm" title="Remove Logo">
+                      <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                     </button>
                   </div>
                 </div>
 
                 <div v-else class="no-print">
-                  <label class="px-3 py-1.5 rounded-lg border-2 border-dashed border-slate-300 hover:border-indigo-500 bg-slate-50 text-slate-600 hover:text-indigo-600 text-xs font-semibold cursor-pointer inline-flex items-center gap-1.5 transition">
+                  <label class="px-3 py-1.5 rounded-xl border-2 border-dashed border-slate-300 hover:border-indigo-500 bg-slate-50 text-slate-600 hover:text-indigo-600 text-xs font-semibold cursor-pointer inline-flex items-center gap-1.5 transition">
                     <i data-lucide="image-plus" class="w-3.5 h-3.5"></i>
-                    <span>Add Company Logo</span>
+                    <span>+ Add Company Logo</span>
                     <input type="file" @change="onLogoUpload" accept="image/*" class="hidden">
                   </label>
                 </div>
@@ -281,10 +312,12 @@
 
           </div>
 
-          <!-- Parties Row: Billed To / Client -->
+          <!-- Parties Row: Billed To -->
           <div class="py-6 invoice-parties-row page-break-avoid">
             <div class="w-full sm:w-1/2 p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-1 text-xs">
-              <span class="text-[10px] font-bold tracking-wider uppercase text-slate-400 block mb-1">Billed To:</span>
+              <div class="flex items-center justify-between mb-1">
+                <input type="text" v-model="sections.clientTitle" class="text-[10px] font-bold tracking-wider uppercase text-slate-400 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded w-40" placeholder="BILLED TO:">
+              </div>
               <input type="text" v-model="client.name" class="w-full font-bold text-sm text-slate-900 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="Client / Contact Name">
               <input type="text" v-model="client.company" class="w-full font-medium text-slate-700 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="Client Company Name">
               <input type="text" v-model="client.address" class="w-full text-slate-600 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="Client Billing Address">
@@ -346,15 +379,32 @@
             <!-- Left: Payment Notes & Bank Details -->
             <div class="w-full sm:w-1/2 space-y-4">
               
-              <!-- Payment Instructions -->
-              <div class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-1 text-xs">
-                <span class="text-[10px] font-bold tracking-wider uppercase text-slate-400 block mb-1">Notes & Payment Instructions:</span>
+              <!-- Payment Instructions (Editable Title & Removable) -->
+              <div v-if="options.showNotes" class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-1 text-xs relative group">
+                <div class="flex items-center justify-between mb-1">
+                  <input type="text" v-model="sections.notesTitle" class="text-[10px] font-bold tracking-wider uppercase text-slate-400 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded w-full pr-14" placeholder="NOTES & PAYMENT INSTRUCTIONS:">
+                  <button type="button" @click="options.showNotes = false" class="no-print text-slate-400 hover:text-rose-600 text-[10px] font-semibold flex items-center gap-0.5 px-1.5 py-0.5 rounded hover:bg-slate-100 transition" title="Hide Notes Section">
+                    <i data-lucide="x" class="w-3 h-3"></i> Hide
+                  </button>
+                </div>
                 <textarea v-model="invoice.notes" rows="3" class="w-full text-slate-600 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded p-1 leading-relaxed" placeholder="Payment terms, bank deposit instructions, or client greeting..."></textarea>
               </div>
 
-              <!-- Bank Account Details -->
-              <div v-if="options.showBankDetails" class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-1.5 text-xs">
-                <span class="text-[10px] font-bold tracking-wider uppercase text-slate-400 block mb-1">Bank & Wire Transfer:</span>
+              <!-- Button to restore Notes if hidden -->
+              <div v-else class="no-print">
+                <button type="button" @click="options.showNotes = true" class="text-xs text-indigo-600 hover:text-indigo-700 font-semibold inline-flex items-center gap-1 p-1">
+                  <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i> + Add Notes / Terms Section
+                </button>
+              </div>
+
+              <!-- Bank Account Details (Editable Title & Removable) -->
+              <div v-if="options.showBankDetails" class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-1.5 text-xs relative group">
+                <div class="flex items-center justify-between mb-1">
+                  <input type="text" v-model="sections.bankTitle" class="text-[10px] font-bold tracking-wider uppercase text-slate-400 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded w-full pr-14" placeholder="BANK & WIRE TRANSFER:">
+                  <button type="button" @click="options.showBankDetails = false" class="no-print text-slate-400 hover:text-rose-600 text-[10px] font-semibold flex items-center gap-0.5 px-1.5 py-0.5 rounded hover:bg-slate-100 transition" title="Hide Bank Details">
+                    <i data-lucide="x" class="w-3 h-3"></i> Hide
+                  </button>
+                </div>
                 <div class="grid grid-cols-2 gap-2">
                   <div>
                     <label class="text-[10px] text-slate-400 block">Bank Name:</label>
@@ -375,10 +425,17 @@
                 </div>
               </div>
 
+              <!-- Button to restore Bank Details if hidden -->
+              <div v-else class="no-print">
+                <button type="button" @click="options.showBankDetails = true" class="text-xs text-indigo-600 hover:text-indigo-700 font-semibold inline-flex items-center gap-1 p-1">
+                  <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i> + Add Bank & Wire Transfer Section
+                </button>
+              </div>
+
             </div>
 
             <!-- Right: Calculations & Grand Total Card -->
-            <div class="w-full sm:w-1/2 max-w-[320px] ml-auto space-y-2 text-xs">
+            <div class="w-full sm:w-1/2 max-w-[340px] ml-auto space-y-2 text-xs">
               
               <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2 theme-bg-subtle">
                 <div class="flex items-center justify-between font-semibold text-slate-600">
@@ -390,7 +447,8 @@
                 <div v-if="options.showTax" class="flex items-center justify-between text-slate-600">
                   <div class="flex items-center gap-1">
                     <span>Tax:</span>
-                    <input type="number" min="0" max="100" step="0.1" v-model.number="invoice.taxRate" class="w-12 text-center font-mono font-semibold text-slate-800 print-clean-input border border-slate-300 rounded px-1" placeholder="0">%
+                    <input type="number" min="0" step="any" v-model.number="invoice.taxRate" class="w-14 text-center font-mono font-semibold text-slate-800 print-clean-input border border-slate-300 rounded px-1" placeholder="0">
+                    <span class="font-mono text-[11px] font-bold">%</span>
                   </div>
                   <span class="font-mono text-slate-900">+ {{ invoice.currency }} {{ formatMoney(taxAmount) }}</span>
                 </div>
@@ -399,9 +457,10 @@
                 <div v-if="options.showDiscount" class="flex items-center justify-between text-slate-600">
                   <div class="flex items-center gap-1">
                     <span>Discount:</span>
-                    <input type="number" min="0" max="100" step="0.1" v-model.number="invoice.discountRate" class="w-12 text-center font-mono font-semibold text-slate-800 print-clean-input border border-slate-300 rounded px-1" placeholder="0">%
+                    <input type="number" min="0" step="any" v-model.number="invoice.discountRate" class="w-14 text-center font-mono font-semibold text-slate-800 print-clean-input border border-slate-300 rounded px-1" placeholder="0">
+                    <span class="font-mono text-[11px] font-bold">%</span>
                   </div>
-                  <span class="font-mono text-emerald-600">- {{ invoice.currency }} {{ formatMoney(discountAmount) }}</span>
+                  <span class="font-mono text-emerald-600 font-bold">- {{ invoice.currency }} {{ formatMoney(discountAmount) }}</span>
                 </div>
 
                 <!-- Shipping -->
@@ -409,7 +468,7 @@
                   <span>Shipping / Fee:</span>
                   <div class="flex items-center gap-1">
                     <span class="font-mono">{{ invoice.currency }}</span>
-                    <input type="number" min="0" step="1" v-model.number="invoice.shipping" class="w-16 text-right font-mono font-semibold text-slate-800 print-clean-input border border-slate-300 rounded px-1" placeholder="0">
+                    <input type="number" min="0" step="any" v-model.number="invoice.shipping" class="w-16 text-right font-mono font-semibold text-slate-800 print-clean-input border border-slate-300 rounded px-1" placeholder="0">
                   </div>
                 </div>
 

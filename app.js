@@ -62,6 +62,7 @@ createApp({
         company.value.logo = event.target.result;
         company.value.showLogo = true;
         showToast('Company logo updated!');
+        nextTick(() => { if (window.lucide) lucide.createIcons(); });
       };
       reader.readAsDataURL(file);
     };
@@ -69,10 +70,17 @@ createApp({
     const removeLogo = () => {
       company.value.showLogo = false;
       company.value.logo = '';
-      showToast('Logo removed');
+      showToast('Logo removed successfully!');
+      nextTick(() => { if (window.lucide) lucide.createIcons(); });
     };
 
-    // 4. Client / Customer Details
+    // 4. Client & Editable Section Titles
+    const sections = ref({
+      clientTitle: 'BILLED TO:',
+      notesTitle: 'NOTES & PAYMENT INSTRUCTIONS:',
+      bankTitle: 'BANK & WIRE TRANSFER:'
+    });
+
     const client = ref({
       name: 'Sarah Jenkins',
       company: 'Apex Digital Global Inc.',
@@ -135,10 +143,11 @@ createApp({
 
     // 7. Options & Feature Toggles
     const options = ref({
+      showNotes: true,
+      showBankDetails: true,
       showTax: true,
       showDiscount: true,
       showShipping: false,
-      showBankDetails: true,
       showSignature: true,
       showWatermark: true
     });
@@ -160,31 +169,31 @@ createApp({
     // 10. Calculations
     const subtotal = computed(() => {
       return items.value.reduce((acc, item) => {
-        const q = Number(item.qty) || 0;
-        const r = Number(item.rate) || 0;
+        const q = parseFloat(item.qty) || 0;
+        const r = parseFloat(item.rate) || 0;
         return acc + (q * r);
       }, 0);
     });
 
     const taxAmount = computed(() => {
       if (!options.value.showTax) return 0;
-      const rate = Number(invoice.value.taxRate) || 0;
-      return subtotal.value * (rate / 100);
+      const rate = parseFloat(invoice.value.taxRate) || 0;
+      return (subtotal.value * rate) / 100;
     });
 
     const discountAmount = computed(() => {
       if (!options.value.showDiscount) return 0;
-      const rate = Number(invoice.value.discountRate) || 0;
-      return subtotal.value * (rate / 100);
+      const rate = parseFloat(invoice.value.discountRate) || 0;
+      return (subtotal.value * rate) / 100;
     });
 
     const grandTotal = computed(() => {
-      const ship = options.value.showShipping ? (Number(invoice.value.shipping) || 0) : 0;
+      const ship = options.value.showShipping ? (parseFloat(invoice.value.shipping) || 0) : 0;
       return Math.max(0, subtotal.value + taxAmount.value - discountAmount.value + ship);
     });
 
     const formatMoney = (val) => {
-      const num = Number(val) || 0;
+      const num = parseFloat(val) || 0;
       return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     };
 
@@ -222,6 +231,7 @@ createApp({
         total: grandTotal.value,
         template: currentTemplate.value,
         company: JSON.parse(JSON.stringify(company.value)),
+        sections: JSON.parse(JSON.stringify(sections.value)),
         client: JSON.parse(JSON.stringify(client.value)),
         invoice: JSON.parse(JSON.stringify(invoice.value)),
         items: JSON.parse(JSON.stringify(items.value)),
@@ -240,6 +250,7 @@ createApp({
       if (!rec) return;
       currentTemplate.value = rec.template || 'modern-indigo';
       company.value = rec.company;
+      if (rec.sections) sections.value = rec.sections;
       client.value = rec.client;
       invoice.value = rec.invoice;
       items.value = rec.items;
@@ -266,6 +277,7 @@ createApp({
         exportedAt: new Date().toISOString(),
         template: currentTemplate.value,
         company: company.value,
+        sections: sections.value,
         client: client.value,
         invoice: invoice.value,
         items: items.value,
@@ -291,6 +303,7 @@ createApp({
         try {
           const parsed = JSON.parse(event.target.result);
           if (parsed.company) company.value = parsed.company;
+          if (parsed.sections) sections.value = parsed.sections;
           if (parsed.client) client.value = parsed.client;
           if (parsed.invoice) invoice.value = parsed.invoice;
           if (parsed.items) items.value = parsed.items;
@@ -312,6 +325,9 @@ createApp({
       invoice.value.date = todayStr;
       invoice.value.dueDate = dueStr;
       invoice.value.poNumber = '';
+      invoice.value.taxRate = 5;
+      invoice.value.discountRate = 0;
+      invoice.value.shipping = 0;
       client.value = { name: '', company: '', address: '', email: '', phone: '' };
       items.value = [
         {
@@ -377,6 +393,7 @@ createApp({
       company,
       onLogoUpload,
       removeLogo,
+      sections,
       client,
       invoice,
       items,
