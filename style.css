@@ -1,12 +1,12 @@
-/* AutomatixInvoice - Financial Ledger & Paper Design System (Automatixes Family) */
+/* AutomatixInvoice - Financial Ledger & Architectural Design System (Automatixes Family) */
 
 :root {
-  --inv-bg-canvas: #f8fafc;
+  --inv-bg-canvas: #f1f3f5;
   --inv-paper-sheet: #ffffff;
-  --inv-ink-primary: #0f172a;
-  --inv-ink-secondary: #475569;
+  --inv-ink-primary: #09090b;
+  --inv-ink-secondary: #3f3f46;
   --inv-accent-finance: #047857;
-  --inv-rule-line: #cbd5e1;
+  --inv-rule-line: #e4e4e7;
 }
 
 body {
@@ -32,20 +32,20 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #d4d4d8;
   border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #a1a1aa;
 }
 
 /* Micro-Interactions */
 button, .btn {
-  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.15s ease, border-color 0.15s ease;
+  transition: transform 0.12s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.12s ease, border-color 0.12s ease;
   user-select: none;
 }
 button:active, .btn:active {
-  transform: scale(0.96) !important;
+  transform: scale(0.97) !important;
 }
 
 /* Input Fields on A4 Sheet (Clean borderless/border on hover) */
@@ -55,7 +55,7 @@ button:active, .btn:active {
   transition: background-color 0.12s ease, border-color 0.12s ease;
 }
 .print-clean-input:hover {
-  background-color: #f8fafc;
+  background-color: #f4f4f5;
 }
 .print-clean-input:focus {
   background-color: #ffffff;
@@ -63,38 +63,43 @@ button:active, .btn:active {
   box-shadow: 0 0 0 1px #047857;
 }
 
-/* A4 Invoice Paper Sheet Simulation */
+/* A4 Invoice Paper Sheet Simulation - Architectonic Precision */
 .invoice-paper-sheet {
   width: 100%;
   max-width: 840px;
   min-height: 1080px;
   background: #ffffff;
-  color: #0f172a;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  box-shadow: 0 4px 20px -5px rgba(15, 23, 42, 0.08);
+  color: #09090b;
+  border: 1px solid #d4d4d8;
+  border-radius: 6px;
+  box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.07);
   transition: box-shadow 0.2s ease;
 }
 
 .dark .invoice-paper-sheet {
   background: #ffffff !important;
-  color: #0f172a !important;
-  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+  color: #09090b !important;
+  box-shadow: 0 12px 36px -10px rgba(0, 0, 0, 0.6);
 }
 
 /* Financial Visual Themes for A4 Invoice Paper */
-.theme-modern-indigo {
-  --theme-accent: #4338ca;
-  --theme-accent-light: #e0e7ff;
-  --theme-accent-border: #a5b4fc;
+.theme-executive-slate {
+  --theme-accent: #09090b;
+  --theme-accent-light: #f4f4f5;
+  --theme-accent-border: #e4e4e7;
 }
 .theme-emerald-growth {
   --theme-accent: #047857;
   --theme-accent-light: #ecfdf5;
   --theme-accent-border: #a7f3d0;
 }
-.theme-executive-slate {
-  --theme-accent: #0f172a;
+.theme-automatix-volt {
+  --theme-accent: #15803d;
+  --theme-accent-light: #f0fdf4;
+  --theme-accent-border: #bbf7d0;
+}
+.theme-modern-indigo {
+  --theme-accent: #1e293b;
   --theme-accent-light: #f1f5f9;
   --theme-accent-border: #cbd5e1;
 }
@@ -102,11 +107,6 @@ button:active, .btn:active {
   --theme-accent: #be123c;
   --theme-accent-light: #fff1f2;
   --theme-accent-border: #fecdd3;
-}
-.theme-automatix-cyber {
-  --theme-accent: #0284c7;
-  --theme-accent-light: #f0f9ff;
-  --theme-accent-border: #bae6fd;
 }
 
 .invoice-paper-sheet {

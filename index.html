@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" class="light">
 <head>
   <meta charset="UTF-8">
@@ -158,29 +158,29 @@
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-[#f8fafc] text-slate-800 dark:bg-[#0b0f17] dark:text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-emerald-600 selection:text-white">
+<body class="bg-[#f1f3f5] text-slate-800 dark:bg-[#0b0f17] dark:text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-emerald-600 selection:text-white">
 
   <div id="app" class="flex flex-col min-h-screen">
 
     <!-- Header Navigation -->
-    <header class="border-b border-slate-200/90 dark:border-slate-800/80 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md sticky top-0 z-40 shadow-sm no-print transition-colors">
+    <header class="border-b border-zinc-200 dark:border-zinc-800 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md sticky top-0 z-40 shadow-xs no-print transition-colors">
       <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         
         <!-- Left: Brand Logo -->
         <div class="flex items-center space-x-3">
           <a href="https://www.automatixes.com" target="_blank" class="flex items-center gap-2.5 group">
-            <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-600 via-indigo-700 to-violet-800 flex items-center justify-center shadow-md shadow-indigo-600/20 group-hover:scale-105 transition-transform text-white">
+            <div class="w-9 h-9 rounded-[6px] bg-zinc-950 flex items-center justify-center border border-zinc-800 text-[#C8E019] group-hover:border-[#C8E019]/60 transition-colors">
               <i data-lucide="file-text" class="w-5 h-5"></i>
             </div>
             <div>
               <div class="flex items-center gap-2">
-                <span class="text-base font-bold font-heading text-slate-900 dark:text-white tracking-tight">Automatix<span class="text-indigo-600 dark:text-indigo-400">Invoice</span></span>
-                <span class="px-2 py-0.5 text-[10px] font-bold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800/60 rounded-full flex items-center gap-1.5 shadow-xs">
-                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                  <span>FREEMIUM • CORE FREE</span>
+                <span class="text-base font-bold font-heading text-zinc-950 dark:text-white tracking-tight">Automatix<span class="text-emerald-600 dark:text-emerald-400">Invoice</span></span>
+                <span class="px-2 py-0.5 text-[10px] font-mono font-bold bg-zinc-950 text-zinc-100 border border-zinc-800 rounded-[4px] flex items-center gap-1.5 shadow-xs">
+                  <span class="w-1.5 h-1.5 rounded-full bg-[#C8E019]"></span>
+                  <span>CORE FREE</span>
                 </span>
               </div>
-              <span class="text-[10px] text-slate-500 dark:text-slate-400 font-medium block">A4 PDF Invoice Generator</span>
+              <span class="text-[10px] text-zinc-500 dark:text-zinc-400 font-medium block">A4 PDF Financial Ledger</span>
             </div>
           </a>
         </div>
@@ -189,45 +189,45 @@
         <div class="flex items-center gap-2 sm:gap-3">
           
           <!-- Saved Clients Button -->
-          <button @click="clientsModalOpen = true" class="px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 transition flex items-center gap-1.5" title="Saved Clients Directory">
-            <i data-lucide="users" class="w-4 h-4 text-cyan-600 dark:text-cyan-400"></i>
+          <button @click="clientsModalOpen = true" class="px-3 py-1.5 text-xs font-semibold rounded-[6px] bg-white dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-800 dark:text-zinc-200 border border-zinc-300 dark:border-zinc-700 transition flex items-center gap-1.5" title="Saved Clients Directory">
+            <i data-lucide="users" class="w-4 h-4 text-zinc-600 dark:text-zinc-300"></i>
             <span class="hidden sm:inline">Clients</span>
-            <span v-if="savedClients.length > 0" class="px-1.5 py-0.2 rounded-full bg-cyan-600 text-white text-[10px]">{{ savedClients.length }}</span>
+            <span v-if="savedClients.length > 0" class="px-1.5 py-0.2 rounded-[4px] bg-zinc-900 dark:bg-zinc-700 text-white text-[10px]">{{ savedClients.length }}</span>
           </button>
 
           <!-- Library Drawer Button -->
-          <button @click="drawerOpen = true" class="px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 transition flex items-center gap-1.5" title="Saved Invoices History">
-            <i data-lucide="folder-clock" class="w-4 h-4 text-indigo-600 dark:text-indigo-400"></i>
+          <button @click="drawerOpen = true" class="px-3 py-1.5 text-xs font-semibold rounded-[6px] bg-white dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-800 dark:text-zinc-200 border border-zinc-300 dark:border-zinc-700 transition flex items-center gap-1.5" title="Saved Invoices History">
+            <i data-lucide="folder-clock" class="w-4 h-4 text-zinc-600 dark:text-zinc-300"></i>
             <span class="hidden sm:inline">Library</span>
-            <span v-if="savedInvoices.length > 0" class="px-1.5 py-0.2 rounded-full bg-indigo-600 text-white text-[10px]">{{ savedInvoices.length }}</span>
+            <span v-if="savedInvoices.length > 0" class="px-1.5 py-0.2 rounded-[4px] bg-zinc-900 dark:bg-zinc-700 text-white text-[10px]">{{ savedInvoices.length }}</span>
           </button>
 
           <!-- Pro Tier Explainer Modal Button -->
-          <button @click="proModalOpen = true" class="px-2.5 py-1.5 text-xs font-bold rounded-xl bg-gradient-to-r from-amber-500/10 to-indigo-500/10 hover:from-amber-500/20 hover:to-indigo-500/20 text-indigo-700 dark:text-indigo-300 border border-indigo-200/80 dark:border-indigo-800/80 transition flex items-center gap-1.5">
+          <button @click="proModalOpen = true" class="px-2.5 py-1.5 text-xs font-bold rounded-[6px] bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-800 dark:text-zinc-200 border border-zinc-300 dark:border-zinc-700 transition flex items-center gap-1.5">
             <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-500"></i>
             <span class="hidden md:inline">Pro Tier</span>
           </button>
 
           <!-- Save Draft Button -->
-          <button @click="saveInvoiceToLibrary" class="px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 transition flex items-center gap-1.5" title="Save Draft">
+          <button @click="saveInvoiceToLibrary" class="px-3 py-1.5 text-xs font-semibold rounded-[6px] bg-white dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-800 dark:text-zinc-200 border border-zinc-300 dark:border-zinc-700 transition flex items-center gap-1.5" title="Save Draft">
             <i data-lucide="save" class="w-4 h-4 text-emerald-600 dark:text-emerald-400"></i>
             <span class="hidden sm:inline">Save Draft</span>
           </button>
 
           <!-- Dark / Light Theme Mode Switcher -->
-          <button @click="toggleTheme" class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 flex items-center justify-center transition" :title="isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
-            <i v-if="!isDark" data-lucide="moon" class="w-4 h-4 text-slate-700"></i>
+          <button @click="toggleTheme" class="w-9 h-9 rounded-[6px] bg-white dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-200 border border-zinc-300 dark:border-zinc-700 flex items-center justify-center transition" :title="isDark ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
+            <i v-if="!isDark" data-lucide="moon" class="w-4 h-4 text-zinc-700"></i>
             <i v-else data-lucide="sun" class="w-4 h-4 text-amber-400"></i>
           </button>
 
           <!-- Reset Button -->
-          <button @click="resetForm" class="p-2 text-xs font-semibold rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition hidden sm:flex items-center gap-1" title="Reset Invoice">
+          <button @click="resetForm" class="p-2 text-xs font-semibold rounded-[6px] bg-white dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-600 dark:text-zinc-300 border border-zinc-300 dark:border-zinc-700 transition hidden sm:flex items-center gap-1" title="Reset Invoice">
             <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
           </button>
 
           <!-- Print / Download PDF CTA -->
-          <button @click="triggerPrint" class="px-4 py-2 text-xs font-bold rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white shadow-xs transition flex items-center gap-2 active:scale-95">
-            <i data-lucide="printer" class="w-4 h-4"></i>
+          <button @click="triggerPrint" class="px-4 py-2 text-xs font-bold rounded-[6px] bg-zinc-950 hover:bg-zinc-800 dark:bg-emerald-600 dark:hover:bg-emerald-700 text-white border border-zinc-800 shadow-xs transition flex items-center gap-2 active:scale-95">
+            <i data-lucide="printer" class="w-4 h-4 text-[#C8E019]"></i>
             <span>Export PDF</span>
           </button>
         </div>
@@ -241,16 +241,16 @@
       <!-- Left Sidebar: Controls (Screen Only) -->
       <aside class="w-full lg:w-[320px] shrink-0 space-y-4 no-print">
         
-        <div class="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-2xl p-4 shadow-sm space-y-4">
+        <div class="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-[6px] p-4 shadow-sm space-y-4">
           <h3 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2 pb-2 border-b border-slate-100 dark:border-slate-800">
-            <i data-lucide="sliders" class="w-4 h-4 text-indigo-600 dark:text-indigo-400"></i>
+            <i data-lucide="sliders" class="w-4 h-4 text-zinc-900 dark:text-zinc-100 dark:text-zinc-300"></i>
             Invoice Controls & Settings
           </h3>
 
           <!-- Country Tax & Compliance Presets -->
           <div>
             <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">Country Tax & Compliance</label>
-            <select @change="applyCountryPreset(countryPresets.find(p => p.id === $event.target.value))" class="w-full text-xs font-semibold px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+            <select @change="applyCountryPreset(countryPresets.find(p => p.id === $event.target.value))" class="w-full text-xs font-semibold px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-[6px] text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-zinc-900 focus:outline-none">
               <option value="">-- Apply Country Preset --</option>
               <option v-for="p in countryPresets" :key="p.id" :value="p.id">{{ p.name }} ({{ p.currency }})</option>
             </select>
@@ -260,7 +260,7 @@
           <div>
             <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">Currency Symbol / Code</label>
             <div class="space-y-1.5">
-              <select v-model="invoice.currency" class="w-full text-xs font-semibold px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+              <select v-model="invoice.currency" class="w-full text-xs font-semibold px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-[6px] text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-zinc-900 focus:outline-none">
                 <optgroup label="⭐ Major Global Currencies">
                   <option value="$">USD ($) - US Dollar</option>
                   <option value="€">EUR (€) - Euro</option>
@@ -339,7 +339,7 @@
               <!-- Custom Currency Quick Input -->
               <div class="flex items-center gap-1.5 pt-0.5">
                 <span class="text-[10px] text-slate-400 font-medium">Custom:</span>
-                <input type="text" v-model="invoice.currency" placeholder="e.g. CAD, zł, Rs." class="flex-1 text-xs font-mono font-semibold px-2 py-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                <input type="text" v-model="invoice.currency" placeholder="e.g. CAD, zł, Rs." class="flex-1 text-xs font-mono font-semibold px-2 py-1 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-zinc-900 focus:outline-none">
               </div>
             </div>
           </div>
@@ -348,15 +348,15 @@
           <div class="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800">
             <div class="flex items-center justify-between">
               <label class="text-xs font-semibold text-slate-700 dark:text-slate-300">Invoice Numbering & Duplication</label>
-              <button type="button" @click="nextInvoiceNumber" class="text-[11px] text-indigo-600 dark:text-indigo-400 font-bold hover:underline flex items-center gap-1">
+              <button type="button" @click="nextInvoiceNumber" class="text-[11px] text-zinc-900 dark:text-zinc-100 dark:text-zinc-300 font-bold hover:underline flex items-center gap-1">
                 <i data-lucide="plus-circle" class="w-3 h-3"></i> + Next #
               </button>
             </div>
             <div class="grid grid-cols-2 gap-2">
-              <button type="button" @click="duplicateInvoice" class="py-1.5 px-2.5 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center justify-center gap-1.5 transition">
-                <i data-lucide="copy" class="w-3.5 h-3.5 text-indigo-600"></i> Duplicate
+              <button type="button" @click="duplicateInvoice" class="py-1.5 px-2.5 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-[6px] text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center justify-center gap-1.5 transition">
+                <i data-lucide="copy" class="w-3.5 h-3.5 text-zinc-900 dark:text-zinc-100"></i> Duplicate
               </button>
-              <button type="button" @click="invoice.isRecurring = !invoice.isRecurring" :class="invoice.isRecurring ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm' : 'bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700'" class="py-1.5 px-2.5 border rounded-xl text-xs font-medium flex items-center justify-center gap-1.5 transition">
+              <button type="button" @click="invoice.isRecurring = !invoice.isRecurring" :class="invoice.isRecurring ? 'bg-zinc-900 text-white border-indigo-600 shadow-sm' : 'bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-700'" class="py-1.5 px-2.5 border rounded-[6px] text-xs font-medium flex items-center justify-center gap-1.5 transition">
                 <i data-lucide="repeat" class="w-3.5 h-3.5"></i> Recurring
               </button>
             </div>
@@ -378,16 +378,16 @@
           <div class="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800">
             <label class="flex items-center justify-between text-xs text-slate-700 dark:text-slate-300 cursor-pointer">
               <span class="flex items-center gap-1.5 font-semibold">
-                <i data-lucide="qr-code" class="w-4 h-4 text-indigo-600 dark:text-indigo-400"></i>
+                <i data-lucide="qr-code" class="w-4 h-4 text-zinc-900 dark:text-zinc-100 dark:text-zinc-300"></i>
                 Scannable Payment QR
               </span>
-              <input type="checkbox" v-model="options.showPaymentQR" class="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4">
+              <input type="checkbox" v-model="options.showPaymentQR" class="rounded text-zinc-900 dark:text-zinc-100 focus:ring-zinc-900 w-4 h-4">
             </label>
             <div v-if="options.showPaymentQR" class="space-y-1.5">
-              <input type="text" v-model="paymentQR.data" placeholder="PayPal link, IBAN, UPI, or crypto address..." class="w-full text-xs font-mono px-2.5 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-800 dark:text-slate-200 focus:ring-1 focus:ring-indigo-500">
+              <input type="text" v-model="paymentQR.data" placeholder="PayPal link, IBAN, UPI, or crypto address..." class="w-full text-xs font-mono px-2.5 py-1.5 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-800 dark:text-slate-200 focus:ring-1 focus:ring-zinc-900">
               <div class="flex items-center justify-between text-[10px] text-slate-400">
                 <span>Embeds on A4 PDF print</span>
-                <a href="https://qrcode.automatixes.com" target="_blank" class="text-indigo-600 dark:text-indigo-400 hover:underline font-bold flex items-center gap-0.5">
+                <a href="https://qrcode.automatixes.com" target="_blank" class="text-zinc-900 dark:text-zinc-100 dark:text-zinc-300 hover:underline font-bold flex items-center gap-0.5">
                   <span>AutomatixQR</span>
                   <i data-lucide="arrow-up-right" class="w-3 h-3"></i>
                 </a>
@@ -399,7 +399,7 @@
           <div>
             <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1.5">Visual Theme</label>
             <div class="grid grid-cols-2 gap-2">
-              <button v-for="tmpl in templates" :key="tmpl.id" @click="currentTemplate = tmpl.id" :class="currentTemplate === tmpl.id ? 'border-slate-900 dark:border-white bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold shadow-xs' : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-300'" class="p-2 border rounded-xl text-left text-xs flex items-center gap-2 transition">
+              <button v-for="tmpl in templates" :key="tmpl.id" @click="currentTemplate = tmpl.id" :class="currentTemplate === tmpl.id ? 'border-slate-900 dark:border-white bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold shadow-xs' : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-300'" class="p-2 border rounded-[6px] text-left text-xs flex items-center gap-2 transition">
                 <span class="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs" :style="{ backgroundColor: tmpl.color }"></span>
                 <span class="truncate">{{ tmpl.name }}</span>
               </button>
@@ -410,12 +410,12 @@
           <div>
             <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1.5">Company Logo</label>
             <div class="flex items-center gap-2">
-              <label class="flex-1 py-1.5 px-3 bg-indigo-50 dark:bg-indigo-950/50 hover:bg-indigo-100 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800 rounded-xl text-xs font-semibold cursor-pointer text-center flex items-center justify-center gap-1.5 transition">
+              <label class="flex-1 py-1.5 px-3 bg-zinc-100 dark:bg-zinc-800 dark:bg-indigo-950/50 hover:bg-indigo-100 text-zinc-900 dark:text-zinc-100 dark:text-indigo-300 border border-zinc-300 dark:border-zinc-700 dark:border-indigo-800 rounded-[6px] text-xs font-semibold cursor-pointer text-center flex items-center justify-center gap-1.5 transition">
                 <i data-lucide="image-plus" class="w-3.5 h-3.5"></i>
                 <span>{{ company.logo ? 'Change Logo' : 'Upload Logo' }}</span>
                 <input type="file" @change="onLogoUpload" accept="image/*" class="hidden">
               </label>
-              <button v-if="company.logo" type="button" @click="removeLogo" class="py-1.5 px-3 bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800 rounded-xl text-xs font-semibold transition" title="Remove Logo">
+              <button v-if="company.logo" type="button" @click="removeLogo" class="py-1.5 px-3 bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800 rounded-[6px] text-xs font-semibold transition" title="Remove Logo">
                 <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
               </button>
             </div>
@@ -425,46 +425,46 @@
           <div class="space-y-2 pt-2 border-t border-slate-100 dark:border-slate-800 text-xs">
             <label class="flex items-center justify-between cursor-pointer">
               <span class="text-slate-600 dark:text-slate-400">Notes & Terms Section</span>
-              <input type="checkbox" v-model="options.showNotes" class="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4">
+              <input type="checkbox" v-model="options.showNotes" class="rounded text-zinc-900 dark:text-zinc-100 focus:ring-zinc-900 w-4 h-4">
             </label>
 
             <label class="flex items-center justify-between cursor-pointer">
               <span class="text-slate-600 dark:text-slate-400">Bank & Wire Section</span>
-              <input type="checkbox" v-model="options.showBankDetails" class="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4">
+              <input type="checkbox" v-model="options.showBankDetails" class="rounded text-zinc-900 dark:text-zinc-100 focus:ring-zinc-900 w-4 h-4">
             </label>
 
             <label class="flex items-center justify-between cursor-pointer">
               <span class="text-slate-600 dark:text-slate-400">Tax Calculation</span>
-              <input type="checkbox" v-model="options.showTax" class="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4">
+              <input type="checkbox" v-model="options.showTax" class="rounded text-zinc-900 dark:text-zinc-100 focus:ring-zinc-900 w-4 h-4">
             </label>
 
             <label class="flex items-center justify-between cursor-pointer">
               <span class="text-slate-600 dark:text-slate-400">Discount Calculation</span>
-              <input type="checkbox" v-model="options.showDiscount" class="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4">
+              <input type="checkbox" v-model="options.showDiscount" class="rounded text-zinc-900 dark:text-zinc-100 focus:ring-zinc-900 w-4 h-4">
             </label>
 
             <label class="flex items-center justify-between cursor-pointer">
               <span class="text-slate-600 dark:text-slate-400">Shipping / Extra Fee</span>
-              <input type="checkbox" v-model="options.showShipping" class="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4">
+              <input type="checkbox" v-model="options.showShipping" class="rounded text-zinc-900 dark:text-zinc-100 focus:ring-zinc-900 w-4 h-4">
             </label>
 
             <label class="flex items-center justify-between cursor-pointer">
               <span class="text-slate-600 dark:text-slate-400">Digital Signature</span>
-              <input type="checkbox" v-model="options.showSignature" class="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4">
+              <input type="checkbox" v-model="options.showSignature" class="rounded text-zinc-900 dark:text-zinc-100 focus:ring-zinc-900 w-4 h-4">
             </label>
 
             <label class="flex items-center justify-between cursor-pointer">
               <span class="text-slate-600 dark:text-slate-400">Watermark Footer</span>
-              <input type="checkbox" v-model="options.showWatermark" class="rounded text-indigo-600 focus:ring-indigo-500 w-4 h-4">
+              <input type="checkbox" v-model="options.showWatermark" class="rounded text-zinc-900 dark:text-zinc-100 focus:ring-zinc-900 w-4 h-4">
             </label>
           </div>
 
           <!-- JSON Backup & Restore -->
           <div class="pt-2 border-t border-slate-100 dark:border-slate-800 flex gap-2">
-            <button @click="exportJSON" class="flex-1 py-1.5 px-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-semibold transition text-center flex items-center justify-center gap-1">
+            <button @click="exportJSON" class="flex-1 py-1.5 px-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-[6px] text-xs font-semibold transition text-center flex items-center justify-center gap-1">
               <i data-lucide="download" class="w-3.5 h-3.5"></i> Export
             </button>
-            <label class="flex-1 py-1.5 px-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-semibold transition text-center flex items-center justify-center gap-1 cursor-pointer">
+            <label class="flex-1 py-1.5 px-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-[6px] text-xs font-semibold transition text-center flex items-center justify-center gap-1 cursor-pointer">
               <i data-lucide="upload" class="w-3.5 h-3.5"></i> Import
               <input type="file" @change="importJSON" accept=".json" class="hidden">
             </label>
@@ -472,7 +472,7 @@
 
         </div>
 
-        <div class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 text-xs text-slate-700 dark:text-slate-300 space-y-1.5">
+        <div class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[6px] p-4 text-xs text-slate-700 dark:text-slate-300 space-y-1.5">
           <div class="font-bold flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400">
             <i data-lucide="check-circle" class="w-4 h-4"></i> Free Core Tools
           </div>
@@ -566,7 +566,7 @@
               </div>
 
               <!-- Payment QR Code on A4 Paper -->
-              <div v-if="options.showPaymentQR && paymentQR.computedUrl" class="sm:w-auto p-3 bg-slate-50 border border-slate-200 rounded-xl text-center flex flex-col items-center gap-1.5 invoice-qr-block">
+              <div v-if="options.showPaymentQR && paymentQR.computedUrl" class="sm:w-auto p-3 bg-slate-50 border border-slate-200 rounded-[6px] text-center flex flex-col items-center gap-1.5 invoice-qr-block">
                 <img :src="paymentQR.computedUrl" alt="Payment QR Code" class="w-20 h-20 rounded border border-slate-200">
                 <span class="text-[9px] font-mono text-slate-500 font-semibold uppercase">Scan to Pay</span>
               </div>
@@ -712,7 +712,7 @@
     <div class="max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10 no-print">
       
       <!-- 1. Quotable Summary & Value Proposition -->
-      <section class="bg-slate-900 rounded-2xl p-6 sm:p-8 text-white border border-slate-800 relative">
+      <section class="bg-slate-900 rounded-[6px] p-6 sm:p-8 text-white border border-slate-800 relative">
         <div class="max-w-3xl space-y-2.5">
           <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-mono font-bold border border-emerald-500/30">
             <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-400"></i>
@@ -728,7 +728,7 @@
       </section>
 
       <!-- 2. How to Create an Invoice in 3 Steps -->
-      <section class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xs space-y-6">
+      <section class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[6px] p-6 sm:p-8 shadow-xs space-y-6">
         <div class="space-y-1">
           <h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
             How to Create a Professional Invoice in 3 Steps
@@ -739,7 +739,7 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="p-5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700/60 space-y-2.5">
+          <div class="p-5 bg-slate-50 dark:bg-slate-800/60 rounded-[6px] border border-slate-200 dark:border-slate-700/60 space-y-2.5">
             <div class="w-8 h-8 rounded-lg bg-emerald-700 text-white font-mono font-bold text-xs flex items-center justify-center">
               1
             </div>
@@ -749,7 +749,7 @@
             </p>
           </div>
 
-          <div class="p-5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700/60 space-y-2.5">
+          <div class="p-5 bg-slate-50 dark:bg-slate-800/60 rounded-[6px] border border-slate-200 dark:border-slate-700/60 space-y-2.5">
             <div class="w-8 h-8 rounded-lg bg-emerald-700 text-white font-mono font-bold text-xs flex items-center justify-center">
               2
             </div>
@@ -759,7 +759,7 @@
             </p>
           </div>
 
-          <div class="p-5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700/60 space-y-2.5">
+          <div class="p-5 bg-slate-50 dark:bg-slate-800/60 rounded-[6px] border border-slate-200 dark:border-slate-700/60 space-y-2.5">
             <div class="w-8 h-8 rounded-lg bg-emerald-700 text-white font-mono font-bold text-xs flex items-center justify-center">
               3
             </div>
@@ -772,7 +772,7 @@
       </section>
 
       <!-- 3. Frequently Asked Questions (GEO & AI Engine Ready) -->
-      <section class="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
+      <section class="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-[8px] p-6 sm:p-8 shadow-sm space-y-6">
         <div class="space-y-1">
           <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-mono font-bold uppercase">
             <span>Knowledge Base</span>
@@ -786,42 +786,42 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-          <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700/60 space-y-1.5">
+          <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-[6px] border border-slate-200 dark:border-slate-700/60 space-y-1.5">
             <h3 class="font-bold text-slate-900 dark:text-white">Is this invoice maker really free?</h3>
             <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
               Yes. Generating, customizing, live mathematical calculation, client directory management, and exporting unlimited A4 PDF invoices is 100% free with no forced watermarks or signups required.
             </p>
           </div>
 
-          <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700/60 space-y-1.5">
+          <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-[6px] border border-slate-200 dark:border-slate-700/60 space-y-1.5">
             <h3 class="font-bold text-slate-900 dark:text-white">Can I add my own company logo?</h3>
             <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
               Yes. Simply click 'Upload Logo' or 'Change Logo' in the left controls to add your PNG, JPEG, or SVG logo. Your logo is automatically saved with your drafts for future invoices.
             </p>
           </div>
 
-          <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700/60 space-y-1.5">
+          <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-[6px] border border-slate-200 dark:border-slate-700/60 space-y-1.5">
             <h3 class="font-bold text-slate-900 dark:text-white">Does it support multiple currencies and international taxes?</h3>
             <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
               Yes. AutomatixInvoice supports over 50 global currencies (USD, EUR, GBP, CAD, AUD, AED, SAR, PKR, INR, etc.) and includes 1-click tax presets for US Sales Tax, UK VAT, EU VAT, and UAE TRN.
             </p>
           </div>
 
-          <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700/60 space-y-1.5">
+          <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-[6px] border border-slate-200 dark:border-slate-700/60 space-y-1.5">
             <h3 class="font-bold text-slate-900 dark:text-white">Can I save invoices for later and manage client contacts?</h3>
             <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
               Yes. You can store your regular clients in the <strong>Saved Clients Directory</strong> and access all previous invoice drafts anytime via the <strong>Library Drawer</strong> stored securely in your browser.
             </p>
           </div>
 
-          <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700/60 space-y-1.5">
+          <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-[6px] border border-slate-200 dark:border-slate-700/60 space-y-1.5">
             <h3 class="font-bold text-slate-900 dark:text-white">How does the scannable payment QR code work?</h3>
             <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
               Toggle the 'Scannable Payment QR' switch to embed a dynamic QR code linked to your PayPal, bank IBAN, UPI ID, or payment portal. Clients can scan it with their phone camera to remit funds instantly.
             </p>
           </div>
 
-          <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700/60 space-y-1.5">
+          <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-[6px] border border-slate-200 dark:border-slate-700/60 space-y-1.5">
             <h3 class="font-bold text-slate-900 dark:text-white">Can I duplicate invoices or set recurring intervals?</h3>
             <p class="text-slate-600 dark:text-slate-300 leading-relaxed">
               Yes. Use the 'Duplicate' button to clone an invoice with an auto-incremented invoice number (e.g. INV-1002), or enable 'Recurring' to advance billing dates on weekly or monthly schedules.
@@ -831,7 +831,7 @@
       </section>
 
       <!-- 4. Freelancer Invoicing Best Practices & Template Guide (High-Authority Asset) -->
-      <section class="bg-gradient-to-br from-slate-50 to-indigo-50/40 dark:from-slate-900 dark:to-indigo-950/30 border border-slate-200/90 dark:border-slate-800 rounded-3xl p-6 sm:p-8 space-y-4">
+      <section class="bg-gradient-to-br from-slate-50 to-indigo-50/40 dark:from-slate-900 dark:to-indigo-950/30 border border-slate-200/90 dark:border-slate-800 rounded-[8px] p-6 sm:p-8 space-y-4">
         <div class="space-y-1">
           <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-[10px] font-mono font-bold uppercase">
             <span>Freelancer & Agency Guide</span>
@@ -844,15 +844,15 @@
           Sending professional invoices with clear itemized line items, explicit payment terms (such as Net 14 or Due Upon Receipt), tax registration numbers (EIN, VAT, NTN), and scannable payment QR codes reduces payment turnaround time by up to <strong>40%</strong>.
         </p>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-xs">
-          <div class="p-4 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-1">
+          <div class="p-4 bg-white dark:bg-slate-800 rounded-[6px] border border-slate-200 dark:border-slate-700 space-y-1">
             <span class="font-bold text-slate-900 dark:text-white block">📅 Explicit Due Dates</span>
             <p class="text-[11px] text-slate-500 dark:text-slate-400">Always specify a concrete calendar due date rather than vague 'payment upon completion' terms.</p>
           </div>
-          <div class="p-4 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-1">
+          <div class="p-4 bg-white dark:bg-slate-800 rounded-[6px] border border-slate-200 dark:border-slate-700 space-y-1">
             <span class="font-bold text-slate-900 dark:text-white block">🔢 Sequential Numbering</span>
             <p class="text-[11px] text-slate-500 dark:text-slate-400">Maintain standardized chronological numbers (e.g. INV-1001, INV-1002) for friction-free tax audits and client accounting.</p>
           </div>
-          <div class="p-4 bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 space-y-1">
+          <div class="p-4 bg-white dark:bg-slate-800 rounded-[6px] border border-slate-200 dark:border-slate-700 space-y-1">
             <span class="font-bold text-slate-900 dark:text-white block">💳 Multiple Payment Routes</span>
             <p class="text-[11px] text-slate-500 dark:text-slate-400">Provide bank wire details (IBAN/SWIFT) alongside instant payment QR codes for credit card or transfer apps.</p>
           </div>
@@ -860,10 +860,10 @@
       </section>
 
       <!-- 5. Connected Ecosystem Suite -->
-      <section class="bg-gradient-to-r from-indigo-50 via-violet-50 to-blue-50 dark:from-indigo-950/40 dark:via-slate-900 dark:to-slate-900 border border-indigo-100 dark:border-indigo-900/60 rounded-3xl p-6 sm:p-8 space-y-6">
+      <section class="bg-gradient-to-r from-indigo-50 via-violet-50 to-blue-50 dark:from-indigo-950/40 dark:via-slate-900 dark:to-slate-900 border border-indigo-100 dark:border-indigo-900/60 rounded-[8px] p-6 sm:p-8 space-y-6">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-indigo-600 text-white text-[10px] font-bold tracking-wide uppercase">
+            <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-zinc-900 text-white text-[10px] font-bold tracking-wide uppercase">
               <span>The Automatixes Suite</span>
             </div>
             <h2 class="text-xl font-bold font-heading text-slate-900 dark:text-white mt-2">
@@ -873,7 +873,7 @@
               AutomatixInvoice connects seamlessly with AutomatixQR and our custom workflow agency services.
             </p>
           </div>
-          <a href="https://www.automatixes.com" target="_blank" class="px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-md shadow-indigo-600/20 transition inline-flex items-center gap-2 self-start md:self-auto">
+          <a href="https://www.automatixes.com" target="_blank" class="px-4 py-2.5 bg-zinc-900 hover:bg-indigo-700 text-white font-bold text-xs rounded-[6px] shadow-md shadow-indigo-600/20 transition inline-flex items-center gap-2 self-start md:self-auto">
             <span>Explore Agency Services</span>
             <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
           </a>
@@ -882,29 +882,29 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
           
           <!-- Tool 1: AutomatixQR -->
-          <a href="https://qrcode.automatixes.com" target="_blank" class="p-5 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/60 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-indigo-500 shadow-sm transition-all group flex flex-col justify-between">
+          <a href="https://qrcode.automatixes.com" target="_blank" class="p-5 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/60 rounded-[6px] border border-slate-200 dark:border-slate-700 hover:border-indigo-500 shadow-sm transition-all group flex flex-col justify-between">
             <div>
-              <div class="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+              <div class="w-10 h-10 rounded-[6px] bg-zinc-100 dark:bg-zinc-800 dark:bg-indigo-950/60 text-zinc-900 dark:text-zinc-100 dark:text-zinc-300 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                 <i data-lucide="qr-code" class="w-5 h-5"></i>
               </div>
               <div class="flex items-center gap-2">
-                <h3 class="text-xs font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 transition">AutomatixQR</h3>
-                <span class="px-1.5 py-0.2 rounded bg-indigo-50 dark:bg-indigo-950 text-indigo-700 dark:text-indigo-300 text-[9px] font-bold border border-indigo-200 dark:border-indigo-800">Free SaaS</span>
+                <h3 class="text-xs font-bold text-slate-900 dark:text-white group-hover:text-zinc-900 dark:text-zinc-100 transition">AutomatixQR</h3>
+                <span class="px-1.5 py-0.2 rounded bg-zinc-100 dark:bg-zinc-800 dark:bg-indigo-950 text-zinc-900 dark:text-zinc-100 dark:text-indigo-300 text-[9px] font-bold border border-zinc-300 dark:border-zinc-700 dark:border-indigo-800">Free SaaS</span>
               </div>
               <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1.5 leading-relaxed">
                 Enterprise QR code studio with lossless vector exports, dynamic links, and bulk batch generation.
               </p>
             </div>
-            <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between text-[11px] font-bold text-indigo-600 dark:text-indigo-400">
+            <div class="mt-4 pt-3 border-t border-slate-100 dark:border-slate-700 flex items-center justify-between text-[11px] font-bold text-zinc-900 dark:text-zinc-100 dark:text-zinc-300">
               <span>Open QR Studio</span>
               <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"></i>
             </div>
           </a>
 
           <!-- Tool 2: AutomatixInvoice -->
-          <div class="p-5 bg-white dark:bg-slate-800 rounded-2xl border border-indigo-200 dark:border-indigo-800 shadow-sm flex flex-col justify-between">
+          <div class="p-5 bg-white dark:bg-slate-800 rounded-[6px] border border-zinc-300 dark:border-zinc-700 dark:border-indigo-800 shadow-sm flex flex-col justify-between">
             <div>
-              <div class="w-10 h-10 rounded-xl bg-violet-600 text-white flex items-center justify-center mb-3">
+              <div class="w-10 h-10 rounded-[6px] bg-violet-600 text-white flex items-center justify-center mb-3">
                 <i data-lucide="file-text" class="w-5 h-5"></i>
               </div>
               <div class="flex items-center gap-2">
@@ -919,13 +919,13 @@
           </div>
 
           <!-- Tool 3: Automatixes Agency -->
-          <a href="https://www.automatixes.com/ai-automated-solutions" target="_blank" class="p-5 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/60 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-indigo-500 shadow-sm transition-all group flex flex-col justify-between">
+          <a href="https://www.automatixes.com/ai-automated-solutions" target="_blank" class="p-5 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/60 rounded-[6px] border border-slate-200 dark:border-slate-700 hover:border-indigo-500 shadow-sm transition-all group flex flex-col justify-between">
             <div>
-              <div class="w-10 h-10 rounded-xl bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+              <div class="w-10 h-10 rounded-[6px] bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                 <i data-lucide="bot" class="w-5 h-5"></i>
               </div>
               <div class="flex items-center gap-2">
-                <h3 class="text-xs font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 transition">AI Automations & Agents</h3>
+                <h3 class="text-xs font-bold text-slate-900 dark:text-white group-hover:text-zinc-900 dark:text-zinc-100 transition">AI Automations & Agents</h3>
                 <span class="px-1.5 py-0.2 rounded bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300 text-[9px] font-bold border border-blue-200 dark:border-blue-800">Enterprise</span>
               </div>
               <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1.5 leading-relaxed">
@@ -945,10 +945,10 @@
 
     <!-- Saved Invoices Library Modal -->
     <div v-if="drawerOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm modal-backdrop">
-      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4 modal-dialog">
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[6px] max-w-lg w-full p-6 shadow-2xl space-y-4 modal-dialog">
         <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
           <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-            <i data-lucide="folder-clock" class="w-4 h-4 text-indigo-600 dark:text-indigo-400"></i>
+            <i data-lucide="folder-clock" class="w-4 h-4 text-zinc-900 dark:text-zinc-100 dark:text-zinc-300"></i>
             Saved Invoices Library ({{ savedInvoices.length }})
           </h3>
           <button @click="drawerOpen = false" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-lg">&times;</button>
@@ -959,27 +959,27 @@
         </div>
 
         <div v-else class="max-h-72 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800 text-xs">
-          <div v-for="(inv, idx) in savedInvoices" :key="idx" class="py-3 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/50 p-2 rounded-xl transition">
+          <div v-for="(inv, idx) in savedInvoices" :key="idx" class="py-3 flex items-center justify-between hover:bg-slate-50 dark:hover:bg-slate-800/50 p-2 rounded-[6px] transition">
             <div>
               <div class="font-bold text-slate-800 dark:text-slate-100">{{ inv.invoice.number || 'INV-Draft' }} — {{ inv.client.name || 'Client' }}</div>
               <div class="text-[11px] text-slate-400">{{ inv.invoice.date }} • {{ inv.invoice.currency }} {{ formatMoney(inv.total) }}</div>
             </div>
             <div class="flex items-center gap-1.5">
-              <button @click="loadSavedInvoice(inv)" class="px-2.5 py-1 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100 rounded-lg text-xs font-semibold">Load</button>
+              <button @click="loadSavedInvoice(inv)" class="px-2.5 py-1 bg-zinc-100 dark:bg-zinc-800 dark:bg-indigo-950/60 text-zinc-900 dark:text-zinc-100 dark:text-indigo-300 hover:bg-indigo-100 rounded-lg text-xs font-semibold">Load</button>
               <button @click="deleteSavedInvoice(idx)" class="px-2 py-1 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg"><i data-lucide="trash" class="w-3.5 h-3.5"></i></button>
             </div>
           </div>
         </div>
 
         <div class="pt-3 border-t border-slate-100 dark:border-slate-800 flex justify-end">
-          <button @click="drawerOpen = false" class="px-4 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-semibold">Close</button>
+          <button @click="drawerOpen = false" class="px-4 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-[6px] text-xs font-semibold">Close</button>
         </div>
       </div>
     </div>
 
     <!-- Saved Clients Directory Modal -->
     <div v-if="clientsModalOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm modal-backdrop">
-      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-xl w-full p-6 shadow-2xl space-y-4 modal-dialog">
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[6px] max-w-xl w-full p-6 shadow-2xl space-y-4 modal-dialog">
         <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
           <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
             <i data-lucide="users" class="w-4 h-4 text-cyan-600 dark:text-cyan-400"></i>
@@ -993,7 +993,7 @@
         </div>
 
         <div v-else class="max-h-80 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800 text-xs space-y-1">
-          <div v-for="(cl, idx) in savedClients" :key="cl.id || idx" class="py-3 flex items-start justify-between hover:bg-slate-50 dark:hover:bg-slate-800/50 p-2.5 rounded-xl transition">
+          <div v-for="(cl, idx) in savedClients" :key="cl.id || idx" class="py-3 flex items-start justify-between hover:bg-slate-50 dark:hover:bg-slate-800/50 p-2.5 rounded-[6px] transition">
             <div class="space-y-0.5 max-w-[320px]">
               <div class="font-bold text-slate-900 dark:text-white text-xs flex items-center gap-1.5">
                 <span>{{ cl.name || 'Unnamed Contact' }}</span>
@@ -1007,24 +1007,24 @@
               </div>
             </div>
             <div class="flex items-center gap-1.5 shrink-0">
-              <button @click="selectClient(cl); clientsModalOpen = false;" class="px-3 py-1.5 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100 rounded-lg text-xs font-bold transition">Apply</button>
+              <button @click="selectClient(cl); clientsModalOpen = false;" class="px-3 py-1.5 bg-zinc-100 dark:bg-zinc-800 dark:bg-indigo-950/60 text-zinc-900 dark:text-zinc-100 dark:text-indigo-300 hover:bg-indigo-100 rounded-lg text-xs font-bold transition">Apply</button>
               <button @click="deleteSavedClient(idx)" class="p-1.5 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition" title="Delete client"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
             </div>
           </div>
         </div>
 
         <div class="pt-3 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center">
-          <button @click="saveCurrentClient" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold flex items-center gap-1.5">
+          <button @click="saveCurrentClient" class="px-3 py-1.5 bg-zinc-900 hover:bg-indigo-700 text-white rounded-[6px] text-xs font-semibold flex items-center gap-1.5">
             <i data-lucide="user-plus" class="w-3.5 h-3.5"></i> Save Current Form as Client
           </button>
-          <button @click="clientsModalOpen = false" class="px-4 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-semibold">Close</button>
+          <button @click="clientsModalOpen = false" class="px-4 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-[6px] text-xs font-semibold">Close</button>
         </div>
       </div>
     </div>
 
     <!-- Freemium & Pro Tier Comparison Modal -->
     <div v-if="proModalOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm modal-backdrop">
-      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-6 modal-dialog">
+      <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[6px] max-w-2xl w-full p-6 shadow-2xl space-y-6 modal-dialog">
         <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
           <div>
             <h3 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -1040,7 +1040,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           
           <!-- Free Forever Tier -->
-          <div class="p-4 rounded-xl border-2 border-emerald-500/30 bg-emerald-50/20 dark:bg-emerald-950/20 space-y-3 relative">
+          <div class="p-4 rounded-[6px] border-2 border-emerald-500/30 bg-emerald-50/20 dark:bg-emerald-950/20 space-y-3 relative">
             <span class="px-2 py-0.5 text-[10px] font-bold bg-emerald-100 dark:bg-emerald-900/60 text-emerald-700 dark:text-emerald-300 rounded-full">CURRENT ACTIVE TIER</span>
             <h4 class="text-sm font-bold text-slate-900 dark:text-white">Free Forever</h4>
             <div class="text-2xl font-extrabold text-slate-900 dark:text-white font-heading">$0 <span class="text-xs font-normal text-slate-400">/ forever</span></div>
@@ -1055,19 +1055,19 @@
           </div>
 
           <!-- Enterprise Pro Cloud Tier -->
-          <div class="p-4 rounded-xl border-2 border-indigo-600 bg-indigo-50/30 dark:bg-indigo-950/30 space-y-3 relative shadow-md">
-            <span class="px-2 py-0.5 text-[10px] font-bold bg-indigo-600 text-white rounded-full">POWER USERS & TEAMS</span>
+          <div class="p-4 rounded-[6px] border-2 border-indigo-600 bg-zinc-100 dark:bg-zinc-800/30 dark:bg-indigo-950/30 space-y-3 relative shadow-md">
+            <span class="px-2 py-0.5 text-[10px] font-bold bg-zinc-900 text-white rounded-full">POWER USERS & TEAMS</span>
             <h4 class="text-sm font-bold text-slate-900 dark:text-white">Pro Cloud & Automation</h4>
-            <div class="text-2xl font-extrabold text-indigo-600 dark:text-indigo-400 font-heading">$9 <span class="text-xs font-normal text-slate-400">/ month</span></div>
+            <div class="text-2xl font-extrabold text-zinc-900 dark:text-zinc-100 dark:text-zinc-300 font-heading">$9 <span class="text-xs font-normal text-slate-400">/ month</span></div>
             <ul class="space-y-1.5 text-xs text-slate-600 dark:text-slate-300">
-              <li class="flex items-center gap-2"><i data-lucide="zap" class="w-3.5 h-3.5 text-indigo-600"></i> Everything in Free Tier</li>
-              <li class="flex items-center gap-2"><i data-lucide="zap" class="w-3.5 h-3.5 text-indigo-600"></i> Unlimited Cloud Synced Invoices</li>
-              <li class="flex items-center gap-2"><i data-lucide="zap" class="w-3.5 h-3.5 text-indigo-600"></i> Automated Recurring Email Dispatch</li>
-              <li class="flex items-center gap-2"><i data-lucide="zap" class="w-3.5 h-3.5 text-indigo-600"></i> White-Label (Remove All Watermarks)</li>
-              <li class="flex items-center gap-2"><i data-lucide="zap" class="w-3.5 h-3.5 text-indigo-600"></i> Multi-User Team Seats & CRM Sync</li>
-              <li class="flex items-center gap-2"><i data-lucide="zap" class="w-3.5 h-3.5 text-indigo-600"></i> Custom n8n / Webhook Automations</li>
+              <li class="flex items-center gap-2"><i data-lucide="zap" class="w-3.5 h-3.5 text-zinc-900 dark:text-zinc-100"></i> Everything in Free Tier</li>
+              <li class="flex items-center gap-2"><i data-lucide="zap" class="w-3.5 h-3.5 text-zinc-900 dark:text-zinc-100"></i> Unlimited Cloud Synced Invoices</li>
+              <li class="flex items-center gap-2"><i data-lucide="zap" class="w-3.5 h-3.5 text-zinc-900 dark:text-zinc-100"></i> Automated Recurring Email Dispatch</li>
+              <li class="flex items-center gap-2"><i data-lucide="zap" class="w-3.5 h-3.5 text-zinc-900 dark:text-zinc-100"></i> White-Label (Remove All Watermarks)</li>
+              <li class="flex items-center gap-2"><i data-lucide="zap" class="w-3.5 h-3.5 text-zinc-900 dark:text-zinc-100"></i> Multi-User Team Seats & CRM Sync</li>
+              <li class="flex items-center gap-2"><i data-lucide="zap" class="w-3.5 h-3.5 text-zinc-900 dark:text-zinc-100"></i> Custom n8n / Webhook Automations</li>
             </ul>
-            <a href="https://www.automatixes.com/contact" target="_blank" class="block w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-center font-bold text-xs rounded-xl shadow-md transition">
+            <a href="https://www.automatixes.com/contact" target="_blank" class="block w-full py-2 bg-zinc-900 hover:bg-indigo-700 text-white text-center font-bold text-xs rounded-[6px] shadow-md transition">
               Inquire / Request Pro Cloud
             </a>
           </div>
@@ -1075,7 +1075,7 @@
         </div>
 
         <div class="pt-3 border-t border-slate-100 dark:border-slate-800 flex justify-end">
-          <button @click="proModalOpen = false" class="px-4 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-semibold">Dismiss</button>
+          <button @click="proModalOpen = false" class="px-4 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-[6px] text-xs font-semibold">Dismiss</button>
         </div>
       </div>
     </div>
@@ -1088,11 +1088,11 @@
           <!-- Col 1: Brand & Bio -->
           <div class="lg:col-span-4 space-y-4">
             <a href="https://www.automatixes.com" target="_blank" class="inline-flex items-center gap-3 group">
-              <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 to-indigo-700 flex items-center justify-center text-white font-bold shadow-md shadow-indigo-600/20 group-hover:scale-105 transition-transform">
+              <div class="w-10 h-10 rounded-[6px] bg-gradient-to-br from-indigo-600 to-indigo-700 flex items-center justify-center text-white font-bold shadow-md shadow-indigo-600/20 group-hover:scale-105 transition-transform">
                 <i data-lucide="file-text" class="w-5 h-5"></i>
               </div>
               <div>
-                <span class="text-lg font-bold font-heading text-slate-900 dark:text-white tracking-tight">Automatix<span class="text-indigo-600 dark:text-indigo-400">Invoice</span></span>
+                <span class="text-lg font-bold font-heading text-slate-900 dark:text-white tracking-tight">Automatix<span class="text-zinc-900 dark:text-zinc-100 dark:text-zinc-300">Invoice</span></span>
                 <span class="block text-[10px] text-slate-500 dark:text-slate-400 font-mono font-semibold">By Automatixes AI Solutions</span>
               </div>
             </a>
@@ -1112,17 +1112,17 @@
             <div class="space-y-2">
               <h4 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Quick Links</h4>
               <ul class="space-y-2 text-xs font-medium text-slate-600 dark:text-slate-400">
-                <li><a href="https://www.automatixes.com" target="_blank" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Home</a></li>
-                <li><a href="https://www.automatixes.com/about" target="_blank" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">About Us</a></li>
-                <li><a href="https://www.automatixes.com/blogs" target="_blank" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Blogs</a></li>
-                <li><a href="https://www.automatixes.com/contact" target="_blank" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Contact Us</a></li>
+                <li><a href="https://www.automatixes.com" target="_blank" class="hover:text-zinc-900 dark:text-zinc-100 dark:hover:text-zinc-300 transition">Home</a></li>
+                <li><a href="https://www.automatixes.com/about" target="_blank" class="hover:text-zinc-900 dark:text-zinc-100 dark:hover:text-zinc-300 transition">About Us</a></li>
+                <li><a href="https://www.automatixes.com/blogs" target="_blank" class="hover:text-zinc-900 dark:text-zinc-100 dark:hover:text-zinc-300 transition">Blogs</a></li>
+                <li><a href="https://www.automatixes.com/contact" target="_blank" class="hover:text-zinc-900 dark:text-zinc-100 dark:hover:text-zinc-300 transition">Contact Us</a></li>
               </ul>
             </div>
             <div class="space-y-2">
               <h4 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Legal</h4>
               <ul class="space-y-2 text-xs font-medium text-slate-600 dark:text-slate-400">
-                <li><a href="https://www.automatixes.com/privacy" target="_blank" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Privacy Policy</a></li>
-                <li><a href="https://www.automatixes.com/terms" target="_blank" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Terms of Service</a></li>
+                <li><a href="https://www.automatixes.com/privacy" target="_blank" class="hover:text-zinc-900 dark:text-zinc-100 dark:hover:text-zinc-300 transition">Privacy Policy</a></li>
+                <li><a href="https://www.automatixes.com/terms" target="_blank" class="hover:text-zinc-900 dark:text-zinc-100 dark:hover:text-zinc-300 transition">Terms of Service</a></li>
               </ul>
             </div>
           </div>
@@ -1131,9 +1131,9 @@
           <div class="lg:col-span-2 space-y-3">
             <h4 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Our Services</h4>
             <ul class="space-y-2 text-xs font-medium text-slate-600 dark:text-slate-400">
-              <li><a href="https://www.automatixes.com/ai-automated-solutions" target="_blank" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">AI Automations</a></li>
-              <li><a href="https://www.automatixes.com/website-development" target="_blank" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Web & App Dev</a></li>
-              <li><a href="https://www.automatixes.com/product-shoot" target="_blank" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Product Shoot</a></li>
+              <li><a href="https://www.automatixes.com/ai-automated-solutions" target="_blank" class="hover:text-zinc-900 dark:text-zinc-100 dark:hover:text-zinc-300 transition">AI Automations</a></li>
+              <li><a href="https://www.automatixes.com/website-development" target="_blank" class="hover:text-zinc-900 dark:text-zinc-100 dark:hover:text-zinc-300 transition">Web & App Dev</a></li>
+              <li><a href="https://www.automatixes.com/product-shoot" target="_blank" class="hover:text-zinc-900 dark:text-zinc-100 dark:hover:text-zinc-300 transition">Product Shoot</a></li>
             </ul>
           </div>
 
@@ -1141,19 +1141,19 @@
           <div class="lg:col-span-2 space-y-3">
             <h4 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5">
               <span>SaaS Tools</span>
-              <span class="w-1.5 h-1.5 rounded-full bg-indigo-600"></span>
+              <span class="w-1.5 h-1.5 rounded-full bg-zinc-900"></span>
             </h4>
             <ul class="space-y-2 text-xs font-medium text-slate-600 dark:text-slate-400">
               <li>
-                <a href="https://qrcode.automatixes.com" target="_blank" class="hover:text-indigo-600 dark:hover:text-indigo-400 font-medium flex items-center gap-1.5">
+                <a href="https://qrcode.automatixes.com" target="_blank" class="hover:text-zinc-900 dark:text-zinc-100 dark:hover:text-zinc-300 font-medium flex items-center gap-1.5">
                   <span>QR Code Generator</span>
-                  <span class="px-1.5 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 text-[9px] font-bold border border-indigo-200 dark:border-indigo-800">Free</span>
+                  <span class="px-1.5 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 dark:bg-indigo-950/60 text-zinc-900 dark:text-zinc-100 dark:text-indigo-300 text-[9px] font-bold border border-zinc-300 dark:border-zinc-700 dark:border-indigo-800">Free</span>
                 </a>
               </li>
               <li>
-                <a href="https://invoicemaker.automatixes.com" class="text-indigo-600 dark:text-indigo-400 font-bold flex items-center gap-1.5">
+                <a href="https://invoicemaker.automatixes.com" class="text-zinc-900 dark:text-zinc-100 dark:text-zinc-300 font-bold flex items-center gap-1.5">
                   <span>Free Invoice Maker</span>
-                  <span class="px-1.5 py-0.5 rounded-full bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 text-[9px] font-bold border border-indigo-200 dark:border-indigo-800">Active</span>
+                  <span class="px-1.5 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 dark:bg-indigo-950/60 text-zinc-900 dark:text-zinc-100 dark:text-indigo-300 text-[9px] font-bold border border-zinc-300 dark:border-zinc-700 dark:border-indigo-800">Active</span>
                 </a>
               </li>
             </ul>
@@ -1164,12 +1164,12 @@
             <h4 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Contact Info</h4>
             <ul class="space-y-2.5 text-xs text-slate-600 dark:text-slate-400 font-mono">
               <li class="flex items-center gap-2">
-                <i data-lucide="mail" class="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400 shrink-0"></i>
-                <a href="mailto:contact@automatixes.com" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition select-all truncate text-[11px]">contact@automatixes.com</a>
+                <i data-lucide="mail" class="w-3.5 h-3.5 text-zinc-900 dark:text-zinc-100 dark:text-zinc-300 shrink-0"></i>
+                <a href="mailto:contact@automatixes.com" class="hover:text-zinc-900 dark:text-zinc-100 dark:hover:text-zinc-300 transition select-all truncate text-[11px]">contact@automatixes.com</a>
               </li>
               <li class="flex items-center gap-2">
-                <i data-lucide="phone" class="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400 shrink-0"></i>
-                <a href="tel:+923366920141" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition select-all text-[11px]">+92 336 6920141</a>
+                <i data-lucide="phone" class="w-3.5 h-3.5 text-zinc-900 dark:text-zinc-100 dark:text-zinc-300 shrink-0"></i>
+                <a href="tel:+923366920141" class="hover:text-zinc-900 dark:text-zinc-100 dark:hover:text-zinc-300 transition select-all text-[11px]">+92 336 6920141</a>
               </li>
             </ul>
           </div>
@@ -1179,18 +1179,18 @@
         <div class="pt-6 border-t border-slate-100 dark:border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500 font-medium">
           <p>&copy; 2026 Automatixes. All rights reserved.</p>
           <div class="flex items-center gap-4">
-            <a href="https://www.automatixes.com/privacy" target="_blank" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Privacy Policy</a>
+            <a href="https://www.automatixes.com/privacy" target="_blank" class="hover:text-zinc-900 dark:text-zinc-100 dark:hover:text-zinc-300 transition">Privacy Policy</a>
             <span>•</span>
-            <a href="https://www.automatixes.com/terms" target="_blank" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Terms of Service</a>
+            <a href="https://www.automatixes.com/terms" target="_blank" class="hover:text-zinc-900 dark:text-zinc-100 dark:hover:text-zinc-300 transition">Terms of Service</a>
             <span>•</span>
-            <a href="https://www.automatixes.com" target="_blank" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Automatixes AI Solutions</a>
+            <a href="https://www.automatixes.com" target="_blank" class="hover:text-zinc-900 dark:text-zinc-100 dark:hover:text-zinc-300 transition">Automatixes AI Solutions</a>
           </div>
         </div>
       </div>
     </footer>
 
     <!-- Notification Toast -->
-    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-2.5 px-4 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-xl shadow-2xl text-xs font-medium pointer-events-none border border-slate-800 dark:border-slate-200">
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-2.5 px-4 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-[6px] shadow-2xl text-xs font-medium pointer-events-none border border-slate-800 dark:border-slate-200">
       <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
       <span id="toast-message">Operation successful!</span>
     </div>
