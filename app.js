@@ -26,6 +26,10 @@ createApp({
       showToast(isDark.value ? 'Dark Mode Enabled' : 'Light Mode Enabled');
     };
 
+    // 1.1 Freemium Positioning & Architecture
+    const userTier = ref('free'); // 'free' | 'pro'
+    const proModalOpen = ref(false);
+
     // 2. Template Schemes
     const templates = [
       { id: 'modern-indigo', name: 'Indigo SaaS', color: '#4F46E5' },
@@ -78,7 +82,8 @@ createApp({
     const sections = ref({
       clientTitle: 'BILLED TO:',
       notesTitle: 'NOTES & PAYMENT INSTRUCTIONS:',
-      bankTitle: 'BANK & WIRE TRANSFER:'
+      bankTitle: 'BANK & WIRE TRANSFER:',
+      qrTitle: 'SCAN TO PAY / VERIFY:'
     });
 
     const client = ref({
@@ -86,17 +91,120 @@ createApp({
       company: 'Apex Digital Global Inc.',
       address: '350 5th Avenue, Suite 2100, New York, NY 10118',
       email: 'billing@apexdigital.io',
-      phone: '+1 (555) 234-5678'
+      phone: '+1 (555) 234-5678',
+      taxId: 'US-TAX-89210'
     });
 
-    // 5. Invoice Metadata & Dates
+    // 4.1 Saved Clients Directory
+    const savedClients = ref([]);
+    const clientsModalOpen = ref(false);
+
+    const loadSavedClientsFromStorage = () => {
+      try {
+        const stored = localStorage.getItem('automatix_saved_clients_v1');
+        if (stored) {
+          savedClients.value = JSON.parse(stored);
+        } else {
+          // Seed initial default clients
+          savedClients.value = [
+            {
+              id: 'client_1',
+              name: 'Sarah Jenkins',
+              company: 'Apex Digital Global Inc.',
+              address: '350 5th Avenue, Suite 2100, New York, NY 10118',
+              email: 'billing@apexdigital.io',
+              phone: '+1 (555) 234-5678',
+              taxId: 'US-TAX-89210'
+            },
+            {
+              id: 'client_2',
+              name: 'Liam Harrington',
+              company: 'Vertex Technologies UK',
+              address: '25 Bank Street, Canary Wharf, London, E14 5JP',
+              email: 'accounts@vertextech.co.uk',
+              phone: '+44 20 7946 0192',
+              taxId: 'GB-VAT-992019'
+            },
+            {
+              id: 'client_3',
+              name: 'Tariq Al-Mansoor',
+              company: 'Emirates Cloud Solutions',
+              address: 'Downtown Dubai, Boulevard Plaza Tower 1, UAE',
+              email: 'finance@emiratescloud.ae',
+              phone: '+971 4 382 9100',
+              taxId: 'AE-TRN-10029482019'
+            }
+          ];
+          localStorage.setItem('automatix_saved_clients_v1', JSON.stringify(savedClients.value));
+        }
+      } catch (e) {}
+    };
+
+    const saveCurrentClient = () => {
+      if (!client.value.name && !client.value.company) {
+        showToast('Please enter at least a client name or company');
+        return;
+      }
+      const existingIdx = savedClients.value.findIndex(c => 
+        (c.email && c.email.toLowerCase() === client.value.email.toLowerCase()) || 
+        (c.company && c.company.toLowerCase() === client.value.company.toLowerCase())
+      );
+
+      const record = {
+        id: existingIdx >= 0 ? savedClients.value[existingIdx].id : 'cli_' + Date.now().toString(36),
+        name: client.value.name,
+        company: client.value.company,
+        address: client.value.address,
+        email: client.value.email,
+        phone: client.value.phone,
+        taxId: client.value.taxId || ''
+      };
+
+      if (existingIdx >= 0) {
+        savedClients.value[existingIdx] = record;
+        showToast(`Updated client ${record.name || record.company} in directory!`);
+      } else {
+        savedClients.value.unshift(record);
+        showToast(`Saved ${record.name || record.company} to Client Directory!`);
+      }
+      localStorage.setItem('automatix_saved_clients_v1', JSON.stringify(savedClients.value));
+    };
+
+    const selectClient = (c) => {
+      if (!c) return;
+      client.value = {
+        name: c.name || '',
+        company: c.company || '',
+        address: c.address || '',
+        email: c.email || '',
+        phone: c.phone || '',
+        taxId: c.taxId || ''
+      };
+      showToast(`Loaded client: ${c.name || c.company}`);
+    };
+
+    const onClientDropdownChange = (e) => {
+      const selectedId = e.target.value;
+      if (!selectedId) return;
+      const found = savedClients.value.find(c => c.id === selectedId);
+      if (found) selectClient(found);
+      e.target.value = '';
+    };
+
+    const deleteSavedClient = (idx) => {
+      const removed = savedClients.value.splice(idx, 1);
+      localStorage.setItem('automatix_saved_clients_v1', JSON.stringify(savedClients.value));
+      showToast('Client removed from directory');
+    };
+
+    // 5. Invoice Metadata & Auto-Incrementing Numbers
     const todayStr = new Date().toISOString().split('T')[0];
     const defaultDue = new Date();
     defaultDue.setDate(defaultDue.getDate() + 14);
     const dueStr = defaultDue.toISOString().split('T')[0];
 
     const invoice = ref({
-      number: 'INV-' + Math.floor(1000 + Math.random() * 9000),
+      number: 'INV-1001',
       date: todayStr,
       dueDate: dueStr,
       poNumber: 'PO-8842',
@@ -104,8 +212,57 @@ createApp({
       taxRate: 5,
       discountRate: 0,
       shipping: 0,
-      notes: 'Thank you for your business! Payment is due within 14 days of invoice date. Please transfer funds to the bank account listed below.'
+      notes: 'Thank you for your business! Payment is due within 14 days of invoice date. Please transfer funds or scan the payment QR code below.',
+      isRecurring: false,
+      recurringInterval: 'monthly'
     });
+
+    const nextInvoiceNumber = () => {
+      const current = invoice.value.number || 'INV-1000';
+      const match = current.match(/^(.*?)(\d+)$/);
+      if (match) {
+        const prefix = match[1];
+        const num = parseInt(match[2], 10) + 1;
+        const padded = String(num).padStart(match[2].length, '0');
+        invoice.value.number = `${prefix}${padded}`;
+      } else {
+        invoice.value.number = 'INV-' + (Math.floor(1000 + Math.random() * 9000));
+      }
+      showToast(`Next invoice number set: ${invoice.value.number}`);
+    };
+
+    const duplicateInvoice = () => {
+      nextInvoiceNumber();
+      invoice.value.date = new Date().toISOString().split('T')[0];
+      const nextDue = new Date();
+      nextDue.setDate(nextDue.getDate() + 14);
+      invoice.value.dueDate = nextDue.toISOString().split('T')[0];
+      showToast(`Duplicated invoice! Created ${invoice.value.number}`);
+    };
+
+    const generateNextPeriodInvoice = () => {
+      nextInvoiceNumber();
+      const curDate = new Date(invoice.value.date || Date.now());
+      const interval = invoice.value.recurringInterval || 'monthly';
+      
+      if (interval === 'weekly') {
+        curDate.setDate(curDate.getDate() + 7);
+      } else if (interval === 'bi-weekly') {
+        curDate.setDate(curDate.getDate() + 14);
+      } else if (interval === 'monthly') {
+        curDate.setMonth(curDate.getMonth() + 1);
+      } else if (interval === 'quarterly') {
+        curDate.setMonth(curDate.getMonth() + 3);
+      } else if (interval === 'annual') {
+        curDate.setFullYear(curDate.getFullYear() + 1);
+      }
+
+      invoice.value.date = curDate.toISOString().split('T')[0];
+      const newDue = new Date(curDate);
+      newDue.setDate(newDue.getDate() + 14);
+      invoice.value.dueDate = newDue.toISOString().split('T')[0];
+      showToast(`Generated next ${interval} recurring invoice (${invoice.value.number})!`);
+    };
 
     // 6. Line Items
     const items = ref([
@@ -141,7 +298,7 @@ createApp({
       }
     };
 
-    // 7. Options & Feature Toggles
+    // 7. Options & Feature Toggles (with Payment QR Code)
     const options = ref({
       showNotes: true,
       showBankDetails: true,
@@ -149,8 +306,99 @@ createApp({
       showDiscount: true,
       showShipping: false,
       showSignature: true,
-      showWatermark: true
+      showWatermark: true,
+      showPaymentQR: true
     });
+
+    // 7.1 Cross-Promotion Payment QR Code Embed (powered by AutomatixQR)
+    const paymentQR = ref({
+      data: 'https://www.automatixes.com/pay/INV-1001',
+      label: 'Scan with Camera / Banking App to Pay'
+    });
+
+    const paymentQRUrl = computed(() => {
+      const payload = paymentQR.value.data && paymentQR.value.data.trim() !== '' 
+        ? paymentQR.value.data.trim() 
+        : `https://www.automatixes.com/pay/${invoice.value.number || 'invoice'}`;
+      return `https://api.qrserver.com/v1/create-qr-code/?size=160x160&margin=0&color=0f172a&data=${encodeURIComponent(payload)}`;
+    });
+
+    // 7.2 Country Localization & Tax Presets
+    const countryPresets = [
+      {
+        id: 'global',
+        name: 'Global Standard',
+        currency: '$',
+        taxRate: 0,
+        taxLabel: 'Tax ID',
+        notes: 'Thank you for your business! Payment is due within 14 days.'
+      },
+      {
+        id: 'us',
+        name: 'United States (Sales Tax)',
+        currency: '$',
+        taxRate: 8.25,
+        taxLabel: 'EIN / Tax ID',
+        notes: 'Sales tax applied per state nexus. Please remit payment via ACH or wire.'
+      },
+      {
+        id: 'uk',
+        name: 'United Kingdom (VAT 20%)',
+        currency: '£',
+        taxRate: 20,
+        taxLabel: 'UK VAT Reg No',
+        notes: 'Standard 20% UK VAT included. Payment due upon receipt of invoice.'
+      },
+      {
+        id: 'eu',
+        name: 'European Union (VAT 19%)',
+        currency: '€',
+        taxRate: 19,
+        taxLabel: 'EU VAT ID',
+        notes: 'EU Reverse charge mechanism applies where cross-border B2B supply is valid.'
+      },
+      {
+        id: 'uae',
+        name: 'UAE & GCC (VAT 5%)',
+        currency: 'AED',
+        taxRate: 5,
+        taxLabel: 'Tax Reg TRN',
+        notes: 'FTA compliant 5% UAE VAT invoice. Please transfer to Emirates NBD account.'
+      },
+      {
+        id: 'pk',
+        name: 'Pakistan (Sales Tax 18%)',
+        currency: 'Rs',
+        taxRate: 18,
+        taxLabel: 'NTN / STRN',
+        notes: 'FBR compliant sales tax invoice. Bank transfer to Habib Bank Limited.'
+      },
+      {
+        id: 'in',
+        name: 'India (GST 18%)',
+        currency: '₹',
+        taxRate: 18,
+        taxLabel: 'GSTIN',
+        notes: '18% GST (CGST + SGST) applicable. Remit via NEFT / RTGS / UPI.'
+      },
+      {
+        id: 'ca',
+        name: 'Canada (HST/GST 13%)',
+        currency: 'C$',
+        taxRate: 13,
+        taxLabel: 'CRA Business No',
+        notes: 'HST # included. Remit payment via Interac e-Transfer or direct wire.'
+      }
+    ];
+
+    const applyCountryPreset = (preset) => {
+      if (!preset) return;
+      invoice.value.currency = preset.currency;
+      invoice.value.taxRate = preset.taxRate;
+      company.value.taxId = company.value.taxId || preset.taxLabel;
+      if (preset.notes) invoice.value.notes = preset.notes;
+      showToast(`Applied ${preset.name} Localization Preset!`);
+    };
 
     // 8. Bank Transfer Details
     const bank = ref({
@@ -375,12 +623,13 @@ createApp({
 
     onMounted(() => {
       const savedTheme = localStorage.getItem('automatix_invoice_theme');
-      if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      if (savedTheme === 'dark') {
         applyTheme(true);
       } else {
         applyTheme(false);
       }
       loadSavedInvoicesFromStorage();
+      loadSavedClientsFromStorage();
       initRipple();
       if (window.lucide) lucide.createIcons();
     });
@@ -388,6 +637,8 @@ createApp({
     return {
       isDark,
       toggleTheme,
+      userTier,
+      proModalOpen,
       templates,
       currentTemplate,
       company,
@@ -395,11 +646,24 @@ createApp({
       removeLogo,
       sections,
       client,
+      savedClients,
+      clientsModalOpen,
+      saveCurrentClient,
+      selectClient,
+      onClientDropdownChange,
+      deleteSavedClient,
       invoice,
+      nextInvoiceNumber,
+      duplicateInvoice,
+      generateNextPeriodInvoice,
       items,
       addItem,
       removeItem,
       options,
+      paymentQR,
+      paymentQRUrl,
+      countryPresets,
+      applyCountryPreset,
       bank,
       signature,
       subtotal,
