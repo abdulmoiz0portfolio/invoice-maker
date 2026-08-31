@@ -82,26 +82,57 @@ button:active, .btn:active {
   box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
 }
 
-/* Financial Themes */
-.theme-modern-indigo .theme-text-primary { color: #1e40af !important; }
-.theme-modern-indigo .theme-bg-subtle { background-color: #eff6ff !important; }
-.theme-modern-indigo .theme-border-primary { border-color: #1e40af !important; }
+/* Financial Visual Themes for A4 Invoice Paper */
+.theme-modern-indigo {
+  --theme-accent: #4338ca;
+  --theme-accent-light: #e0e7ff;
+  --theme-accent-border: #a5b4fc;
+}
+.theme-emerald-growth {
+  --theme-accent: #047857;
+  --theme-accent-light: #ecfdf5;
+  --theme-accent-border: #a7f3d0;
+}
+.theme-executive-slate {
+  --theme-accent: #0f172a;
+  --theme-accent-light: #f1f5f9;
+  --theme-accent-border: #cbd5e1;
+}
+.theme-vibrant-coral {
+  --theme-accent: #be123c;
+  --theme-accent-light: #fff1f2;
+  --theme-accent-border: #fecdd3;
+}
+.theme-automatix-cyber {
+  --theme-accent: #0284c7;
+  --theme-accent-light: #f0f9ff;
+  --theme-accent-border: #bae6fd;
+}
 
-.theme-emerald-growth .theme-text-primary { color: #047857 !important; }
-.theme-emerald-growth .theme-bg-subtle { background-color: #ecfdf5 !important; }
-.theme-emerald-growth .theme-border-primary { border-color: #047857 !important; }
+.invoice-paper-sheet {
+  border-top: 5px solid var(--theme-accent, #047857) !important;
+}
 
-.theme-executive-slate .theme-text-primary { color: #0f172a !important; }
-.theme-executive-slate .theme-bg-subtle { background-color: #f8fafc !important; }
-.theme-executive-slate .theme-border-primary { border-color: #0f172a !important; }
+.theme-text-primary {
+  color: var(--theme-accent, #047857) !important;
+}
 
-.theme-vibrant-coral .theme-text-primary { color: #be123c !important; }
-.theme-vibrant-coral .theme-bg-subtle { background-color: #fff1f2 !important; }
-.theme-vibrant-coral .theme-border-primary { border-color: #be123c !important; }
+.theme-bg-subtle {
+  background-color: var(--theme-accent-light, #ecfdf5) !important;
+}
 
-.theme-automatix-cyber .theme-text-primary { color: #0f172a !important; }
-.theme-automatix-cyber .theme-bg-subtle { background-color: #f1f5f9 !important; }
-.theme-automatix-cyber .theme-border-primary { border-color: #0f172a !important; }
+.theme-border-accent {
+  border-color: var(--theme-accent-border, #a7f3d0) !important;
+}
+
+.theme-btn-accent {
+  color: var(--theme-accent, #047857) !important;
+  background-color: var(--theme-accent-light, #ecfdf5) !important;
+  border-color: var(--theme-accent-border, #a7f3d0) !important;
+}
+.theme-btn-accent:hover {
+  filter: brightness(0.95);
+}
 
 /* Modal Backdrop */
 .modal-backdrop:not(.hidden) {
