@@ -1,0 +1,44 @@
+# AutomatixInvoice
+
+> AutomatixInvoice is a free, professional online invoice generator and PDF creator engineered by Automatixes LLC. It allows freelancers, contractors, agencies, and small businesses to generate calculation-verified, branded A4 PDF invoices with custom company logos, client directory storage, multi-currency support, tax compliance presets, auto-numbering, and scannable payment QR codes.
+
+## Key Capabilities
+
+- **100% Free Core Functionality**: Create, customize, compute, and download clean A4 PDF invoices without signups, trial limits, or watermarks.
+- **Client Directory (Saved Clients)**: Persistently store client names, billing addresses, emails, phones, and tax IDs for 1-click invoice creation.
+- **Auto-Incrementing Numbers & Duplication**: Standardized sequential numbering (e.g. INV-1001, INV-1002) with 1-click invoice duplication and recurring period generator.
+- **Scannable Payment QR Codes**: Embed dynamic QR codes linked directly to PayPal, bank IBAN, UPI, crypto, or custom payment gateways powered by AutomatixQR.
+- **International Multi-Currency & Tax Presets**: Support for over 50 global currencies and 1-click compliance presets for US Sales Tax, UK 20% VAT, EU 19% VAT, UAE 5% TRN, Pakistan 18% Sales Tax, and India 18% GST.
+- **5 Visual Theme Palettes**: Modern Indigo, Emerald Growth, Slate Executive, Vibrant Coral, and Cyber Minimal.
+- **Instant Client-Side Privacy**: All calculations, logo processing, and drafts remain securely within the user's browser localStorage.
+
+## Workflow: How to Create an Invoice in 3 Steps
+
+1. **Add Company & Client Info**: Upload your logo, enter business details, and select or save client billing information.
+2. **Itemize Services & Taxes**: Add item descriptions, quantities, unit rates, discounts, tax percentages, and bank transfer notes.
+3. **Export Print-Ready PDF**: Click 'Export PDF' to trigger lossless browser A4 PDF printing or file download.
+
+## Supported Export Formats
+
+- **A4 PDF Document**: High-resolution print-ready layout with page-break avoidance and custom watermarks.
+- **JSON Backup / Restore**: Export entire invoice schemas to .json files and import them across machines.
+
+## Ecosystem & Related Products
+
+- **AutomatixQR**: Free enterprise QR code generator with logo embedding and vector SVG export (https://qrcode.automatixes.com/).
+- **Automatixes AI Solutions**: Autonomous AI workflow automation, Voice AI agents, and web development (https://www.automatixes.com/).
+
+## Frequently Asked Questions
+
+### Is AutomatixInvoice free?
+Yes. Creating, designing, calculating, and exporting unlimited A4 PDF invoices is 100% free with no subscription or account required.
+
+### Does AutomatixInvoice store my financial data on a server?
+No. All draft invoices, client contacts, and company logos are stored locally in your browser's localStorage for maximum confidentiality.
+
+## Contact & Links
+
+- **Website**: https://invoicemaker.automatixes.com/
+- **Parent Company**: https://www.automatixes.com/
+- **Contact Email**: contact@automatixes.com
+- **Phone**: +92 336 6920141

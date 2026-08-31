@@ -22,3 +22,4 @@ User-agent: CCBot
 Allow: /
 
 Sitemap: https://invoicemaker.automatixes.com/sitemap.xml
+# LLM & AI Engine Context: https://invoicemaker.automatixes.com/llms.txt
