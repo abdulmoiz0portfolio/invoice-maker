@@ -117,29 +117,45 @@
       }
     ]
   }
-  </script>
-  
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       darkMode: 'class',
       theme: {
         extend: {
+          colors: {
+            finance: {
+              50: '#ecfdf5',
+              100: '#d1fae5',
+              200: '#a7f3d0',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+            },
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              600: '#1e40af',
+              700: '#1d4ed8',
+            }
+          },
           fontFamily: {
-            sans: ['Inter', 'system-ui', 'sans-serif'],
-            heading: ['Space Grotesk', 'sans-serif'],
-            mono: ['JetBrains Mono', 'monospace'],
+            sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            heading: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
           }
         }
       }
     }
   </script>
-
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-slate-50 dark:bg-[#090D16] text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-sans antialiased transition-colors duration-200 selection:bg-indigo-500 selection:text-white">
+<body class="bg-slate-100 dark:bg-[#0b0f17] text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-emerald-600 selection:text-white">
 
   <div id="app" class="flex flex-col min-h-screen">
 
@@ -215,7 +231,7 @@
           </button>
 
           <!-- Print / Download PDF CTA -->
-          <button @click="triggerPrint" class="px-4 py-2 text-xs font-bold rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-600/25 transition flex items-center gap-2 active:scale-95">
+          <button @click="triggerPrint" class="px-4 py-2 text-xs font-bold rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white shadow-xs transition flex items-center gap-2 active:scale-95">
             <i data-lucide="printer" class="w-4 h-4"></i>
             <span>Export PDF</span>
           </button>
@@ -357,8 +373,8 @@
                 <option value="quarterly">Quarterly</option>
                 <option value="annual">Annual</option>
               </select>
-              <button type="button" @click="generateNextPeriodInvoice" class="px-2.5 py-1.5 bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100 rounded-lg text-xs font-bold shrink-0">
-                Next Period &rarr;
+              <button type="button" @click="generateNextPeriodInvoice" class="px-2.5 py-1.5 bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 rounded-lg text-xs font-bold shrink-0">
+                Next Period
               </button>
             </div>
           </div>
@@ -461,12 +477,12 @@
 
         </div>
 
-        <div class="bg-indigo-50/70 dark:bg-indigo-950/30 border border-indigo-200/80 dark:border-indigo-800/40 rounded-2xl p-4 text-xs text-indigo-900 dark:text-indigo-200 space-y-2">
-          <div class="font-bold flex items-center gap-1.5 text-indigo-700 dark:text-indigo-300">
-            <i data-lucide="sparkles" class="w-4 h-4"></i> Freemium Architecture
+        <div class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 text-xs text-slate-700 dark:text-slate-300 space-y-1.5">
+          <div class="font-bold flex items-center gap-1.5 text-emerald-700 dark:text-emerald-400">
+            <i data-lucide="check-circle" class="w-4 h-4"></i> Free Core Tools
           </div>
-          <p class="leading-relaxed text-[11px] text-indigo-800/90 dark:text-indigo-300/90">
-            Core invoice creation, client directory, payment QR embed, and A4 PDF export remain <strong>100% free forever</strong>.
+          <p class="leading-relaxed text-[11px] text-slate-500 dark:text-slate-400">
+            Invoice creation, client directory, payment QR codes, and A4 PDF exports are 100% free with no account required.
           </p>
         </div>
 
@@ -482,277 +498,201 @@
             
             <!-- Left: Company Logo & Info -->
             <div class="w-full sm:w-1/2 space-y-3">
-              
-              <!-- Logo Container & Controls -->
               <div class="flex items-center gap-3">
-                <div v-if="company.logo" class="relative inline-flex items-center gap-2">
-                  <img :src="company.logo" alt="Company Logo" class="max-h-14 max-w-[180px] object-contain rounded-md">
-                  <div class="no-print flex items-center gap-1">
-                    <label class="p-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs cursor-pointer transition shadow-sm" title="Change Logo">
-                      <i data-lucide="camera" class="w-3.5 h-3.5"></i>
-                      <input type="file" @change="onLogoUpload" accept="image/*" class="hidden">
-                    </label>
-                    <button type="button" @click="removeLogo" class="p-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 rounded-lg text-xs transition shadow-sm" title="Remove Logo">
-                      <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                <div v-if="company.logo" class="relative group">
+                  <img :src="company.logo" alt="Company Logo" class="max-h-16 max-w-44 object-contain rounded">
+                </div>
+                <div v-else class="w-12 h-12 rounded-lg bg-slate-100 dark:bg-slate-800 border border-dashed border-slate-300 dark:border-slate-700 flex items-center justify-center text-slate-400">
+                  <i data-lucide="image" class="w-5 h-5"></i>
+                </div>
+              </div>
+
+              <div class="space-y-1">
+                <input type="text" v-model="company.name" placeholder="Your Business / Agency Name" class="text-lg font-bold text-slate-900 w-full print-clean-input focus:ring-1 focus:ring-emerald-500 rounded px-1">
+                <textarea v-model="company.address" rows="2" placeholder="Street Address, City, Country, Tax / NTN / VAT ID" class="text-xs text-slate-500 w-full print-clean-input focus:ring-1 focus:ring-emerald-500 rounded px-1 resize-none"></textarea>
+                <div class="flex gap-2">
+                  <input type="text" v-model="company.email" placeholder="billing@agency.com" class="text-xs text-slate-500 w-1/2 print-clean-input focus:ring-1 focus:ring-emerald-500 rounded px-1">
+                  <input type="text" v-model="company.phone" placeholder="+1 (555) 000-0000" class="text-xs text-slate-500 w-1/2 print-clean-input focus:ring-1 focus:ring-emerald-500 rounded px-1">
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Invoice Title & Meta Details -->
+            <div class="w-full sm:w-auto text-left sm:text-right space-y-2">
+              <h1 class="text-2xl font-bold tracking-tight text-slate-900">INVOICE</h1>
+              
+              <div class="space-y-1 text-xs">
+                <div class="flex items-center justify-between sm:justify-end gap-3">
+                  <span class="text-slate-400 font-medium">Invoice No:</span>
+                  <input type="text" v-model="invoice.number" class="w-28 text-right font-mono font-bold text-slate-800 print-clean-input border border-slate-200 rounded px-1.5 py-0.5">
+                </div>
+                <div class="flex items-center justify-between sm:justify-end gap-3">
+                  <span class="text-slate-400 font-medium">Date:</span>
+                  <input type="date" v-model="invoice.date" class="w-28 text-right font-mono text-slate-800 print-clean-input border border-slate-200 rounded px-1 py-0.5">
+                </div>
+                <div class="flex items-center justify-between sm:justify-end gap-3">
+                  <span class="text-slate-400 font-medium">Due Date:</span>
+                  <input type="date" v-model="invoice.dueDate" class="w-28 text-right font-mono text-slate-800 print-clean-input border border-slate-200 rounded px-1 py-0.5">
+                </div>
+                <div class="flex items-center justify-between sm:justify-end gap-3">
+                  <span class="text-slate-400 font-medium">PO Number:</span>
+                  <input type="text" v-model="invoice.poNumber" placeholder="Optional" class="w-28 text-right font-mono text-slate-800 print-clean-input border border-slate-200 rounded px-1.5 py-0.5">
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Bill-To Section with 1-Click Client Autocomplete -->
+          <div class="py-6 border-b border-slate-200 invoice-bill-to-row page-break-avoid">
+            <div class="flex flex-col sm:flex-row items-start justify-between gap-4">
+              <div class="w-full sm:w-1/2 space-y-1.5">
+                <div class="flex items-center justify-between">
+                  <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Billed To</span>
+                  
+                  <!-- Saved Client Fast-Select Dropdown -->
+                  <div class="no-print flex items-center gap-1.5">
+                    <select @change="selectSavedClient($event.target.value); $event.target.value='';" class="text-[11px] bg-slate-50 border border-slate-200 rounded px-1.5 py-0.5 text-slate-700 focus:outline-none">
+                      <option value="">Select Saved Client...</option>
+                      <option v-for="c in savedClients" :key="c.id" :value="c.id">{{ c.name }}</option>
+                    </select>
+                    <button type="button" @click="saveCurrentClient" class="text-[10px] font-semibold text-emerald-700 hover:underline" title="Save current client to directory">
+                      + Save
                     </button>
                   </div>
                 </div>
 
-                <div v-else class="no-print">
-                  <label class="px-3 py-1.5 rounded-xl border-2 border-dashed border-slate-300 hover:border-indigo-500 bg-slate-50 text-slate-600 hover:text-indigo-600 text-xs font-semibold cursor-pointer inline-flex items-center gap-1.5 transition">
-                    <i data-lucide="image-plus" class="w-3.5 h-3.5"></i>
-                    <span>+ Add Company Logo</span>
-                    <input type="file" @change="onLogoUpload" accept="image/*" class="hidden">
-                  </label>
+                <input type="text" v-model="client.name" placeholder="Client Name / Organization" class="text-sm font-bold text-slate-900 w-full print-clean-input focus:ring-1 focus:ring-emerald-500 rounded px-1">
+                <textarea v-model="client.address" rows="2" placeholder="Client Billing Address, Tax ID" class="text-xs text-slate-500 w-full print-clean-input focus:ring-1 focus:ring-emerald-500 rounded px-1 resize-none"></textarea>
+                <div class="flex gap-2">
+                  <input type="text" v-model="client.email" placeholder="client@company.com" class="text-xs text-slate-500 w-1/2 print-clean-input focus:ring-1 focus:ring-emerald-500 rounded px-1">
+                  <input type="text" v-model="client.phone" placeholder="+1 (555) 000-0000" class="text-xs text-slate-500 w-1/2 print-clean-input focus:ring-1 focus:ring-emerald-500 rounded px-1">
                 </div>
               </div>
 
-              <!-- Company Name & Tagline -->
-              <div>
-                <input type="text" v-model="company.name" class="w-full font-heading font-extrabold text-xl sm:text-2xl text-slate-900 tracking-tight print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="Your Business Name">
-                <input type="text" v-model="company.tagline" class="w-full text-xs text-slate-500 font-medium print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="Business Tagline / Subtitle">
-              </div>
-
-              <!-- Company Contact Info -->
-              <div class="text-xs text-slate-500 space-y-0.5">
-                <input type="text" v-model="company.address" class="w-full print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="123 Street Name, City, Country">
-                <div class="flex items-center gap-2">
-                  <input type="text" v-model="company.phone" class="w-1/2 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="+1 (555) 000-0000">
-                  <input type="email" v-model="company.email" class="w-1/2 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="billing@yourbusiness.com">
-                </div>
-                <div class="flex items-center gap-2">
-                  <input type="text" v-model="company.website" class="w-1/2 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="www.yourbusiness.com">
-                  <input type="text" v-model="company.taxId" class="w-1/2 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="Tax / VAT ID (Optional)">
-                </div>
-              </div>
-
-            </div>
-
-            <!-- Right: Invoice Title & Meta Card -->
-            <div class="w-full sm:w-1/2 flex flex-col sm:items-end text-left sm:text-right space-y-3">
-              <h1 class="text-3xl sm:text-4xl font-heading font-extrabold tracking-tight theme-text-primary">INVOICE</h1>
-              
-              <div class="w-full max-w-[280px] p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-1.5 text-xs text-slate-600 theme-bg-subtle">
-                <div class="flex items-center justify-between">
-                  <span class="font-bold text-slate-700">Invoice No:</span>
-                  <input type="text" v-model="invoice.number" class="w-28 text-right font-mono font-bold text-slate-900 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="INV-1001">
-                </div>
-                <div class="flex items-center justify-between">
-                  <span class="font-semibold text-slate-600">Issue Date:</span>
-                  <input type="date" v-model="invoice.date" class="w-32 text-right font-medium text-slate-800 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1">
-                </div>
-                <div class="flex items-center justify-between">
-                  <span class="font-semibold text-slate-600">Due Date:</span>
-                  <input type="date" v-model="invoice.dueDate" class="w-32 text-right font-medium text-slate-800 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1">
-                </div>
-                <div class="flex items-center justify-between">
-                  <span class="font-semibold text-slate-600">PO / Ref #:</span>
-                  <input type="text" v-model="invoice.poNumber" class="w-28 text-right font-mono text-slate-800 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="PO-9920">
-                </div>
-              </div>
-
-            </div>
-
-          </div>
-
-          <!-- Parties Row: Billed To -->
-          <div class="py-6 invoice-parties-row page-break-avoid">
-            <div class="w-full sm:w-1/2 p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-1 text-xs">
-              
-              <!-- Quick Select Client from Directory -->
-              <div class="no-print pb-1.5 flex items-center justify-between gap-2 border-b border-slate-200/80 mb-2">
-                <select @change="onClientDropdownChange($event)" class="text-[11px] font-semibold px-2 py-1 bg-white border border-slate-200 rounded-lg text-slate-700 focus:outline-none focus:border-indigo-500 max-w-[220px] truncate">
-                  <option value="">-- Quick Load Client ({{ savedClients.length }}) --</option>
-                  <option v-for="c in savedClients" :key="c.id" :value="c.id">{{ c.company ? (c.name + ' (' + c.company + ')') : c.name }}</option>
-                </select>
-                <button type="button" @click="saveCurrentClient" class="px-2 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg text-[10px] font-bold transition flex items-center gap-1 shrink-0" title="Save this client to directory">
-                  <i data-lucide="user-plus" class="w-3 h-3"></i> Save Client
-                </button>
-              </div>
-
-              <div class="flex items-center justify-between mb-1">
-                <input type="text" v-model="sections.clientTitle" class="text-[10px] font-bold tracking-wider uppercase text-slate-400 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded w-40" placeholder="BILLED TO:">
-              </div>
-              <input type="text" v-model="client.name" class="w-full font-bold text-sm text-slate-900 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="Client / Contact Name">
-              <input type="text" v-model="client.company" class="w-full font-medium text-slate-700 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="Client Company Name">
-              <input type="text" v-model="client.address" class="w-full text-slate-600 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="Client Billing Address">
-              <div class="flex items-center gap-2 pt-0.5">
-                <input type="email" v-model="client.email" class="w-1/2 text-slate-600 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="client@company.com">
-                <input type="text" v-model="client.phone" class="w-1/2 text-slate-600 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="+1 (555) 123-4567">
+              <!-- Payment QR Code on A4 Paper -->
+              <div v-if="options.showPaymentQR && paymentQR.computedUrl" class="sm:w-auto p-3 bg-slate-50 border border-slate-200 rounded-xl text-center flex flex-col items-center gap-1.5 invoice-qr-block">
+                <img :src="paymentQR.computedUrl" alt="Payment QR Code" class="w-20 h-20 rounded border border-slate-200">
+                <span class="text-[9px] font-mono text-slate-500 font-semibold uppercase">Scan to Pay</span>
               </div>
             </div>
           </div>
 
-          <!-- Line Items Table -->
-          <div class="overflow-x-auto mb-4 page-break-avoid">
-            <table class="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr class="border-b-2 border-slate-300 bg-slate-100/70 text-slate-700 uppercase text-[10px] font-bold tracking-wider">
-                  <th class="py-2.5 px-3 w-[45%]">Item & Description</th>
-                  <th class="py-2.5 px-3 text-center w-[15%]">Qty</th>
-                  <th class="py-2.5 px-3 text-right w-[20%]">Rate ({{ invoice.currency }})</th>
-                  <th class="py-2.5 px-3 text-right w-[20%]">Amount ({{ invoice.currency }})</th>
-                  <th class="py-2.5 px-2 text-center w-[40px] no-print"></th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-slate-200">
-                <tr v-for="(item, index) in items" :key="index" class="group hover:bg-slate-50/80 transition-colors">
-                  <td class="py-2.5 px-3 align-top">
-                    <input type="text" v-model="item.name" class="w-full font-bold text-slate-900 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="Service or Product Name">
-                    <textarea v-model="item.desc" rows="1" class="w-full text-[11px] text-slate-500 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1 mt-0.5" placeholder="Detailed service breakdown or notes..."></textarea>
-                  </td>
-                  <td class="py-2.5 px-3 text-center align-top">
-                    <input type="number" min="1" step="1" v-model.number="item.qty" class="w-16 text-center font-semibold text-slate-800 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1">
-                  </td>
-                  <td class="py-2.5 px-3 text-right align-top">
-                    <input type="number" min="0" step="0.01" v-model.number="item.rate" class="w-24 text-right font-mono font-semibold text-slate-800 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1">
-                  </td>
-                  <td class="py-2.5 px-3 text-right align-top font-mono font-bold text-slate-900">
-                    {{ invoice.currency }} {{ formatMoney(item.qty * item.rate) }}
-                  </td>
-                  <td class="py-2.5 px-2 text-center align-top no-print">
-                    <button @click="removeItem(index)" :disabled="items.length <= 1" class="text-slate-400 hover:text-rose-600 disabled:opacity-30 transition p-1" title="Delete Row">
-                      <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+          <!-- Tabular Line Items -->
+          <div class="py-6 invoice-table-row">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead>
+                  <tr class="border-b border-slate-300 text-slate-500 font-semibold text-[11px]">
+                    <th class="pb-2 w-7/12">Item Description</th>
+                    <th class="pb-2 text-center w-1/12">Qty</th>
+                    <th class="pb-2 text-right w-2/12">Rate ({{ invoice.currency }})</th>
+                    <th class="pb-2 text-right w-2/12">Amount ({{ invoice.currency }})</th>
+                    <th class="pb-2 text-right w-8 no-print"></th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100">
+                  <tr v-for="(item, idx) in items" :key="idx" class="group">
+                    <td class="py-2.5 pr-2">
+                      <input type="text" v-model="item.description" placeholder="Description of service or item..." class="w-full font-medium text-slate-900 print-clean-input border-b border-transparent focus:border-slate-300 rounded px-1">
+                    </td>
+                    <td class="py-2.5 px-1 text-center">
+                      <input type="number" min="0" step="any" v-model.number="item.quantity" class="w-14 text-center font-mono font-medium text-slate-800 print-clean-input border border-slate-200 rounded px-1">
+                    </td>
+                    <td class="py-2.5 px-1 text-right">
+                      <input type="number" min="0" step="any" v-model.number="item.rate" class="w-20 text-right font-mono font-medium text-slate-800 print-clean-input border border-slate-200 rounded px-1">
+                    </td>
+                    <td class="py-2.5 pl-2 text-right font-mono font-bold text-slate-900">
+                      {{ formatMoney(item.quantity * item.rate) }}
+                    </td>
+                    <td class="py-2.5 text-right no-print">
+                      <button v-if="items.length > 1" @click="removeItem(idx)" class="text-slate-300 hover:text-rose-600 p-1 transition" title="Remove Item">
+                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Add Line Item Action -->
+            <div class="pt-3 no-print">
+              <button @click="addItem" class="px-3 py-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-lg transition flex items-center gap-1.5">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                <span>Add Item</span>
+              </button>
+            </div>
           </div>
 
-          <!-- Add Line Item Button (No Print) -->
-          <div class="mb-6 no-print">
-            <button @click="addItem" class="px-3 py-1.5 rounded-xl border border-indigo-200 dark:border-indigo-800 text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 text-xs font-bold transition inline-flex items-center gap-1.5">
-              <i data-lucide="plus" class="w-3.5 h-3.5"></i>
-              <span>Add Item Row</span>
-            </button>
-          </div>
-
-          <!-- Summary & Totals Row -->
-          <div class="flex flex-col sm:flex-row items-start justify-between gap-6 py-4 invoice-totals-row page-break-avoid">
+          <!-- Bottom Row: Bank Wire / Notes & Financial Summary Totals -->
+          <div class="pt-6 border-t border-slate-200 flex flex-col sm:flex-row justify-between gap-6 invoice-totals-row page-break-avoid">
             
-            <!-- Left: Payment Notes, Bank Details & Scannable QR -->
+            <!-- Left: Notes & Bank Wire -->
             <div class="w-full sm:w-1/2 space-y-4">
-              
-              <!-- Payment Instructions (Editable Title & Removable) -->
-              <div v-if="options.showNotes" class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-1 text-xs relative group">
-                <div class="flex items-center justify-between mb-1">
-                  <input type="text" v-model="sections.notesTitle" class="text-[10px] font-bold tracking-wider uppercase text-slate-400 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded w-full pr-14" placeholder="NOTES & PAYMENT INSTRUCTIONS:">
-                  <button type="button" @click="options.showNotes = false" class="no-print text-slate-400 hover:text-rose-600 text-[10px] font-semibold flex items-center gap-0.5 px-1.5 py-0.5 rounded hover:bg-slate-100 transition" title="Hide Notes Section">
-                    <i data-lucide="x" class="w-3 h-3"></i> Hide
-                  </button>
-                </div>
-                <textarea v-model="invoice.notes" rows="3" class="w-full text-slate-600 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded p-1 leading-relaxed" placeholder="Payment terms, bank deposit instructions, or client greeting..."></textarea>
+              <div v-if="options.showNotes" class="space-y-1">
+                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Notes & Payment Terms</span>
+                <textarea v-model="notes" rows="3" placeholder="Payment due within 14 days of invoice date. Thank you for your business." class="text-xs text-slate-600 w-full print-clean-input border border-slate-200 rounded p-1.5 resize-none"></textarea>
               </div>
 
-              <!-- Scannable Payment QR Block (Cross-Promotion with AutomatixQR) -->
-              <div v-if="options.showPaymentQR" class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-1.5 text-xs relative group theme-bg-subtle page-break-avoid">
-                <div class="flex items-center justify-between mb-1">
-                  <input type="text" v-model="sections.qrTitle" class="text-[10px] font-bold tracking-wider uppercase text-slate-400 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded w-full pr-14" placeholder="SCAN TO PAY / VERIFY:">
-                  <button type="button" @click="options.showPaymentQR = false" class="no-print text-slate-400 hover:text-rose-600 text-[10px] font-semibold flex items-center gap-0.5 px-1.5 py-0.5 rounded hover:bg-slate-100 transition" title="Hide QR Code">
-                    <i data-lucide="x" class="w-3 h-3"></i> Hide
-                  </button>
-                </div>
-                <div class="flex items-center gap-3">
-                  <div class="p-1.5 bg-white rounded-xl border border-slate-200 shadow-sm shrink-0">
-                    <img :src="paymentQRUrl" alt="Payment QR Code" class="w-20 h-20 object-contain">
-                  </div>
-                  <div class="space-y-1 text-xs">
-                    <input type="text" v-model="paymentQR.label" class="font-bold text-slate-900 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1 w-full text-[11px]" placeholder="Scan to Pay / Verify">
-                    <input type="text" v-model="paymentQR.data" class="font-mono text-slate-500 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1 w-full text-[10px]" placeholder="https://www.automatixes.com/pay/INV-1001">
-                    <div class="no-print text-[10px] text-indigo-600 dark:text-indigo-400 font-semibold pt-0.5">
-                      <a href="https://qrcode.automatixes.com" target="_blank" class="hover:underline inline-flex items-center gap-1">
-                        <i data-lucide="sparkles" class="w-3 h-3"></i> Powered by AutomatixQR
-                      </a>
-                    </div>
-                  </div>
-                </div>
+              <div v-if="options.showBankDetails" class="space-y-1">
+                <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Bank Transfer Details</span>
+                <textarea v-model="bankDetails" rows="2" placeholder="Bank: Chase | Account: 00928172 | Routing: 12100024 | IBAN: GB29..." class="text-xs text-slate-600 font-mono w-full print-clean-input border border-slate-200 rounded p-1.5 resize-none"></textarea>
               </div>
-
-              <!-- Bank Account Details (Editable Title & Removable) -->
-              <div v-if="options.showBankDetails" class="p-3.5 bg-slate-50 border border-slate-200 rounded-xl space-y-1.5 text-xs relative group">
-                <div class="flex items-center justify-between mb-1">
-                  <input type="text" v-model="sections.bankTitle" class="text-[10px] font-bold tracking-wider uppercase text-slate-400 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded w-full pr-14" placeholder="BANK & WIRE TRANSFER:">
-                  <button type="button" @click="options.showBankDetails = false" class="no-print text-slate-400 hover:text-rose-600 text-[10px] font-semibold flex items-center gap-0.5 px-1.5 py-0.5 rounded hover:bg-slate-100 transition" title="Hide Bank Details">
-                    <i data-lucide="x" class="w-3 h-3"></i> Hide
-                  </button>
-                </div>
-                <div class="grid grid-cols-2 gap-2">
-                  <div>
-                    <label class="text-[10px] text-slate-400 block">Bank Name:</label>
-                    <input type="text" v-model="bank.name" class="w-full font-semibold text-slate-800 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="JPMorgan Chase">
-                  </div>
-                  <div>
-                    <label class="text-[10px] text-slate-400 block">Account / IBAN:</label>
-                    <input type="text" v-model="bank.iban" class="w-full font-mono text-slate-800 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="GB29 XXXXXXXX">
-                  </div>
-                  <div>
-                    <label class="text-[10px] text-slate-400 block">Swift / BIC:</label>
-                    <input type="text" v-model="bank.swift" class="w-full font-mono text-slate-800 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="CHASUS33">
-                  </div>
-                  <div>
-                    <label class="text-[10px] text-slate-400 block">Account Title:</label>
-                    <input type="text" v-model="bank.holder" class="w-full text-slate-800 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded px-1" placeholder="Automatixes LLC">
-                  </div>
-                </div>
-              </div>
-
             </div>
 
-            <!-- Right: Calculations & Grand Total Card -->
-            <div class="w-full sm:w-1/2 max-w-[340px] ml-auto space-y-2 text-xs">
+            <!-- Right: Financial Totals Breakdown -->
+            <div class="w-full sm:w-5/12 space-y-2 text-xs">
               
-              <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-2 theme-bg-subtle">
-                <div class="flex items-center justify-between font-semibold text-slate-600">
-                  <span>Subtotal:</span>
-                  <span class="font-mono font-bold text-slate-900">{{ invoice.currency }} {{ formatMoney(subtotal) }}</span>
-                </div>
+              <!-- Subtotal -->
+              <div class="flex items-center justify-between text-slate-600 pb-1.5 border-b border-slate-100">
+                <span>Subtotal:</span>
+                <span class="font-mono font-bold text-slate-900">{{ invoice.currency }} {{ formatMoney(subtotal) }}</span>
+              </div>
 
-                <!-- Tax Calculation -->
-                <div v-if="options.showTax" class="flex items-center justify-between text-slate-600">
-                  <div class="flex items-center gap-1">
-                    <span>Tax:</span>
-                    <input type="number" min="0" step="any" v-model.number="invoice.taxRate" class="w-14 text-center font-mono font-semibold text-slate-800 print-clean-input border border-slate-300 rounded px-1" placeholder="0">
-                    <span class="font-mono text-[11px] font-bold">%</span>
-                  </div>
-                  <span class="font-mono text-slate-900">+ {{ invoice.currency }} {{ formatMoney(taxAmount) }}</span>
+              <!-- Tax -->
+              <div v-if="options.showTax" class="flex items-center justify-between text-slate-600">
+                <div class="flex items-center gap-1">
+                  <span>{{ invoice.taxName || 'Tax' }}:</span>
+                  <input type="number" min="0" step="any" v-model.number="invoice.taxRate" class="w-12 text-center font-mono font-semibold text-slate-800 print-clean-input border border-slate-200 rounded px-1" placeholder="0">
+                  <span class="font-mono text-[11px] font-bold">%</span>
                 </div>
+                <span class="font-mono font-semibold text-slate-900">+ {{ invoice.currency }} {{ formatMoney(taxAmount) }}</span>
+              </div>
 
-                <!-- Discount Calculation -->
-                <div v-if="options.showDiscount" class="flex items-center justify-between text-slate-600">
-                  <div class="flex items-center gap-1">
-                    <span>Discount:</span>
-                    <input type="number" min="0" step="any" v-model.number="invoice.discountRate" class="w-14 text-center font-mono font-semibold text-slate-800 print-clean-input border border-slate-300 rounded px-1" placeholder="0">
-                    <span class="font-mono text-[11px] font-bold">%</span>
-                  </div>
-                  <span class="font-mono text-emerald-600 font-bold">- {{ invoice.currency }} {{ formatMoney(discountAmount) }}</span>
+              <!-- Discount -->
+              <div v-if="options.showDiscount" class="flex items-center justify-between text-slate-600">
+                <div class="flex items-center gap-1">
+                  <span>Discount:</span>
+                  <input type="number" min="0" step="any" v-model.number="invoice.discountRate" class="w-12 text-center font-mono font-semibold text-slate-800 print-clean-input border border-slate-200 rounded px-1" placeholder="0">
+                  <span class="font-mono text-[11px] font-bold">%</span>
                 </div>
+                <span class="font-mono text-emerald-700 font-bold">- {{ invoice.currency }} {{ formatMoney(discountAmount) }}</span>
+              </div>
 
-                <!-- Shipping -->
-                <div v-if="options.showShipping" class="flex items-center justify-between text-slate-600">
-                  <span>Shipping / Fee:</span>
-                  <div class="flex items-center gap-1">
-                    <span class="font-mono">{{ invoice.currency }}</span>
-                    <input type="number" min="0" step="any" v-model.number="invoice.shipping" class="w-16 text-right font-mono font-semibold text-slate-800 print-clean-input border border-slate-300 rounded px-1" placeholder="0">
-                  </div>
+              <!-- Shipping -->
+              <div v-if="options.showShipping" class="flex items-center justify-between text-slate-600">
+                <span>Shipping / Fee:</span>
+                <div class="flex items-center gap-1">
+                  <span class="font-mono">{{ invoice.currency }}</span>
+                  <input type="number" min="0" step="any" v-model.number="invoice.shipping" class="w-16 text-right font-mono font-semibold text-slate-800 print-clean-input border border-slate-200 rounded px-1" placeholder="0">
                 </div>
+              </div>
 
-                <!-- Grand Total -->
-                <div class="pt-3 border-t-2 border-slate-300 flex items-center justify-between">
-                  <span class="font-heading font-extrabold text-sm sm:text-base text-slate-900">Total Due:</span>
-                  <span class="font-mono font-extrabold text-lg sm:text-xl theme-text-primary">
-                    {{ invoice.currency }} {{ formatMoney(grandTotal) }}
-                  </span>
-                </div>
+              <!-- Grand Total -->
+              <div class="pt-3 border-t-2 border-slate-900 flex items-center justify-between">
+                <span class="font-extrabold text-sm text-slate-900">Total Due:</span>
+                <span class="font-mono font-extrabold text-lg text-emerald-700">
+                  {{ invoice.currency }} {{ formatMoney(grandTotal) }}
+                </span>
               </div>
 
               <!-- Signature Block -->
               <div v-if="options.showSignature" class="pt-4 text-center sm:text-right invoice-signature-row">
                 <div class="inline-block text-center space-y-1">
                   <div class="w-44 border-b border-slate-400 pb-1 mx-auto sm:ml-auto">
-                    <input type="text" v-model="signature.name" class="w-full text-center font-serif italic text-sm text-slate-800 print-clean-input focus:ring-1 focus:ring-indigo-500 rounded" placeholder="Authorized Signature">
+                    <input type="text" v-model="signature.name" class="w-full text-center italic text-sm text-slate-800 print-clean-input focus:ring-1 focus:ring-emerald-500 rounded" placeholder="Authorized Signature">
                   </div>
-                  <input type="text" v-model="signature.title" class="text-[10px] text-slate-400 text-center print-clean-input focus:ring-1 focus:ring-indigo-500 rounded" placeholder="Managing Director">
+                  <input type="text" v-model="signature.title" class="text-[10px] text-slate-400 text-center print-clean-input focus:ring-1 focus:ring-emerald-500 rounded" placeholder="Managing Director">
                 </div>
               </div>
 
@@ -762,7 +702,7 @@
 
           <!-- In-Flow Watermark Footer -->
           <div v-if="options.showWatermark" class="invoice-watermark-row pt-6 mt-4 border-t border-slate-200 text-center text-slate-400 text-[10px] page-break-avoid">
-            <span>Generated with <strong>AutomatixInvoice</strong> • Powered by <a href="https://www.automatixes.com" target="_blank" class="hover:underline text-slate-500 font-semibold">Automatixes AI Solutions</a> (www.automatixes.com)</span>
+            <span>Generated with <strong>AutomatixInvoice</strong> | Powered by <a href="https://www.automatixes.com" target="_blank" class="hover:underline text-slate-500 font-semibold">Automatixes</a> (www.automatixes.com)</span>
           </div>
 
         </div>
@@ -777,29 +717,25 @@
     <div class="max-w-[1600px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10 no-print">
       
       <!-- 1. Quotable Summary & Value Proposition -->
-      <section class="bg-gradient-to-br from-indigo-900 via-indigo-950 to-slate-900 rounded-3xl p-6 sm:p-10 text-white shadow-xl border border-indigo-800/60 relative overflow-hidden">
-        <div class="absolute -right-12 -bottom-12 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="max-w-3xl space-y-3 relative z-10">
-          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-mono font-bold border border-emerald-500/30">
-            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-emerald-400"></i>
-            <span>100% Free Forever • Zero Signup Required</span>
+      <section class="bg-slate-900 rounded-2xl p-6 sm:p-8 text-white border border-slate-800 relative">
+        <div class="max-w-3xl space-y-2.5">
+          <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-mono font-bold border border-emerald-500/30">
+            <i data-lucide="check-circle" class="w-3.5 h-3.5 text-emerald-400"></i>
+            <span>100% Free Forever | Zero Signup Required</span>
           </div>
-          <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold font-heading text-white tracking-tight leading-tight">
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-tight">
             Free Online Invoice Generator & Professional A4 PDF Maker
           </h1>
-          <p class="text-sm text-slate-300 leading-relaxed">
+          <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
             <strong>AutomatixInvoice</strong> is a free online tool to create, customize, and export professional PDF invoices instantly. Built for freelancers, agencies, and small businesses, it features automatic numbering, saved clients directory, recurring duplicate, live tax calculations, and scannable payment QR codes.
           </p>
         </div>
       </section>
 
       <!-- 2. How to Create an Invoice in 3 Steps -->
-      <section class="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-3xl p-6 sm:p-8 shadow-sm space-y-6">
+      <section class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xs space-y-6">
         <div class="space-y-1">
-          <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-[10px] font-mono font-bold uppercase">
-            <span>Quick Workflow</span>
-          </div>
-          <h2 class="text-lg sm:text-xl font-bold font-heading text-slate-900 dark:text-white">
+          <h2 class="text-base sm:text-lg font-bold text-slate-900 dark:text-white">
             How to Create a Professional Invoice in 3 Steps
           </h2>
           <p class="text-xs text-slate-500 dark:text-slate-400">
@@ -808,31 +744,31 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="p-5 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200 dark:border-slate-700/60 space-y-3">
-            <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white font-mono font-extrabold flex items-center justify-center shadow-md shadow-indigo-600/20">
+          <div class="p-5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700/60 space-y-2.5">
+            <div class="w-8 h-8 rounded-lg bg-emerald-700 text-white font-mono font-bold text-xs flex items-center justify-center">
               1
             </div>
-            <h3 class="text-sm font-bold text-slate-900 dark:text-white">Add Company & Client Details</h3>
+            <h3 class="text-xs font-bold text-slate-900 dark:text-white">Add Company & Client Details</h3>
             <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-              Upload your company logo, enter your business contact info, and type or select your client from the <strong>Saved Clients Directory</strong> for 1-click autofill.
+              Upload your company logo, enter business details, and type or select your client from the <strong>Saved Clients Directory</strong> for 1-click autofill.
             </p>
           </div>
 
-          <div class="p-5 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200 dark:border-slate-700/60 space-y-3">
-            <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white font-mono font-extrabold flex items-center justify-center shadow-md shadow-indigo-600/20">
+          <div class="p-5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700/60 space-y-2.5">
+            <div class="w-8 h-8 rounded-lg bg-emerald-700 text-white font-mono font-bold text-xs flex items-center justify-center">
               2
             </div>
-            <h3 class="text-sm font-bold text-slate-900 dark:text-white">Itemize Deliverables & Taxes</h3>
+            <h3 class="text-xs font-bold text-slate-900 dark:text-white">Itemize Deliverables & Taxes</h3>
             <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
               List products or hourly services, apply discounts, select your country tax preset (VAT, GST, Sales Tax), and enter payment details or a scannable payment QR.
             </p>
           </div>
 
-          <div class="p-5 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200 dark:border-slate-700/60 space-y-3">
-            <div class="w-10 h-10 rounded-xl bg-indigo-600 text-white font-mono font-extrabold flex items-center justify-center shadow-md shadow-indigo-600/20">
+          <div class="p-5 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700/60 space-y-2.5">
+            <div class="w-8 h-8 rounded-lg bg-emerald-700 text-white font-mono font-bold text-xs flex items-center justify-center">
               3
             </div>
-            <h3 class="text-sm font-bold text-slate-900 dark:text-white">Export Clean A4 PDF</h3>
+            <h3 class="text-xs font-bold text-slate-900 dark:text-white">Export Clean A4 PDF</h3>
             <p class="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
               Click <strong>Export PDF</strong> to download an authentic A4 PDF invoice without registration, or save it to your local browser library for future recurring billing.
             </p>
