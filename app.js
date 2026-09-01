@@ -622,6 +622,24 @@ createApp({
     };
 
     onMounted(() => {
+      // Initialize Lenis Smooth Inertia Scroll (Option 2: Gliding Inertia)
+      if (typeof Lenis !== 'undefined') {
+        const lenis = new Lenis({
+          lerp: 0.1,
+          duration: 1.1,
+          smoothWheel: true,
+          wheelMultiplier: 1.0,
+          touchMultiplier: 1.0,
+          infinite: false
+        });
+        function raf(time) {
+          lenis.raf(time);
+          requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+        window.lenis = lenis;
+      }
+
       const savedTheme = localStorage.getItem('automatix_invoice_theme');
       if (savedTheme === 'dark') {
         applyTheme(true);
