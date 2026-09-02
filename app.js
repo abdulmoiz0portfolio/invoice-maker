@@ -641,10 +641,10 @@ createApp({
       }
 
       const savedTheme = localStorage.getItem('automatix_invoice_theme');
-      if (savedTheme === 'dark') {
-        applyTheme(true);
-      } else {
+      if (savedTheme === 'light') {
         applyTheme(false);
+      } else {
+        applyTheme(true);
       }
       loadSavedInvoicesFromStorage();
       loadSavedClientsFromStorage();

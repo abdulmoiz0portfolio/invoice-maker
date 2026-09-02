@@ -1,6 +1,20 @@
 <!DOCTYPE html>
-<html lang="en" class="light">
+<html lang="en" class="dark">
 <head>
+  <script>
+    (function() {
+      try {
+        var saved = localStorage.getItem('automatix_invoice_theme');
+        if (saved === 'light') {
+          document.documentElement.classList.add('light');
+          document.documentElement.classList.remove('dark');
+        } else {
+          document.documentElement.classList.add('dark');
+          document.documentElement.classList.remove('light');
+        }
+      } catch(e) {}
+    })();
+  </script>
   <!-- Google Consent Mode v2 (must fire BEFORE gtag.js) -->
   <script>
     window.dataLayer = window.dataLayer || [];

@@ -1,158 +1,315 @@
-/* AutomatixInvoice - Financial Ledger & Architectural Design System (Automatixes Family) */
+/* ==========================================================================
+   AUTOMATIXINVOICE - BKLIT UI ENTERPRISE DUAL-THEME DESIGN SYSTEM
+   High-Contrast Obsidian Zinc Dark & Slate Light Engine
+   Matching AutomatixQR Design Language & Precision Primitives
+   ========================================================================== */
 
+/* --- 1. SYSTEM ROOT TOKENS --- */
 :root {
-  --inv-bg-canvas: #f1f3f5;
-  --inv-paper-sheet: #ffffff;
-  --inv-ink-primary: #09090b;
-  --inv-ink-secondary: #3f3f46;
-  --inv-accent-finance: #047857;
-  --inv-rule-line: #e4e4e7;
+  /* LIGHT MODE: Technical Slate & Crisp White Surfaces */
+  --inv-bg-canvas: #f1f5f9;
+  --inv-surface-shell: #ffffff;
+  --inv-surface-core: #ffffff;
+  --inv-surface-elevated: #ffffff;
+  --inv-surface-muted: #f8fafc;
+  
+  --inv-ink-primary: #0f172a;
+  --inv-ink-secondary: #334155;
+  --inv-ink-muted: #64748b;
+  --inv-ink-faint: #94a3b8;
+  
+  --inv-accent-primary: #0f172a;
+  --inv-accent-brand: #4f46e5;
+  --inv-accent-emerald: #059669;
+  --inv-accent-amber: #d97706;
+  --inv-accent-rose: #e11d48;
+  
+  --inv-border-hairline: #cbd5e1;
+  --inv-border-medium: #94a3b8;
+  
+  --inv-radius-xl: 12px;
+  --inv-radius-lg: 10px;
+  --inv-radius-md: 8px;
+  --inv-radius-sm: 6px;
+  --inv-radius-pill: 9999px;
+  
+  --inv-shadow-ambient: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
+  --inv-shadow-card: 0 1px 3px 0 rgba(15, 23, 42, 0.06), 0 4px 14px -3px rgba(15, 23, 42, 0.04);
+  --inv-shadow-hover: 0 10px 25px -4px rgba(15, 23, 42, 0.1), 0 0 0 1px rgba(79, 70, 229, 0.3);
+  
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* DARK MODE: Obsidian Canvas & Zinc Surfaces */
+html.dark {
+  color-scheme: dark;
+  --inv-bg-canvas: #09090b;
+  --inv-surface-shell: #0c0c0e;
+  --inv-surface-core: #121215;
+  --inv-surface-elevated: #18181b;
+  --inv-surface-muted: #141418;
+  
+  --inv-ink-primary: #fafafa;
+  --inv-ink-secondary: #e4e4e7;
+  --inv-ink-muted: #a1a1aa;
+  --inv-ink-faint: #52525b;
+  
+  --inv-accent-primary: #fafafa;
+  --inv-accent-brand: #6366f1;
+  --inv-accent-emerald: #10b981;
+  --inv-accent-amber: #fbbf24;
+  --inv-accent-rose: #f43f5e;
+  
+  --inv-border-hairline: #27272a;
+  --inv-border-medium: #3f3f46;
+  
+  --inv-shadow-ambient: 0 4px 20px -2px rgba(0, 0, 0, 0.7);
+  --inv-shadow-card: 0 4px 14px 0 rgba(0, 0, 0, 0.5), inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
+  --inv-shadow-hover: 0 10px 28px -4px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(99, 102, 241, 0.4);
+}
+
+/* --- 2. BASE SURFACE & GEOMETRIC DOT GRID --- */
 body {
-  background-color: var(--inv-bg-canvas);
-  color: var(--inv-ink-primary);
+  background-color: var(--inv-bg-canvas) !important;
+  color: var(--inv-ink-primary) !important;
   font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  overflow-x: hidden;
+  position: relative;
 }
 
-/* Tabular figures for financial calculations */
+/* Subtle Geometric Dot Grid */
+html.dark body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 28px 28px;
+  z-index: 0;
+  opacity: 0.75;
+}
+
+html:not(.dark) body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background-image: radial-gradient(rgba(15, 23, 42, 0.07) 1px, transparent 1px);
+  background-size: 28px 28px;
+  z-index: 0;
+  opacity: 0.6;
+}
+
+h1, h2, h3, h4, .font-heading {
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  letter-spacing: -0.025em;
+}
+
 .font-mono, input[type="number"], .tabular-nums {
   font-family: 'JetBrains Mono', monospace !important;
   font-feature-settings: 'tnum' 1;
 }
 
-/* Custom Clean Scrollbar */
-::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: #d4d4d8;
-  border-radius: 2px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #a1a1aa;
+/* --- 3. BKLIT UI CARDS & PANELS --- */
+.bklit-card {
+  background: var(--inv-surface-core);
+  border-radius: var(--inv-radius-lg);
+  border: 1px solid var(--inv-border-hairline);
+  box-shadow: var(--inv-shadow-card);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* Micro-Interactions */
+html:not(.dark) .bklit-card {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+}
+
+html.dark .bklit-card {
+  background: linear-gradient(180deg, #131317 0%, #0f0f12 100%);
+  border: 1px solid #27272a;
+}
+
+/* --- 4. TACTILE BUTTONS & MICRO-INTERACTIONS --- */
 button, .btn {
-  transition: transform 0.12s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.12s ease, border-color 0.12s ease;
+  transition: transform 0.12s var(--ease-spring), background-color 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease, color 0.12s ease;
   user-select: none;
-}
-button:active, .btn:active {
-  transform: scale(0.97) !important;
-}
-
-/* Input Fields on A4 Sheet (Clean borderless/border on hover) */
-.print-clean-input {
-  background: transparent;
   outline: none;
-  transition: background-color 0.12s ease, border-color 0.12s ease;
-}
-.print-clean-input:hover {
-  background-color: #f4f4f5;
-}
-.print-clean-input:focus {
-  background-color: #ffffff;
-  border-color: #047857 !important;
-  box-shadow: 0 0 0 1px #047857;
 }
 
-/* A4 Invoice Paper Sheet Simulation - Architectonic Precision */
+button:active, .btn:active {
+  transform: scale(0.96) !important;
+}
+
+/* --- 5. A4 INVOICE PAPER SHEET SIMULATION --- */
 .invoice-paper-sheet {
   width: 100%;
   max-width: 840px;
   min-height: 1080px;
   background: #ffffff;
   color: #09090b;
-  border: 1px solid #d4d4d8;
-  border-radius: 6px;
-  box-shadow: 0 4px 24px -4px rgba(0, 0, 0, 0.07);
-  transition: box-shadow 0.2s ease;
+  border: 1px solid #cbd5e1;
+  border-radius: var(--inv-radius-md);
+  box-shadow: 0 8px 30px -4px rgba(15, 23, 42, 0.08), 0 1px 3px rgba(15, 23, 42, 0.05);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  position: relative;
 }
 
-.dark .invoice-paper-sheet {
-  background: #ffffff !important;
+html.dark .invoice-paper-sheet {
+  background: #ffffff !important; /* A4 paper stays physical white for printing/preview */
   color: #09090b !important;
-  box-shadow: 0 12px 36px -10px rgba(0, 0, 0, 0.6);
+  border: 1px solid #27272a;
+  box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.7);
 }
 
-/* Financial Visual Themes for A4 Invoice Paper */
-.theme-executive-slate {
-  --theme-accent: #09090b;
-  --theme-accent-light: #f4f4f5;
-  --theme-accent-border: #e4e4e7;
+.invoice-paper-sheet {
+  border-top: 5px solid var(--theme-accent, #4F46E5) !important;
+}
+
+/* Input Fields on A4 Sheet */
+.print-clean-input {
+  background: transparent;
+  outline: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  transition: background-color 0.12s ease, border-color 0.12s ease;
+}
+
+.print-clean-input:hover {
+  background-color: #f4f4f5;
+  border-color: #e4e4e7;
+}
+
+.print-clean-input:focus {
+  background-color: #ffffff;
+  border-color: var(--theme-accent, #4F46E5) !important;
+  box-shadow: 0 0 0 1px var(--theme-accent, #4F46E5);
+}
+
+/* --- 6. FINANCIAL COLOR THEMES --- */
+.theme-modern-indigo {
+  --theme-accent: #4F46E5;
+  --theme-accent-light: #eef2ff;
+  --theme-accent-border: #c7d2fe;
 }
 .theme-emerald-growth {
-  --theme-accent: #047857;
+  --theme-accent: #059669;
   --theme-accent-light: #ecfdf5;
   --theme-accent-border: #a7f3d0;
 }
-.theme-automatix-volt {
-  --theme-accent: #15803d;
-  --theme-accent-light: #f0fdf4;
-  --theme-accent-border: #bbf7d0;
-}
-.theme-modern-indigo {
-  --theme-accent: #1e293b;
+.theme-executive-slate {
+  --theme-accent: #0f172a;
   --theme-accent-light: #f1f5f9;
   --theme-accent-border: #cbd5e1;
 }
 .theme-vibrant-coral {
-  --theme-accent: #be123c;
+  --theme-accent: #e11d48;
   --theme-accent-light: #fff1f2;
   --theme-accent-border: #fecdd3;
 }
-
-.invoice-paper-sheet {
-  border-top: 5px solid var(--theme-accent, #047857) !important;
+.theme-automatix-cyber {
+  --theme-accent: #15803d;
+  --theme-accent-light: #f0fdf4;
+  --theme-accent-border: #bbf7d0;
 }
 
 .theme-text-primary {
-  color: var(--theme-accent, #047857) !important;
+  color: var(--theme-accent, #4F46E5) !important;
 }
 
 .theme-bg-subtle {
-  background-color: var(--theme-accent-light, #ecfdf5) !important;
+  background-color: var(--theme-accent-light, #eef2ff) !important;
 }
 
 .theme-border-accent {
-  border-color: var(--theme-accent-border, #a7f3d0) !important;
+  border-color: var(--theme-accent-border, #c7d2fe) !important;
 }
 
 .theme-btn-accent {
-  color: var(--theme-accent, #047857) !important;
-  background-color: var(--theme-accent-light, #ecfdf5) !important;
-  border-color: var(--theme-accent-border, #a7f3d0) !important;
+  color: var(--theme-accent, #4F46E5) !important;
+  background-color: var(--theme-accent-light, #eef2ff) !important;
+  border-color: var(--theme-accent-border, #c7d2fe) !important;
 }
 .theme-btn-accent:hover {
-  filter: brightness(0.95);
+  filter: brightness(0.96);
 }
 
-/* Modal Backdrop */
+/* --- 7. TOP APP HEADER & NAVBAR --- */
+header {
+  border-bottom: 1px solid var(--inv-border-hairline) !important;
+}
+
+html:not(.dark) header {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+html.dark header {
+  background-color: rgba(12, 12, 14, 0.95) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* --- 8. INPUTS, SELECTS & CONTROLS IN SIDEBAR/MODALS --- */
+input[type="text"], input[type="url"], input[type="email"], input[type="password"], textarea, select {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.8125rem;
+  transition: all 0.15s ease;
+}
+
+html:not(.dark) aside input, html:not(.dark) aside select, html:not(.dark) .modal-dialog input, html:not(.dark) .modal-dialog select {
+  background-color: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+html:not(.dark) aside input:focus, html:not(.dark) aside select:focus {
+  border-color: #4f46e5 !important;
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.15) !important;
+}
+
+html.dark aside input, html.dark aside select, html.dark .modal-dialog input, html.dark .modal-dialog select {
+  background-color: #0c0c0e !important;
+  border: 1px solid #27272a !important;
+  color: #fafafa !important;
+}
+
+html.dark aside input:focus, html.dark aside select:focus {
+  border-color: #6366f1 !important;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.25) !important;
+}
+
+/* --- 9. MODALS & DRAWERS --- */
 .modal-backdrop:not(.hidden) {
   display: flex !important;
   animation: backdropIn 0.2s ease-out forwards;
 }
 
 @keyframes backdropIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from { opacity: 0; backdrop-filter: blur(0px); }
+  to { opacity: 1; backdrop-filter: blur(12px); }
 }
 
 .modal-dialog {
-  animation: modalIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: modalIn 0.25s var(--ease-spring) forwards;
+  border-radius: var(--inv-radius-xl);
+  border: 1px solid var(--inv-border-hairline);
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.5);
 }
 
 @keyframes modalIn {
   from {
     opacity: 0;
-    transform: translateY(10px) scale(0.98);
+    transform: translateY(12px) scale(0.97);
   }
   to {
     opacity: 1;
@@ -160,7 +317,30 @@ button:active, .btn:active {
   }
 }
 
-/* Print Stylesheet (Pure Clean A4) */
+html:not(.dark) .modal-dialog {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+html.dark .modal-dialog {
+  background: #121215 !important;
+  border: 1px solid #27272a !important;
+}
+
+/* --- 10. CLEAN SCROLLBARS --- */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--inv-border-hairline);
+  border-radius: var(--inv-radius-pill);
+}
+
+/* --- 11. PRINT STYLESHEET (CLEAN A4 EXPORT) --- */
 @media print {
   body {
     background: #ffffff !important;
@@ -170,6 +350,10 @@ button:active, .btn:active {
     margin: 0 !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
+  }
+
+  body::before {
+    display: none !important;
   }
 
   header, footer, .no-print, #toast, .modal-backdrop {
@@ -203,15 +387,5 @@ button:active, .btn:active {
   .page-break-avoid {
     break-inside: avoid;
     page-break-inside: avoid;
-  }
-}
-
-/* Accessibility & Reduced Motion */
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
   }
 }
