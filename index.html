@@ -1,11 +1,29 @@
 <!DOCTYPE html>
 <html lang="en" class="light">
 <head>
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QNFRW1GPJR"></script>
+  <!-- Google Consent Mode v2 (must fire BEFORE gtag.js) -->
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
+    gtag('consent', 'default', {
+      'ad_storage': 'denied',
+      'ad_user_data': 'denied',
+      'ad_personalization': 'denied',
+      'analytics_storage': 'denied',
+      'wait_for_update': 500
+    });
+    if (localStorage.getItem('cookie_consent') === 'granted') {
+      gtag('consent', 'update', {
+        'ad_storage': 'granted',
+        'ad_user_data': 'granted',
+        'ad_personalization': 'granted',
+        'analytics_storage': 'granted'
+      });
+    }
+  </script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QNFRW1GPJR"></script>
+  <script>
     gtag('js', new Date());
     gtag('config', 'G-QNFRW1GPJR');
   </script>
@@ -1209,5 +1227,40 @@
   <script src="app.js?v=3.0.0"></script>
   <!-- Agentation Visual Feedback Toolbar -->
   <script src="agentation-widget.js" defer></script>
+  <!-- Cookie Consent Banner -->
+  <div id="cookieConsentBanner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:2147483646;background:rgba(15,23,42,0.97);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid rgba(255,255,255,0.1);padding:18px 24px;font-family:'Plus Jakarta Sans',system-ui,sans-serif;">
+    <div style="max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;">
+      <p style="margin:0;color:#94a3b8;font-size:14px;line-height:1.6;flex:1;min-width:280px;">
+        We use cookies and Google Analytics to understand how you use our site and improve your experience. By clicking <strong style="color:#fff;">"Accept All"</strong>, you consent to analytics and personalization cookies.
+        <a href="https://www.automatixes.com/privacy" style="color:#C8E019;text-decoration:underline;margin-left:4px;">Privacy Policy</a>
+      </p>
+      <div style="display:flex;gap:10px;flex-shrink:0;">
+        <button onclick="handleCookieConsent('denied')" style="padding:10px 22px;border-radius:8px;border:1px solid rgba(255,255,255,0.15);background:transparent;color:#94a3b8;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;">Reject All</button>
+        <button onclick="handleCookieConsent('granted')" style="padding:10px 22px;border-radius:8px;border:none;background:#C8E019;color:#0b0f19;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;">Accept All</button>
+      </div>
+    </div>
+  </div>
+  <script>
+  (function(){
+    var consent = localStorage.getItem('cookie_consent');
+    if (!consent) {
+      var b = document.getElementById('cookieConsentBanner');
+      if (b) b.style.display = 'block';
+    }
+  })();
+  function handleCookieConsent(choice) {
+    localStorage.setItem('cookie_consent', choice);
+    document.getElementById('cookieConsentBanner').style.display = 'none';
+    if (typeof gtag === 'function') {
+      var granted = choice === 'granted';
+      gtag('consent', 'update', {
+        'ad_storage': granted ? 'granted' : 'denied',
+        'ad_user_data': granted ? 'granted' : 'denied',
+        'ad_personalization': granted ? 'granted' : 'denied',
+        'analytics_storage': granted ? 'granted' : 'denied'
+      });
+    }
+  }
+  </script>
 </body>
 </html>
