@@ -4,6 +4,11 @@
    Matching AutomatixQR Design Language & Precision Primitives
    ========================================================================== */
 
+/* Vue Cloak to prevent modal flash on initial load */
+[v-cloak] {
+  display: none !important;
+}
+
 /* --- 1. SYSTEM ROOT TOKENS --- */
 :root {
   /* LIGHT MODE: Technical Slate & Crisp White Surfaces */

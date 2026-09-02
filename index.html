@@ -242,7 +242,7 @@
     <div class="absolute -bottom-20 left-1/3 w-[500px] h-[500px] bg-blue-500/10 dark:bg-blue-500/5 rounded-full blur-[140px]"></div>
   </div>
 
-  <div id="app" class="flex flex-col min-h-screen relative z-1">
+  <div id="app" v-cloak class="flex flex-col min-h-screen relative z-1">
 
     <!-- Header Navigation -->
     <header class="border-b border-zinc-200 dark:border-zinc-800 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md sticky top-0 z-40 shadow-xs no-print transition-colors">
@@ -1026,7 +1026,7 @@
     </div>
 
     <!-- Saved Invoices Library Modal -->
-    <div v-if="drawerOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm modal-backdrop">
+    <div v-if="drawerOpen" v-cloak style="display: none;" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm modal-backdrop">
       <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[6px] max-w-lg w-full p-6 shadow-2xl space-y-4 modal-dialog">
         <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
           <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -1060,7 +1060,7 @@
     </div>
 
     <!-- Saved Clients Directory Modal -->
-    <div v-if="clientsModalOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm modal-backdrop">
+    <div v-if="clientsModalOpen" v-cloak style="display: none;" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm modal-backdrop">
       <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[6px] max-w-xl w-full p-6 shadow-2xl space-y-4 modal-dialog">
         <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
           <h3 class="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
@@ -1105,7 +1105,7 @@
     </div>
 
     <!-- Freemium & Pro Tier Comparison Modal -->
-    <div v-if="proModalOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm modal-backdrop">
+    <div v-if="proModalOpen" v-cloak style="display: none;" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm modal-backdrop">
       <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[6px] max-w-2xl w-full p-6 shadow-2xl space-y-6 modal-dialog">
         <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
           <div>
