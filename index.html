@@ -27,6 +27,41 @@
     gtag('js', new Date());
     gtag('config', 'G-QNFRW1GPJR');
   </script>
+
+  <!-- Meta Pixel Code -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', 'PLACEHOLDER_PIXEL_ID');
+  fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=PLACEHOLDER_PIXEL_ID&ev=PageView&noscript=1"
+  /></noscript>
+  <!-- End Meta Pixel Code -->
+
+  <!-- SoftwareApplication Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Invoice Maker by Automatixes",
+    "operatingSystem": "All",
+    "applicationCategory": "BusinessApplication",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "description": "Generate professional, customizable invoices instantly with live math calculations, dynamic line items, and print/PDF export for free."
+  }
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AutomatixInvoice - Free Online Invoice Maker & PDF Generator</title>
@@ -1109,6 +1144,18 @@
     <!-- Official Automatixes SaaS Footer -->
     <footer class="bg-white dark:bg-slate-950 text-slate-600 dark:text-slate-400 border-t border-slate-200/90 dark:border-slate-800/80 mt-auto pt-12 pb-8 no-print transition-colors">
       <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Newsletter Signup -->
+        <div class="bg-indigo-50/50 dark:bg-indigo-900/10 border border-indigo-100 dark:border-indigo-800/30 rounded-2xl p-6 md:p-8 mb-12 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div class="flex-1 text-center md:text-left">
+            <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Stay Ahead with AI & Automation Insights</h3>
+            <p class="text-sm text-slate-600 dark:text-slate-400">Join our newsletter to receive the latest updates on AI agents, workflows, and free tools like this one.</p>
+          </div>
+          <div class="w-full md:w-auto max-w-sm flex gap-2">
+            <input type="email" placeholder="you@company.com" class="w-full min-w-[240px] px-4 py-2.5 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600/20 focus:border-indigo-600 transition">
+            <button class="px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm rounded-xl transition whitespace-nowrap">Subscribe</button>
+          </div>
+        </div>
+        <!-- Footer Links Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 mb-12">
           
           <!-- Col 1: Brand & Bio -->
