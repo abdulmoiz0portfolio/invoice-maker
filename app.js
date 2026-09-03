@@ -537,6 +537,14 @@ createApp({
       saveBusinessProfile();
     }, { deep: true });
 
+    watch(webhookModalOpen, (open) => {
+      if (open) {
+        nextTick(() => {
+          if (window.lucide) lucide.createIcons();
+        });
+      }
+    });
+
     watch([invoice, client, items], () => {
       try {
         localStorage.setItem(DRAFT_KEY, JSON.stringify({
