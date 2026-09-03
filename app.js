@@ -1,6 +1,4 @@
-// AutomatixInvoice - Vue 3 Reactive SaaS Architecture
-
-const { createApp, ref, computed, onMounted, nextTick } = Vue;
+const { createApp, ref, computed, watch, onMounted, nextTick } = Vue;
 
 createApp({
   setup() {
@@ -30,15 +28,47 @@ createApp({
     const userTier = ref('free'); // 'free' | 'pro'
     const proModalOpen = ref(false);
 
-    // 2. Template Schemes
-    const templates = [
-      { id: 'modern-indigo', name: 'Indigo SaaS', color: '#4F46E5' },
-      { id: 'emerald-growth', name: 'Emerald Tech', color: '#059669' },
-      { id: 'executive-slate', name: 'Slate Executive', color: '#0F172A' },
-      { id: 'vibrant-coral', name: 'Vibrant Coral', color: '#E11D48' },
-      { id: 'automatix-cyber', name: 'Cyber Minimal', color: '#C8E019' }
+    // 2. Advanced UX & Branding Controls (Pillar 1)
+    const layoutTemplate = ref('modern'); // 'modern' | 'corporate' | 'minimalist'
+    const pageFormat = ref('a4'); // 'a4' | 'letter'
+    const customColor = ref('#4F46E5');
+
+    const colorPresets = [
+      { id: 'indigo', name: 'Indigo SaaS', color: '#4F46E5' },
+      { id: 'emerald', name: 'Emerald Tech', color: '#059669' },
+      { id: 'navy', name: 'Executive Navy', color: '#0F172A' },
+      { id: 'coral', name: 'Vibrant Coral', color: '#E11D48' },
+      { id: 'amber', name: 'Warm Amber', color: '#D97706' },
+      { id: 'cyber', name: 'Cyber Green', color: '#15803D' },
+      { id: 'purple', name: 'Royal Purple', color: '#7C3AED' }
     ];
-    const currentTemplate = ref('modern-indigo');
+
+    const hexToRgba = (hex, alpha) => {
+      if (!hex) return `rgba(79, 70, 229, ${alpha})`;
+      let c = hex.replace('#', '');
+      if (c.length === 3) c = c.split('').map(x => x + x).join('');
+      if (c.length !== 6) return `rgba(79, 70, 229, ${alpha})`;
+      const num = parseInt(c, 16);
+      return `rgba(${(num >> 16) & 255}, ${(num >> 8) & 255}, ${num & 255}, ${alpha})`;
+    };
+
+    const sheetStyles = computed(() => {
+      const accent = customColor.value || '#4F46E5';
+      return {
+        '--theme-accent': accent,
+        '--theme-accent-light': hexToRgba(accent, 0.08),
+        '--theme-accent-border': hexToRgba(accent, 0.25)
+      };
+    });
+
+    const selectPresetColor = (hex) => {
+      customColor.value = hex;
+      showToast(`Applied brand accent: ${hex}`);
+    };
+
+    // Backward-compatibility template alias
+    const currentTemplate = computed(() => layoutTemplate.value);
+    const templates = colorPresets;
 
     // 3. Sender / Company Profile
     const company = ref({
@@ -209,7 +239,9 @@ createApp({
       dueDate: dueStr,
       poNumber: 'PO-8842',
       currency: '$',
+      taxName: 'Tax',
       taxRate: 5,
+      taxType: 'exclusive', // 'exclusive' | 'inclusive'
       discountRate: 0,
       shipping: 0,
       notes: 'Thank you for your business! Payment is due within 14 days of invoice date. Please transfer funds or scan the payment QR code below.',
@@ -218,13 +250,35 @@ createApp({
     });
 
     const nextInvoiceNumber = () => {
-      const current = invoice.value.number || 'INV-1000';
-      const match = current.match(/^(.*?)(\d+)$/);
-      if (match) {
-        const prefix = match[1];
-        const num = parseInt(match[2], 10) + 1;
-        const padded = String(num).padStart(match[2].length, '0');
-        invoice.value.number = `${prefix}${padded}`;
+      let maxNum = 0;
+      let prefix = 'INV-';
+      let padLen = 4;
+
+      const scanNumber = (str) => {
+        if (!str) return;
+        const match = String(str).match(/^(.*?)(\d+)$/);
+        if (match) {
+          const p = match[1];
+          const n = parseInt(match[2], 10);
+          if (n > maxNum) {
+            maxNum = n;
+            prefix = p;
+            padLen = match[2].length;
+          }
+        }
+      };
+
+      scanNumber(invoice.value.number);
+      if (savedInvoices.value) {
+        savedInvoices.value.forEach(item => {
+          if (item.invoice && item.invoice.number) {
+            scanNumber(item.invoice.number);
+          }
+        });
+      }
+
+      if (maxNum > 0) {
+        invoice.value.number = `${prefix}${String(maxNum + 1).padStart(padLen, '0')}`;
       } else {
         invoice.value.number = 'INV-' + (Math.floor(1000 + Math.random() * 9000));
       }
@@ -264,27 +318,24 @@ createApp({
       showToast(`Generated next ${interval} recurring invoice (${invoice.value.number})!`);
     };
 
-    // 6. Line Items
+    // 6. Line Items (Supports both quantity and qty)
     const items = ref([
       {
-        name: 'Autonomous AI Agent Architecture',
-        desc: 'Custom n8n lead scoring agent with CRM & WhatsApp integration',
-        qty: 1,
+        description: 'Autonomous AI Agent Architecture',
+        quantity: 1,
         rate: 1800.00
       },
       {
-        name: 'Enterprise Web Application Development',
-        desc: 'Responsive high-speed frontend and API design',
-        qty: 1,
+        description: 'Enterprise Web Application Development',
+        quantity: 1,
         rate: 1200.00
       }
     ]);
 
     const addItem = () => {
       items.value.push({
-        name: 'AI Consulting & Custom Integration',
-        desc: 'Technical workflow audit and deployment services',
-        qty: 1,
+        description: 'AI Consulting & Custom Integration',
+        quantity: 1,
         rate: 500.00
       });
       nextTick(() => {
@@ -298,7 +349,7 @@ createApp({
       }
     };
 
-    // 7. Options & Feature Toggles (with Payment QR Code)
+    // 7. Options & Feature Toggles
     const options = ref({
       showNotes: true,
       showBankDetails: true,
@@ -307,7 +358,8 @@ createApp({
       showShipping: false,
       showSignature: true,
       showWatermark: true,
-      showPaymentQR: true
+      showPaymentQR: true,
+      showPoweredBy: true
     });
 
     // 7.1 Cross-Promotion Payment QR Code Embed (powered by AutomatixQR)
@@ -325,99 +377,47 @@ createApp({
 
     // 7.2 Country Localization & Tax Presets
     const countryPresets = [
-      {
-        id: 'global',
-        name: 'Global Standard',
-        currency: '$',
-        taxRate: 0,
-        taxLabel: 'Tax ID',
-        notes: 'Thank you for your business! Payment is due within 14 days.'
-      },
-      {
-        id: 'us',
-        name: 'United States (Sales Tax)',
-        currency: '$',
-        taxRate: 8.25,
-        taxLabel: 'EIN / Tax ID',
-        notes: 'Sales tax applied per state nexus. Please remit payment via ACH or wire.'
-      },
-      {
-        id: 'uk',
-        name: 'United Kingdom (VAT 20%)',
-        currency: '£',
-        taxRate: 20,
-        taxLabel: 'UK VAT Reg No',
-        notes: 'Standard 20% UK VAT included. Payment due upon receipt of invoice.'
-      },
-      {
-        id: 'eu',
-        name: 'European Union (VAT 19%)',
-        currency: '€',
-        taxRate: 19,
-        taxLabel: 'EU VAT ID',
-        notes: 'EU Reverse charge mechanism applies where cross-border B2B supply is valid.'
-      },
-      {
-        id: 'uae',
-        name: 'UAE & GCC (VAT 5%)',
-        currency: 'AED',
-        taxRate: 5,
-        taxLabel: 'Tax Reg TRN',
-        notes: 'FTA compliant 5% UAE VAT invoice. Please transfer to Emirates NBD account.'
-      },
-      {
-        id: 'pk',
-        name: 'Pakistan (Sales Tax 18%)',
-        currency: 'Rs',
-        taxRate: 18,
-        taxLabel: 'NTN / STRN',
-        notes: 'FBR compliant sales tax invoice. Bank transfer to Habib Bank Limited.'
-      },
-      {
-        id: 'in',
-        name: 'India (GST 18%)',
-        currency: '₹',
-        taxRate: 18,
-        taxLabel: 'GSTIN',
-        notes: '18% GST (CGST + SGST) applicable. Remit via NEFT / RTGS / UPI.'
-      },
-      {
-        id: 'ca',
-        name: 'Canada (HST/GST 13%)',
-        currency: 'C$',
-        taxRate: 13,
-        taxLabel: 'CRA Business No',
-        notes: 'HST # included. Remit payment via Interac e-Transfer or direct wire.'
-      }
+      { id: 'global', name: 'Global Standard', currency: '$', taxRate: 0, taxLabel: 'Tax ID', taxType: 'exclusive' },
+      { id: 'us', name: 'United States (Sales Tax)', currency: '$', taxRate: 8.25, taxLabel: 'EIN / Tax ID', taxType: 'exclusive' },
+      { id: 'uk', name: 'United Kingdom (VAT 20%)', currency: '£', taxRate: 20, taxLabel: 'UK VAT Reg No', taxType: 'inclusive' },
+      { id: 'eu', name: 'European Union (VAT 19%)', currency: '€', taxRate: 19, taxLabel: 'EU VAT ID', taxType: 'inclusive' },
+      { id: 'uae', name: 'UAE & GCC (VAT 5%)', currency: 'AED', taxRate: 5, taxLabel: 'Tax Reg TRN', taxType: 'exclusive' },
+      { id: 'pk', name: 'Pakistan (Sales Tax 18%)', currency: 'Rs', taxRate: 18, taxLabel: 'NTN / STRN', taxType: 'exclusive' },
+      { id: 'in', name: 'India (GST 18%)', currency: '₹', taxRate: 18, taxLabel: 'GSTIN', taxType: 'inclusive' },
+      { id: 'ca', name: 'Canada (HST/GST 13%)', currency: 'C$', taxRate: 13, taxLabel: 'CRA Business No', taxType: 'exclusive' }
     ];
 
     const applyCountryPreset = (preset) => {
       if (!preset) return;
       invoice.value.currency = preset.currency;
       invoice.value.taxRate = preset.taxRate;
+      invoice.value.taxType = preset.taxType || 'exclusive';
       company.value.taxId = company.value.taxId || preset.taxLabel;
       if (preset.notes) invoice.value.notes = preset.notes;
+      saveBusinessProfile();
       showToast(`Applied ${preset.name} Localization Preset!`);
     };
 
     // 8. Bank Transfer Details
-    const bank = ref({
+    const defaultBank = {
       name: 'JPMorgan Chase Bank',
       iban: 'GB29 CHAS 0928 3829 1029 48',
       swift: 'CHASUS33XXX',
       holder: 'Automatixes LLC'
-    });
+    };
+    const bank = ref({ ...defaultBank });
 
     // 9. Authorized Signature
-    const signature = ref({
+    const defaultSignature = {
       name: 'Abdul Moiz',
       title: 'Managing Director'
-    });
+    };
+    const signature = ref({ ...defaultSignature });
 
-    // 10. Calculations
+    // 10. Smart Calculations (Exclusive vs Inclusive Tax)
     const subtotal = computed(() => {
       return items.value.reduce((acc, item) => {
-        const q = parseFloat(item.qty) || 0;
+        const q = parseFloat(item.quantity !== undefined ? item.quantity : item.qty) || 0;
         const r = parseFloat(item.rate) || 0;
         return acc + (q * r);
       }, 0);
@@ -426,7 +426,20 @@ createApp({
     const taxAmount = computed(() => {
       if (!options.value.showTax) return 0;
       const rate = parseFloat(invoice.value.taxRate) || 0;
-      return (subtotal.value * rate) / 100;
+      if (invoice.value.taxType === 'inclusive') {
+        // Line items include tax: Tax = Subtotal - (Subtotal / (1 + rate / 100))
+        return subtotal.value - (subtotal.value / (1 + (rate / 100)));
+      } else {
+        // Standard exclusive tax: Tax = Subtotal * (rate / 100)
+        return (subtotal.value * rate) / 100;
+      }
+    });
+
+    const netSubtotal = computed(() => {
+      if (invoice.value.taxType === 'inclusive') {
+        return Math.max(0, subtotal.value - taxAmount.value);
+      }
+      return subtotal.value;
     });
 
     const discountAmount = computed(() => {
@@ -437,7 +450,13 @@ createApp({
 
     const grandTotal = computed(() => {
       const ship = options.value.showShipping ? (parseFloat(invoice.value.shipping) || 0) : 0;
-      return Math.max(0, subtotal.value + taxAmount.value - discountAmount.value + ship);
+      if (invoice.value.taxType === 'inclusive') {
+        // Tax is already in subtotal, so total is subtotal - discount + ship
+        return Math.max(0, subtotal.value - discountAmount.value + ship);
+      } else {
+        // Exclusive tax is added to subtotal
+        return Math.max(0, subtotal.value + taxAmount.value - discountAmount.value + ship);
+      }
     });
 
     const formatMoney = (val) => {
@@ -456,10 +475,91 @@ createApp({
       setTimeout(() => {
         toast.classList.remove('opacity-100', 'translate-y-0');
         toast.classList.add('opacity-0', 'translate-y-20', 'pointer-events-none');
-      }, 3000);
+      }, 3200);
     };
 
-    // 12. Saved Invoices History
+    // 12. Robust Data Persistence (Pillar 2 - Zero Friction Auto-Save)
+    const isProfileSavedLocally = ref(false);
+    const PROFILE_KEY = 'automatix_business_profile_v2';
+    const DRAFT_KEY = 'automatix_active_draft_v2';
+
+    const saveBusinessProfile = () => {
+      try {
+        const payload = {
+          company: company.value,
+          bank: bank.value,
+          signature: signature.value,
+          currency: invoice.value.currency,
+          taxType: invoice.value.taxType,
+          customColor: customColor.value,
+          layoutTemplate: layoutTemplate.value,
+          pageFormat: pageFormat.value,
+          options: options.value
+        };
+        localStorage.setItem(PROFILE_KEY, JSON.stringify(payload));
+        isProfileSavedLocally.value = true;
+      } catch (e) {}
+    };
+
+    const loadBusinessProfile = () => {
+      try {
+        const stored = localStorage.getItem(PROFILE_KEY);
+        if (stored) {
+          const data = JSON.parse(stored);
+          if (data.company) company.value = { ...defaultCompany, ...data.company };
+          if (data.bank) bank.value = { ...defaultBank, ...data.bank };
+          if (data.signature) signature.value = { ...defaultSignature, ...data.signature };
+          if (data.currency) invoice.value.currency = data.currency;
+          if (data.taxType) invoice.value.taxType = data.taxType;
+          if (data.customColor) customColor.value = data.customColor;
+          if (data.layoutTemplate) layoutTemplate.value = data.layoutTemplate;
+          if (data.pageFormat) pageFormat.value = data.pageFormat;
+          if (data.options) options.value = { ...options.value, ...data.options };
+          isProfileSavedLocally.value = true;
+        }
+      } catch (e) {}
+    };
+
+    const resetBusinessProfile = () => {
+      localStorage.removeItem(PROFILE_KEY);
+      company.value = { ...defaultCompany };
+      bank.value = { ...defaultBank };
+      signature.value = { ...defaultSignature };
+      customColor.value = '#4F46E5';
+      layoutTemplate.value = 'modern';
+      pageFormat.value = 'a4';
+      isProfileSavedLocally.value = false;
+      showToast('Business profile reset to default!');
+    };
+
+    // Auto-save watchers
+    watch([company, bank, signature, customColor, layoutTemplate, pageFormat], () => {
+      saveBusinessProfile();
+    }, { deep: true });
+
+    watch([invoice, client, items], () => {
+      try {
+        localStorage.setItem(DRAFT_KEY, JSON.stringify({
+          invoice: invoice.value,
+          client: client.value,
+          items: items.value
+        }));
+      } catch (e) {}
+    }, { deep: true });
+
+    const loadActiveDraft = () => {
+      try {
+        const stored = localStorage.getItem(DRAFT_KEY);
+        if (stored) {
+          const d = JSON.parse(stored);
+          if (d.invoice) invoice.value = { ...invoice.value, ...d.invoice };
+          if (d.client) client.value = { ...client.value, ...d.client };
+          if (d.items && d.items.length) items.value = d.items;
+        }
+      } catch (e) {}
+    };
+
+    // 13. Saved Invoices History (Library)
     const drawerOpen = ref(false);
     const savedInvoices = ref([]);
 
@@ -477,7 +577,8 @@ createApp({
         id: 'inv_' + Date.now().toString(36),
         savedAt: new Date().toISOString(),
         total: grandTotal.value,
-        template: currentTemplate.value,
+        layoutTemplate: layoutTemplate.value,
+        customColor: customColor.value,
         company: JSON.parse(JSON.stringify(company.value)),
         sections: JSON.parse(JSON.stringify(sections.value)),
         client: JSON.parse(JSON.stringify(client.value)),
@@ -496,7 +597,8 @@ createApp({
 
     const loadSavedInvoice = (rec) => {
       if (!rec) return;
-      currentTemplate.value = rec.template || 'modern-indigo';
+      if (rec.layoutTemplate) layoutTemplate.value = rec.layoutTemplate;
+      if (rec.customColor) customColor.value = rec.customColor;
       company.value = rec.company;
       if (rec.sections) sections.value = rec.sections;
       client.value = rec.client;
@@ -518,12 +620,106 @@ createApp({
       showToast('Invoice deleted from library');
     };
 
-    // 13. Export & Import JSON
+    // 14. Webhook & CRM Automation Engine (Pillar 4 - Agency Integration)
+    const webhookModalOpen = ref(false);
+    const webhookUrl = ref('');
+    const webhookStatus = ref('idle'); // 'idle' | 'sending' | 'success' | 'error'
+    const webhookMessage = ref('');
+
+    const loadWebhookSettings = () => {
+      try {
+        const stored = localStorage.getItem('automatix_webhook_url_v1');
+        if (stored) webhookUrl.value = stored;
+      } catch (e) {}
+    };
+
+    const sendToWebhook = async () => {
+      if (!webhookUrl.value || !webhookUrl.value.startsWith('http')) {
+        showToast('Please enter a valid HTTP/HTTPS Webhook URL');
+        return;
+      }
+
+      webhookStatus.value = 'sending';
+      webhookMessage.value = 'Transmitting structured invoice JSON...';
+
+      const payload = {
+        event: 'invoice.created',
+        invoiceNumber: invoice.value.number,
+        date: invoice.value.date,
+        dueDate: invoice.value.dueDate,
+        poNumber: invoice.value.poNumber,
+        currency: invoice.value.currency,
+        taxType: invoice.value.taxType,
+        taxRate: invoice.value.taxRate,
+        taxAmount: taxAmount.value,
+        discountRate: invoice.value.discountRate,
+        discountAmount: discountAmount.value,
+        shipping: invoice.value.shipping,
+        subtotal: subtotal.value,
+        grandTotal: grandTotal.value,
+        company: {
+          name: company.value.name,
+          email: company.value.email,
+          phone: company.value.phone,
+          taxId: company.value.taxId
+        },
+        client: client.value,
+        items: items.value,
+        paymentLink: paymentQR.value.data,
+        timestamp: new Date().toISOString(),
+        source: 'AutomatixInvoice by Automatixes'
+      };
+
+      try {
+        localStorage.setItem('automatix_webhook_url_v1', webhookUrl.value);
+        const res = await fetch(webhookUrl.value, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (res.ok) {
+          webhookStatus.value = 'success';
+          webhookMessage.value = `Webhook received successfully (${res.status} ${res.statusText})!`;
+          showToast(`Invoice ${invoice.value.number} pushed to Webhook!`);
+        } else {
+          webhookStatus.value = 'error';
+          webhookMessage.value = `Server responded with HTTP ${res.status}`;
+        }
+      } catch (err) {
+        webhookStatus.value = 'error';
+        webhookMessage.value = `Network or CORS error: ${err.message}`;
+      }
+    };
+
+    // 15. One-Click Email to Client
+    const emailInvoiceToClient = () => {
+      const recipient = client.value.email || '';
+      const subject = encodeURIComponent(`Invoice ${invoice.value.number} from ${company.value.name || 'Automatixes'}`);
+      const body = encodeURIComponent(
+        `Hi ${client.value.name || 'Valued Client'},\n\n` +
+        `Please find the details for Invoice ${invoice.value.number} below:\n\n` +
+        `• Invoice Date: ${invoice.value.date}\n` +
+        `• Due Date: ${invoice.value.dueDate}\n` +
+        `• Total Due: ${invoice.value.currency} ${formatMoney(grandTotal.value)}\n\n` +
+        `Notes: ${invoice.value.notes}\n\n` +
+        `Thank you for your business!\n\n` +
+        `Best regards,\n` +
+        `${company.value.name}\n` +
+        `${company.value.phone || ''}`
+      );
+      window.open(`mailto:${recipient}?subject=${subject}&body=${body}`, '_blank');
+      showToast('Opened prefilled email draft!');
+    };
+
+    // 16. JSON Export / Import
     const exportJSON = () => {
       const data = {
-        version: '1.0',
+        version: '2.0',
         exportedAt: new Date().toISOString(),
-        template: currentTemplate.value,
+        layoutTemplate: layoutTemplate.value,
+        customColor: customColor.value,
+        pageFormat: pageFormat.value,
         company: company.value,
         sections: sections.value,
         client: client.value,
@@ -558,7 +754,9 @@ createApp({
           if (parsed.options) options.value = parsed.options;
           if (parsed.bank) bank.value = parsed.bank;
           if (parsed.signature) signature.value = parsed.signature;
-          if (parsed.template) currentTemplate.value = parsed.template;
+          if (parsed.customColor) customColor.value = parsed.customColor;
+          if (parsed.layoutTemplate) layoutTemplate.value = parsed.layoutTemplate;
+          if (parsed.pageFormat) pageFormat.value = parsed.pageFormat;
           showToast('Invoice imported successfully!');
         } catch (err) {
           showToast('Invalid JSON file format');
@@ -567,7 +765,7 @@ createApp({
       reader.readAsText(file);
     };
 
-    // 14. Reset Form
+    // 17. Reset Form
     const resetForm = () => {
       invoice.value.number = 'INV-' + Math.floor(1000 + Math.random() * 9000);
       invoice.value.date = todayStr;
@@ -576,62 +774,48 @@ createApp({
       invoice.value.taxRate = 5;
       invoice.value.discountRate = 0;
       invoice.value.shipping = 0;
-      client.value = { name: '', company: '', address: '', email: '', phone: '' };
+      client.value = { name: '', company: '', address: '', email: '', phone: '', taxId: '' };
       items.value = [
         {
-          name: 'Professional Consulting Services',
-          desc: 'Deliverables and scope breakdown',
-          qty: 1,
+          description: 'Professional Consulting Services',
+          quantity: 1,
           rate: 1000.00
         }
       ];
-      showToast('Invoice reset to blank draft');
+      showToast('Invoice draft cleared');
     };
 
-    // 15. Print Action
+    // 18. Print Action
     const triggerPrint = () => {
       window.print();
     };
 
-    // 16. Universal Click Ripple Effect
+    // 19. Universal Click Ripple Effect
     const initRipple = () => {
       document.addEventListener('click', (e) => {
         const btn = e.target.closest('button, .btn, a.btn');
         if (!btn) return;
-
         const style = window.getComputedStyle(btn);
         if (style.position === 'static') btn.style.position = 'relative';
         if (style.overflow !== 'hidden') btn.style.overflow = 'hidden';
-
         const circle = document.createElement('span');
         const diameter = Math.max(btn.clientWidth, btn.clientHeight);
         const radius = diameter / 2;
         const rect = btn.getBoundingClientRect();
-
         circle.style.width = circle.style.height = `${diameter}px`;
         circle.style.left = `${e.clientX - rect.left - radius}px`;
         circle.style.top = `${e.clientY - rect.top - radius}px`;
         circle.classList.add('ripple-wave');
-
         const prev = btn.querySelector('.ripple-wave');
         if (prev) prev.remove();
-
         btn.appendChild(circle);
         setTimeout(() => circle.remove(), 600);
       });
     };
 
     onMounted(() => {
-      // Initialize Lenis Smooth Inertia Scroll (Option 2: Gliding Inertia)
       if (typeof Lenis !== 'undefined') {
-        const lenis = new Lenis({
-          lerp: 0.1,
-          duration: 1.1,
-          smoothWheel: true,
-          wheelMultiplier: 1.0,
-          touchMultiplier: 1.0,
-          infinite: false
-        });
+        const lenis = new Lenis({ lerp: 0.1, duration: 1.1, smoothWheel: true });
         function raf(time) {
           lenis.raf(time);
           requestAnimationFrame(raf);
@@ -646,8 +830,12 @@ createApp({
       } else {
         applyTheme(true);
       }
+
+      loadBusinessProfile();
+      loadActiveDraft();
       loadSavedInvoicesFromStorage();
       loadSavedClientsFromStorage();
+      loadWebhookSettings();
       initRipple();
       if (window.lucide) lucide.createIcons();
     });
@@ -657,11 +845,18 @@ createApp({
       toggleTheme,
       userTier,
       proModalOpen,
-      templates,
-      currentTemplate,
+      layoutTemplate,
+      pageFormat,
+      customColor,
+      colorPresets,
+      selectPresetColor,
+      sheetStyles,
       company,
       onLogoUpload,
       removeLogo,
+      isProfileSavedLocally,
+      saveBusinessProfile,
+      resetBusinessProfile,
       sections,
       client,
       savedClients,
@@ -686,6 +881,7 @@ createApp({
       signature,
       subtotal,
       taxAmount,
+      netSubtotal,
       discountAmount,
       grandTotal,
       formatMoney,
@@ -695,10 +891,18 @@ createApp({
       saveInvoiceToLibrary,
       loadSavedInvoice,
       deleteSavedInvoice,
+      webhookModalOpen,
+      webhookUrl,
+      webhookStatus,
+      webhookMessage,
+      sendToWebhook,
+      emailInvoiceToClient,
       exportJSON,
       importJSON,
       resetForm,
-      triggerPrint
+      triggerPrint,
+      templates,
+      currentTemplate
     };
   }
 }).mount('#app');

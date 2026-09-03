@@ -235,7 +235,7 @@
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=8.0.0">
 </head>
 <body class="bg-slate-100 dark:bg-[#09090b] text-slate-800 dark:text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-emerald-600 selection:text-white relative">
 
@@ -294,6 +294,18 @@
             <span class="hidden md:inline">Pro Tier</span>
           </button>
 
+          <!-- Email Client Button (Pillar 4) -->
+          <button @click="emailInvoiceToClient" class="px-2.5 py-1.5 text-xs font-semibold rounded-[6px] bg-white dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-800 dark:text-zinc-200 border border-zinc-300 dark:border-zinc-700 transition hidden sm:flex items-center gap-1.5" title="Email invoice details directly to client">
+            <i data-lucide="mail" class="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400"></i>
+            <span>Email Client</span>
+          </button>
+
+          <!-- Webhook / CRM Push Button (Pillar 4) -->
+          <button @click="webhookModalOpen = true" class="px-2.5 py-1.5 text-xs font-semibold rounded-[6px] bg-white dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-800 dark:text-zinc-200 border border-zinc-300 dark:border-zinc-700 transition hidden sm:flex items-center gap-1.5" title="Push structured invoice to n8n / Make / Google Sheets">
+            <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-500"></i>
+            <span>Webhook</span>
+          </button>
+
           <!-- Save Draft Button -->
           <button @click="saveInvoiceToLibrary" class="px-3 py-1.5 text-xs font-semibold rounded-[6px] bg-white dark:bg-zinc-800 hover:bg-zinc-100 dark:hover:bg-zinc-700 text-zinc-800 dark:text-zinc-200 border border-zinc-300 dark:border-zinc-700 transition flex items-center gap-1.5" title="Save Draft">
             <i data-lucide="save" class="w-4 h-4 text-emerald-600 dark:text-emerald-400"></i>
@@ -328,10 +340,21 @@
       <aside class="w-full lg:w-[320px] shrink-0 space-y-4 no-print">
         
         <div class="bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 rounded-[6px] p-4 shadow-sm space-y-4">
-          <h3 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2 pb-2 border-b border-slate-100 dark:border-slate-800">
-            <i data-lucide="sliders" class="w-4 h-4 text-zinc-900 dark:text-zinc-100 dark:text-zinc-300"></i>
-            Invoice Controls & Settings
-          </h3>
+          <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+            <h3 class="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+              <i data-lucide="sliders" class="w-4 h-4 text-zinc-900 dark:text-zinc-100"></i>
+              <span>Invoice Controls</span>
+            </h3>
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1" title="Company profile, bank details & branding auto-saved locally">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span>Auto-Saved</span>
+              </span>
+              <button type="button" @click="resetBusinessProfile" class="text-[10px] text-slate-400 hover:text-rose-500 underline transition" title="Reset saved business profile">
+                Reset
+              </button>
+            </div>
+          </div>
 
           <!-- Country Tax & Compliance Presets -->
           <div>
@@ -481,13 +504,45 @@
             </div>
           </div>
 
-          <!-- Template Preset Selector -->
+          <!-- 1. Layout Style Selector (Pillar 1) -->
           <div>
-            <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1.5">Visual Theme</label>
-            <div class="grid grid-cols-2 gap-2">
-              <button v-for="tmpl in templates" :key="tmpl.id" @click="currentTemplate = tmpl.id" :class="currentTemplate === tmpl.id ? 'border-slate-900 dark:border-white bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-bold shadow-xs' : 'border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:border-slate-300'" class="p-2 border rounded-[6px] text-left text-xs flex items-center gap-2 transition">
-                <span class="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs" :style="{ backgroundColor: tmpl.color }"></span>
-                <span class="truncate">{{ tmpl.name }}</span>
+            <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1.5">Invoice Layout Style</label>
+            <div class="grid grid-cols-3 gap-1.5">
+              <button type="button" @click="layoutTemplate = 'modern'" :class="layoutTemplate === 'modern' ? 'bg-zinc-950 dark:bg-white text-white dark:text-zinc-900 font-bold shadow-xs' : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-100'" class="py-1.5 px-2 rounded-[6px] text-xs transition text-center">
+                Modern
+              </button>
+              <button type="button" @click="layoutTemplate = 'corporate'" :class="layoutTemplate === 'corporate' ? 'bg-zinc-950 dark:bg-white text-white dark:text-zinc-900 font-bold shadow-xs' : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-100'" class="py-1.5 px-2 rounded-[6px] text-xs transition text-center">
+                Corporate
+              </button>
+              <button type="button" @click="layoutTemplate = 'minimalist'" :class="layoutTemplate === 'minimalist' ? 'bg-zinc-950 dark:bg-white text-white dark:text-zinc-900 font-bold shadow-xs' : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-100'" class="py-1.5 px-2 rounded-[6px] text-xs transition text-center">
+                Minimalist
+              </button>
+            </div>
+          </div>
+
+          <!-- 2. Dynamic Brand Accent Color Engine (Pillar 1) -->
+          <div>
+            <div class="flex items-center justify-between mb-1.5">
+              <label class="text-xs font-medium text-slate-600 dark:text-slate-400">Brand Accent Color</label>
+              <div class="flex items-center gap-1.5">
+                <input type="color" v-model="customColor" class="w-5 h-5 rounded cursor-pointer border border-slate-300 dark:border-slate-600 p-0 bg-transparent" title="Choose custom brand color">
+                <span class="font-mono text-[10px] text-slate-500 font-bold">{{ customColor }}</span>
+              </div>
+            </div>
+            <div class="flex items-center gap-1.5 flex-wrap">
+              <button v-for="c in colorPresets" :key="c.id" type="button" @click="selectPresetColor(c.color)" :title="c.name" class="w-6 h-6 rounded-full border-2 transition transform hover:scale-110 active:scale-95" :class="customColor.toLowerCase() === c.color.toLowerCase() ? 'border-slate-900 dark:border-white ring-2 ring-indigo-400 scale-105' : 'border-transparent'" :style="{ backgroundColor: c.color }"></button>
+            </div>
+          </div>
+
+          <!-- 3. Document Format (A4 vs US Letter) -->
+          <div>
+            <label class="block text-xs font-medium text-slate-600 dark:text-slate-400 mb-1">Page Dimensions (PDF)</label>
+            <div class="grid grid-cols-2 gap-1.5">
+              <button type="button" @click="pageFormat = 'a4'" :class="pageFormat === 'a4' ? 'bg-zinc-950 dark:bg-white text-white dark:text-zinc-900 font-bold' : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700'" class="py-1.5 px-2 rounded-[6px] text-xs transition text-center">
+                A4 Standard
+              </button>
+              <button type="button" @click="pageFormat = 'letter'" :class="pageFormat === 'letter' ? 'bg-zinc-950 dark:bg-white text-white dark:text-zinc-900 font-bold' : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700'" class="py-1.5 px-2 rounded-[6px] text-xs transition text-center">
+                US Letter
               </button>
             </div>
           </div>
@@ -519,10 +574,25 @@
               <input type="checkbox" v-model="options.showBankDetails" class="rounded text-zinc-900 dark:text-zinc-100 focus:ring-zinc-900 w-4 h-4">
             </label>
 
-            <label class="flex items-center justify-between cursor-pointer">
-              <span class="text-slate-600 dark:text-slate-400">Tax Calculation</span>
-              <input type="checkbox" v-model="options.showTax" class="rounded text-zinc-900 dark:text-zinc-100 focus:ring-zinc-900 w-4 h-4">
-            </label>
+            <div class="space-y-1.5">
+              <label class="flex items-center justify-between cursor-pointer">
+                <span class="text-slate-600 dark:text-slate-400">Tax Calculation</span>
+                <input type="checkbox" v-model="options.showTax" class="rounded text-zinc-900 dark:text-zinc-100 focus:ring-zinc-900 w-4 h-4">
+              </label>
+
+              <!-- Smart Tax Mode Toggle: Exclusive vs Inclusive (Pillar 3) -->
+              <div v-if="options.showTax" class="flex items-center justify-between pt-1 text-[11px]">
+                <span class="text-slate-400">Tax Mode:</span>
+                <div class="inline-flex rounded-[6px] border border-slate-200 dark:border-slate-700 p-0.5 bg-slate-50 dark:bg-slate-800">
+                  <button type="button" @click="invoice.taxType = 'exclusive'" :class="invoice.taxType === 'exclusive' ? 'bg-white dark:bg-zinc-900 text-slate-900 dark:text-white font-bold shadow-xs' : 'text-slate-500'" class="px-1.5 py-0.5 rounded transition">
+                    + Exclusive
+                  </button>
+                  <button type="button" @click="invoice.taxType = 'inclusive'" :class="invoice.taxType === 'inclusive' ? 'bg-white dark:bg-zinc-900 text-slate-900 dark:text-white font-bold shadow-xs' : 'text-slate-500'" class="px-1.5 py-0.5 rounded transition">
+                    Incl. in Rate
+                  </button>
+                </div>
+              </div>
+            </div>
 
             <label class="flex items-center justify-between cursor-pointer">
               <span class="text-slate-600 dark:text-slate-400">Discount Calculation</span>
@@ -543,6 +613,19 @@
               <span class="text-slate-600 dark:text-slate-400">Watermark Footer</span>
               <input type="checkbox" v-model="options.showWatermark" class="rounded text-zinc-900 dark:text-zinc-100 focus:ring-zinc-900 w-4 h-4">
             </label>
+
+            <label class="flex items-center justify-between cursor-pointer">
+              <span class="text-slate-600 dark:text-slate-400">Powered by Automatixes Badge</span>
+              <input type="checkbox" v-model="options.showPoweredBy" class="rounded text-zinc-900 dark:text-zinc-100 focus:ring-zinc-900 w-4 h-4">
+            </label>
+          </div>
+
+          <!-- Webhook CRM Push Trigger Button (Pillar 4) -->
+          <div class="pt-2 border-t border-slate-100 dark:border-slate-800">
+            <button type="button" @click="webhookModalOpen = true" class="w-full py-2 px-3 bg-zinc-50 dark:bg-slate-800/80 hover:bg-zinc-100 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 rounded-[6px] text-xs font-bold transition flex items-center justify-center gap-1.5">
+              <i data-lucide="zap" class="w-4 h-4 text-amber-500"></i>
+              <span>Webhook & CRM Push</span>
+            </button>
           </div>
 
           <!-- JSON Backup & Restore -->
@@ -569,10 +652,10 @@
 
       </aside>
 
-      <!-- Center: Interactive A4 Sheet Canvas -->
+      <!-- Center: Interactive A4 Sheet Canvas (Pillars 1 & 3) -->
       <section class="flex-1 w-full flex justify-center pb-12">
         
-        <div class="invoice-paper-sheet p-6 sm:p-10" :class="'theme-' + currentTemplate">
+        <div class="invoice-paper-sheet p-6 sm:p-10" :style="sheetStyles" :class="['layout-' + layoutTemplate, 'format-' + pageFormat]">
           
           <!-- Header Banner Row -->
           <div class="flex flex-col sm:flex-row items-start justify-between gap-6 pb-6 border-b border-slate-200 invoice-header-row page-break-avoid">
@@ -730,14 +813,33 @@
                 <span class="font-mono font-bold text-slate-900">{{ invoice.currency }} {{ formatMoney(subtotal) }}</span>
               </div>
 
-              <!-- Tax -->
-              <div v-if="options.showTax" class="flex items-center justify-between text-slate-600">
-                <div class="flex items-center gap-1">
-                  <span>{{ invoice.taxName || 'Tax' }}:</span>
-                  <input type="number" min="0" step="any" v-model.number="invoice.taxRate" class="w-12 text-center font-mono font-semibold text-slate-800 print-clean-input border border-slate-200 rounded px-1" placeholder="0">
-                  <span class="font-mono text-[11px] font-bold">%</span>
+              <!-- Tax (Exclusive vs Inclusive Modes) -->
+              <div v-if="options.showTax" class="space-y-1">
+                <!-- Exclusive Tax Mode -->
+                <div v-if="invoice.taxType === 'exclusive'" class="flex items-center justify-between text-slate-600">
+                  <div class="flex items-center gap-1">
+                    <span>{{ invoice.taxName || 'Tax' }}:</span>
+                    <input type="number" min="0" step="any" v-model.number="invoice.taxRate" class="w-12 text-center font-mono font-semibold text-slate-800 print-clean-input border border-slate-200 rounded px-1" placeholder="0">
+                    <span class="font-mono text-[11px] font-bold">%</span>
+                  </div>
+                  <span class="font-mono font-semibold text-slate-900">+ {{ invoice.currency }} {{ formatMoney(taxAmount) }}</span>
                 </div>
-                <span class="font-mono font-semibold text-slate-900">+ {{ invoice.currency }} {{ formatMoney(taxAmount) }}</span>
+
+                <!-- Inclusive Tax Mode -->
+                <div v-else class="space-y-1">
+                  <div class="flex items-center justify-between text-slate-500 text-[11px]">
+                    <span>Net Subtotal (Pre-tax):</span>
+                    <span class="font-mono text-slate-700">{{ invoice.currency }} {{ formatMoney(netSubtotal) }}</span>
+                  </div>
+                  <div class="flex items-center justify-between text-slate-600">
+                    <div class="flex items-center gap-1">
+                      <span>{{ invoice.taxName || 'Tax' }} ({{ invoice.taxRate }}% Incl.):</span>
+                      <input type="number" min="0" step="any" v-model.number="invoice.taxRate" class="w-12 text-center font-mono font-semibold text-slate-800 print-clean-input border border-slate-200 rounded px-1" placeholder="0">
+                      <span class="font-mono text-[11px] font-bold">%</span>
+                    </div>
+                    <span class="font-mono text-slate-600 text-xs">{{ invoice.currency }} {{ formatMoney(taxAmount) }} <span class="text-[10px] text-slate-400 font-sans">(included)</span></span>
+                  </div>
+                </div>
               </div>
 
               <!-- Discount -->
@@ -761,7 +863,10 @@
 
               <!-- Grand Total -->
               <div class="pt-3 border-t-2 border-slate-900 flex items-center justify-between">
-                <span class="font-extrabold text-sm text-slate-900">Total Due:</span>
+                <div>
+                  <span class="font-extrabold text-sm text-slate-900">Total Due:</span>
+                  <span v-if="invoice.taxType === 'inclusive'" class="block text-[10px] text-slate-400 font-normal">All taxes included</span>
+                </div>
                 <span class="font-mono font-extrabold text-xl theme-text-primary">
                   {{ invoice.currency }} {{ formatMoney(grandTotal) }}
                 </span>
@@ -781,9 +886,18 @@
 
           </div>
 
-          <!-- In-Flow Watermark Footer -->
+          <!-- In-Flow Watermark Footer & Viral Automatixes Badge (Pillar 4) -->
           <div v-if="options.showWatermark" class="invoice-watermark-row pt-6 mt-4 border-t border-slate-200 text-center text-slate-400 text-[10px] page-break-avoid">
-            <span>Generated with <strong>AutomatixInvoice</strong> | Powered by <a href="https://www.automatixes.com" target="_blank" class="hover:underline text-slate-500 font-semibold">Automatixes</a> (www.automatixes.com)</span>
+            <span>Generated with <strong>AutomatixInvoice</strong> | Free Professional Invoice Generator</span>
+          </div>
+
+          <!-- Subtle Viral Agency Badge -->
+          <div v-if="options.showPoweredBy" class="pt-3 text-center text-[10px] text-slate-400 tracking-wide flex items-center justify-center gap-1.5 page-break-avoid">
+            <span>⚡ Powered by</span>
+            <a href="https://automatixes.com" target="_blank" class="font-semibold text-slate-600 hover:text-indigo-600 transition flex items-center gap-0.5">
+              <span>Automatixes AI Automation Agency</span>
+              <i data-lucide="arrow-up-right" class="w-3 h-3"></i>
+            </a>
           </div>
 
         </div>
@@ -1166,6 +1280,75 @@
       </div>
     </div>
 
+    <!-- Webhook & CRM Automation Modal (Pillar 4) -->
+    <div v-if="webhookModalOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm modal-backdrop" @click.self="webhookModalOpen = false">
+      <div class="modal-dialog bg-white dark:bg-slate-900 w-full max-w-lg rounded-xl p-6 shadow-2xl space-y-4 border border-slate-200 dark:border-slate-800">
+        
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-800">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-500 flex items-center justify-center">
+              <i data-lucide="zap" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <h3 class="text-sm font-bold text-slate-900 dark:text-white">Webhook & CRM Cloud Push</h3>
+              <p class="text-[11px] text-slate-400">Push live invoice JSON to n8n, Make, Zapier, or Google Sheets</p>
+            </div>
+          </div>
+          <button @click="webhookModalOpen = false" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-1">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        </div>
+
+        <div class="space-y-3 text-xs">
+          <div>
+            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Webhook Endpoint URL</label>
+            <input type="url" v-model="webhookUrl" placeholder="https://your-n8n.com/webhook/invoice or Make webhook..." class="w-full font-mono text-xs px-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-zinc-900 focus:outline-none">
+            <span class="text-[10px] text-slate-400 mt-1 block">Saved automatically in your browser for 1-click future pushes.</span>
+          </div>
+
+          <div v-if="webhookStatus !== 'idle'" class="p-3 rounded-lg border text-xs" :class="{
+            'bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-800 text-amber-800 dark:text-amber-300': webhookStatus === 'sending',
+            'bg-emerald-50 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300': webhookStatus === 'success',
+            'bg-rose-50 dark:bg-rose-950/30 border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-300': webhookStatus === 'error'
+          }">
+            <div class="font-bold flex items-center gap-1.5">
+              <i v-if="webhookStatus === 'sending'" data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i>
+              <i v-else-if="webhookStatus === 'success'" data-lucide="check-circle" class="w-3.5 h-3.5"></i>
+              <i v-else data-lucide="alert-circle" class="w-3.5 h-3.5"></i>
+              <span>Status: {{ webhookStatus.toUpperCase() }}</span>
+            </div>
+            <p class="mt-1 text-[11px] leading-relaxed">{{ webhookMessage }}</p>
+          </div>
+
+          <!-- Agency Upsell Banner -->
+          <div class="p-3.5 bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-800/60 rounded-lg space-y-1.5">
+            <div class="text-[11px] font-bold text-indigo-950 dark:text-indigo-200 flex items-center gap-1.5">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400"></i>
+              <span>Need Custom Enterprise Accounting & CRM Automations?</span>
+            </div>
+            <p class="text-[11px] text-indigo-900/80 dark:text-indigo-300/80 leading-relaxed">
+              Automatixes builds production-grade n8n & Make workflows connecting your invoicing to QuickBooks, Xero, HubSpot, Slack & WhatsApp notification bots.
+            </p>
+            <a href="https://www.automatixes.com/contact" target="_blank" class="inline-flex items-center gap-1 text-[11px] font-bold text-indigo-600 dark:text-indigo-400 hover:underline pt-0.5">
+              <span>Book a Free 30-Min AI Automation Audit with Automatixes</span>
+              <i data-lucide="arrow-right" class="w-3 h-3"></i>
+            </a>
+          </div>
+        </div>
+
+        <div class="pt-3 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+          <button @click="webhookModalOpen = false" class="px-3 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-lg text-xs font-semibold hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+            Close
+          </button>
+          <button @click="sendToWebhook" :disabled="webhookStatus === 'sending'" class="px-4 py-1.5 bg-zinc-950 hover:bg-zinc-800 dark:bg-indigo-600 dark:hover:bg-indigo-700 text-white rounded-lg text-xs font-bold shadow-xs transition flex items-center gap-1.5 disabled:opacity-50">
+            <i data-lucide="send" class="w-3.5 h-3.5 text-[#C8E019]"></i>
+            <span>{{ webhookStatus === 'sending' ? 'Transmitting...' : 'Push Live Webhook' }}</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
     <!-- Official Automatixes SaaS Footer -->
     <footer class="bg-white dark:bg-slate-950 text-slate-600 dark:text-slate-400 border-t border-slate-200/90 dark:border-slate-800/80 mt-auto pt-12 pb-8 no-print transition-colors">
       <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -1296,7 +1479,7 @@
   </div>
 
   <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
-  <script src="app.js?v=3.0.0"></script>
+  <script src="app.js?v=8.0.0"></script>
   <!-- Agentation Visual Feedback Toolbar -->
   <script src="agentation-widget.js" defer></script>
   <!-- Cookie Consent Banner -->

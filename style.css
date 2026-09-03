@@ -189,31 +189,11 @@ html.dark .invoice-paper-sheet {
   box-shadow: 0 0 0 1px var(--theme-accent, #4F46E5);
 }
 
-/* --- 6. FINANCIAL COLOR THEMES --- */
-.theme-modern-indigo {
+/* --- 6. FINANCIAL COLOR THEMES & DYNAMIC ACCENT ENGINE --- */
+.invoice-paper-sheet {
   --theme-accent: #4F46E5;
-  --theme-accent-light: #eef2ff;
-  --theme-accent-border: #c7d2fe;
-}
-.theme-emerald-growth {
-  --theme-accent: #059669;
-  --theme-accent-light: #ecfdf5;
-  --theme-accent-border: #a7f3d0;
-}
-.theme-executive-slate {
-  --theme-accent: #0f172a;
-  --theme-accent-light: #f1f5f9;
-  --theme-accent-border: #cbd5e1;
-}
-.theme-vibrant-coral {
-  --theme-accent: #e11d48;
-  --theme-accent-light: #fff1f2;
-  --theme-accent-border: #fecdd3;
-}
-.theme-automatix-cyber {
-  --theme-accent: #15803d;
-  --theme-accent-light: #f0fdf4;
-  --theme-accent-border: #bbf7d0;
+  --theme-accent-light: rgba(79, 70, 229, 0.08);
+  --theme-accent-border: rgba(79, 70, 229, 0.25);
 }
 
 .theme-text-primary {
@@ -221,20 +201,111 @@ html.dark .invoice-paper-sheet {
 }
 
 .theme-bg-subtle {
-  background-color: var(--theme-accent-light, #eef2ff) !important;
+  background-color: var(--theme-accent-light, rgba(79, 70, 229, 0.08)) !important;
 }
 
 .theme-border-accent {
-  border-color: var(--theme-accent-border, #c7d2fe) !important;
+  border-color: var(--theme-accent-border, rgba(79, 70, 229, 0.25)) !important;
 }
 
 .theme-btn-accent {
   color: var(--theme-accent, #4F46E5) !important;
-  background-color: var(--theme-accent-light, #eef2ff) !important;
-  border-color: var(--theme-accent-border, #c7d2fe) !important;
+  background-color: var(--theme-accent-light, rgba(79, 70, 229, 0.08)) !important;
+  border-color: var(--theme-accent-border, rgba(79, 70, 229, 0.25)) !important;
 }
 .theme-btn-accent:hover {
   filter: brightness(0.96);
+}
+
+/* --- 6.1 ALTERNATE LAYOUT TEMPLATES --- */
+
+/* 1. Modern Layout (Default) */
+.layout-modern.invoice-paper-sheet {
+  border-top: 6px solid var(--theme-accent, #4F46E5) !important;
+}
+
+/* 2. Corporate Layout (Executive Block Banner) */
+.layout-corporate.invoice-paper-sheet {
+  border-top: none !important;
+  padding-top: 0 !important;
+  overflow: hidden;
+}
+
+.layout-corporate .invoice-header-row {
+  background: var(--theme-accent, #0f172a);
+  color: #ffffff !important;
+  margin: 0 -2.5rem 1.5rem -2.5rem;
+  padding: 2.25rem 2.5rem;
+  border-bottom: none !important;
+}
+
+.layout-corporate .invoice-header-row input,
+.layout-corporate .invoice-header-row textarea,
+.layout-corporate .invoice-header-row span {
+  color: #ffffff !important;
+}
+
+.layout-corporate .invoice-header-row .text-slate-400,
+.layout-corporate .invoice-header-row .text-slate-500 {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+.layout-corporate .invoice-header-row input.print-clean-input {
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+.layout-corporate th {
+  background: var(--theme-accent-light, #f1f5f9);
+  color: var(--theme-accent, #0f172a) !important;
+  padding-top: 0.6rem !important;
+  padding-bottom: 0.6rem !important;
+  padding-left: 0.5rem !important;
+  padding-right: 0.5rem !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700 !important;
+}
+
+/* 3. Minimalist Layout (Swiss Typographic Grid) */
+.layout-minimalist.invoice-paper-sheet {
+  border-top: 1px solid #e2e8f0 !important;
+  font-family: 'Inter', -apple-system, sans-serif;
+}
+
+.layout-minimalist .invoice-header-row {
+  border-bottom: 2px solid #0f172a !important;
+  padding-bottom: 1.5rem;
+}
+
+.layout-minimalist h1 {
+  font-family: 'JetBrains Mono', monospace !important;
+  letter-spacing: -0.05em;
+  color: #0f172a !important;
+}
+
+.layout-minimalist th {
+  border-top: 1px solid #0f172a;
+  border-bottom: 1px solid #0f172a;
+  padding: 0.5rem 0;
+  text-transform: uppercase;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  color: #0f172a !important;
+}
+
+.layout-minimalist .invoice-totals-row {
+  border-top: 1px solid #0f172a !important;
+}
+
+/* --- 6.2 PAGE FORMAT CONTROLS (A4 VS LETTER) --- */
+.format-a4 {
+  max-width: 840px !important;
+  min-height: 1080px;
+}
+
+.format-letter {
+  max-width: 816px !important;
+  min-height: 1056px;
 }
 
 /* --- 7. TOP APP HEADER & NAVBAR --- */
