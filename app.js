@@ -15,7 +15,7 @@ createApp({
         localStorage.setItem('automatix_invoice_theme', 'light');
       }
       nextTick(() => {
-        if (window.lucide) lucide.createIcons();
+        if (window.lucide) window.lucide.createIcons();
       });
     };
 
@@ -98,7 +98,7 @@ createApp({
         company.value.logo = event.target.result;
         company.value.showLogo = true;
         showToast('Company logo updated!');
-        nextTick(() => { if (window.lucide) lucide.createIcons(); });
+        nextTick(() => { if (window.lucide) window.lucide.createIcons(); });
       };
       reader.readAsDataURL(file);
     };
@@ -107,7 +107,7 @@ createApp({
       company.value.showLogo = false;
       company.value.logo = '';
       showToast('Logo removed successfully!');
-      nextTick(() => { if (window.lucide) lucide.createIcons(); });
+      nextTick(() => { if (window.lucide) window.lucide.createIcons(); });
     };
 
     // 4. Client & Editable Section Titles
@@ -341,7 +341,7 @@ createApp({
         rate: 500.00
       });
       nextTick(() => {
-        if (window.lucide) lucide.createIcons();
+        if (window.lucide) window.lucide.createIcons();
       });
     };
 
@@ -539,14 +539,6 @@ createApp({
       saveBusinessProfile();
     }, { deep: true });
 
-    watch(webhookModalOpen, (open) => {
-      if (open) {
-        nextTick(() => {
-          if (window.lucide) lucide.createIcons();
-        });
-      }
-    });
-
     watch([invoice, client, items], () => {
       try {
         localStorage.setItem(DRAFT_KEY, JSON.stringify({
@@ -620,7 +612,7 @@ createApp({
       drawerOpen.value = false;
       showToast(`Loaded invoice ${rec.invoice.number}`);
       nextTick(() => {
-        if (window.lucide) lucide.createIcons();
+        if (window.lucide) window.lucide.createIcons();
       });
     };
 
@@ -635,6 +627,14 @@ createApp({
     const webhookUrl = ref('');
     const webhookStatus = ref('idle'); // 'idle' | 'sending' | 'success' | 'error'
     const webhookMessage = ref('');
+
+    watch(webhookModalOpen, (open) => {
+      if (open) {
+        nextTick(() => {
+          if (window.lucide) window.lucide.createIcons();
+        });
+      }
+    });
 
     const loadWebhookSettings = () => {
       try {
@@ -853,7 +853,7 @@ createApp({
       loadSavedClientsFromStorage();
       loadWebhookSettings();
       initRipple();
-      if (window.lucide) lucide.createIcons();
+      if (window.lucide) window.lucide.createIcons();
     });
 
     return {
