@@ -71,17 +71,19 @@ createApp({
     const templates = colorPresets;
 
     // 3. Sender / Company Profile
-    const company = ref({
+    const defaultCompany = {
       showLogo: true,
       logo: 'https://www.automatixes.com/assets/img/logo/automatixes-logo-new.png',
       name: 'Automatixes LLC',
       tagline: 'AI Solutions & Workflow Automation',
       address: '71-75 Shelton Street, Covent Garden, London, WC2H 9JQ',
-      phone: '+92 336 6920141',
+      phone: '',
       email: 'contact@automatixes.com',
       website: 'https://automatixes.com',
       taxId: 'US-EIN-9482019'
-    });
+    };
+
+    const company = ref({ ...defaultCompany });
 
     // Logo Manager
     const onLogoUpload = (e) => {
@@ -713,10 +715,16 @@ createApp({
         `Notes: ${invoice.value.notes}\n\n` +
         `Thank you for your business!\n\n` +
         `Best regards,\n` +
-        `${company.value.name}\n` +
-        `${company.value.phone || ''}`
+        `${company.value.name || 'Automatixes LLC'}\n` +
+        `${company.value.email || 'contact@automatixes.com'}`
       );
-      window.open(`mailto:${recipient}?subject=${subject}&body=${body}`, '_blank');
+      const mailtoUrl = `mailto:${recipient}?subject=${subject}&body=${body}`;
+      const link = document.createElement('a');
+      link.href = mailtoUrl;
+      link.target = '_self';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
       showToast('Opened prefilled email draft!');
     };
 
