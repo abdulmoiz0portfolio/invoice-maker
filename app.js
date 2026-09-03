@@ -702,22 +702,51 @@ createApp({
       }
     };
 
-    // 15. One-Click Email to Client
-    const emailInvoiceToClient = () => {
-      const recipient = client.value.email || '';
-      const subject = encodeURIComponent(`Invoice ${invoice.value.number} from ${company.value.name || 'Automatixes'}`);
-      const body = encodeURIComponent(
-        `Hi ${client.value.name || 'Valued Client'},\n\n` +
+    // 15. Email & Client Dispatch Modal System
+    const emailModalOpen = ref(false);
+
+    watch(emailModalOpen, (open) => {
+      if (open) {
+        nextTick(() => {
+          if (window.lucide) window.lucide.createIcons();
+        });
+      }
+    });
+
+    const emailSubject = computed(() => {
+      return `Invoice ${invoice.value.number} from ${company.value.name || 'Automatixes LLC'}`;
+    });
+
+    const emailBody = computed(() => {
+      return `Hi ${client.value.name || 'Valued Client'},\n\n` +
         `Please find the details for Invoice ${invoice.value.number} below:\n\n` +
         `• Invoice Date: ${invoice.value.date}\n` +
         `• Due Date: ${invoice.value.dueDate}\n` +
         `• Total Due: ${invoice.value.currency} ${formatMoney(grandTotal.value)}\n\n` +
         `Notes: ${invoice.value.notes}\n\n` +
-        `Thank you for your business!\n\n` +
+        `Thank you for your prompt payment!\n\n` +
         `Best regards,\n` +
         `${company.value.name || 'Automatixes LLC'}\n` +
-        `${company.value.email || 'contact@automatixes.com'}`
-      );
+        `${company.value.email || 'contact@automatixes.com'}`;
+    });
+
+    const emailInvoiceToClient = () => {
+      emailModalOpen.value = true;
+    };
+
+    const openInGmail = () => {
+      const to = encodeURIComponent(client.value.email || '');
+      const su = encodeURIComponent(emailSubject.value);
+      const body = encodeURIComponent(emailBody.value);
+      const url = `https://mail.google.com/mail/?view=cm&fs=1&to=${to}&su=${su}&body=${body}`;
+      window.open(url, '_blank');
+      showToast('Opening Web Gmail composer...');
+    };
+
+    const openInDefaultMail = () => {
+      const recipient = client.value.email || '';
+      const subject = encodeURIComponent(emailSubject.value);
+      const body = encodeURIComponent(emailBody.value);
       const mailtoUrl = `mailto:${recipient}?subject=${subject}&body=${body}`;
       const link = document.createElement('a');
       link.href = mailtoUrl;
@@ -725,7 +754,16 @@ createApp({
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-      showToast('Opened prefilled email draft!');
+      showToast('Opened system mail app!');
+    };
+
+    const copyEmailMessage = () => {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(emailBody.value);
+        showToast('Copied email draft to clipboard!');
+      } else {
+        showToast('Clipboard access unavailable');
+      }
     };
 
     // 16. JSON Export / Import
@@ -913,6 +951,12 @@ createApp({
       webhookMessage,
       sendToWebhook,
       emailInvoiceToClient,
+      emailModalOpen,
+      emailSubject,
+      emailBody,
+      openInGmail,
+      openInDefaultMail,
+      copyEmailMessage,
       exportJSON,
       importJSON,
       resetForm,
