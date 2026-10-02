@@ -27,7 +27,7 @@ createApp({
     // 1.1 Freemium Positioning & Architecture
     const userTier = ref('free'); // 'free' | 'pro'
     const proModalOpen = ref(false);
-    const activeMobileTab = ref('invoice'); // 'invoice' | 'controls'
+    const activeMobileTab = ref(new URLSearchParams(window.location.search).get('tab') === 'controls' ? 'controls' : 'invoice'); // 'invoice' | 'controls'
     const mobileMenuOpen = ref(false);
 
     // 2. Advanced UX & Branding Controls (Pillar 1)
