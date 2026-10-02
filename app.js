@@ -27,6 +27,8 @@ createApp({
     // 1.1 Freemium Positioning & Architecture
     const userTier = ref('free'); // 'free' | 'pro'
     const proModalOpen = ref(false);
+    const activeMobileTab = ref('invoice'); // 'invoice' | 'controls'
+    const mobileMenuOpen = ref(false);
 
     // 2. Advanced UX & Branding Controls (Pillar 1)
     const layoutTemplate = ref('modern'); // 'modern' | 'corporate' | 'minimalist'
@@ -962,7 +964,9 @@ createApp({
       resetForm,
       triggerPrint,
       templates,
-      currentTemplate
+      currentTemplate,
+      activeMobileTab,
+      mobileMenuOpen
     };
   }
 }).mount('#app');

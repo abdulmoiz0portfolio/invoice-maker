@@ -455,3 +455,44 @@ html.dark .modal-dialog {
     page-break-inside: avoid;
   }
 }
+
+/* --- 12. MOBILE RESPONSIVE ENGINE (COCONUT UI) --- */
+@media screen and (max-width: 768px) {
+  .invoice-paper-sheet {
+    border-radius: 10px !important;
+    min-height: auto !important;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.06) !important;
+  }
+  
+  /* Prevent auto-zoom on iOS Safari when tapping inputs */
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  input[type="date"],
+  select,
+  textarea {
+    font-size: 14px !important;
+  }
+
+  /* Fluid padding on mobile */
+  .invoice-paper-sheet {
+    padding: 1rem !important;
+  }
+
+  .invoice-header-row {
+    flex-direction: column !important;
+    gap: 16px !important;
+  }
+
+  .invoice-totals-row {
+    flex-direction: column !important;
+    gap: 20px !important;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .invoice-paper-sheet {
+    padding: 0.75rem !important;
+  }
+}
+
